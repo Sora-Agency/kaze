@@ -1,0 +1,30 @@
+KAZE · PRIVACY
+Sora Agency · Version 1.0 · October 11, 2026
+
+LOCAL ANALYSIS
+Kaze uses names, paths, dates, item types and allocated disk space to display the contents of folders you select. It calculates sizes using metadata; the explorer does not open document contents or request iCloud downloads to measure them. Explorer results remain in memory during the session.
+
+Application discovery also reads identifiers and installation metadata to locate related data. Resource views query local Docker and Xcode tools. Cleanup features act on the files and resources described in their controls and confirmations.
+
+NO SORA TELEMETRY
+Kaze includes no analytics, advertising or automatic transmission of files, folder listings, paths or logs to Sora Agency. No Sora account is required. Fonts are bundled and are not downloaded when the app opens.
+
+LOGS AND PREFERENCES
+Cleanup, uninstallation and resource management activity is logged locally at:
+~/Library/Logs/LiberarEspacioMac/limpieza.log
+
+This historical folder name is retained for compatibility with earlier versions. Logs may contain app names, paths, identifiers and system tool messages. The appearance toggle and language selector store their preferences in local macOS preferences. Scheduled task settings (time, free-space condition, categories, notifications and state) are stored in ~/Library/Application Support/Kaze/schedule.json. Each task has its own identifier and cleanup agent under ~/Library/LaunchAgents, installed only when enabled. The app migrates earlier settings and retains a local backup.
+
+Updates preserve a copy of the app and its previous scheduling configuration under:
+~/Library/Application Support/Kaze/Backups
+
+USER CONTROL
+You can stop a scan, change folders and grant or revoke Full Disk Access in System Settings. You can disable tasks in Scheduled Tasks or remove them with the uninstaller. The uninstaller retains logs and backups; you can delete them manually if you wish.
+
+Copy Path and Save a Copy write only to the clipboard or your chosen location. They are not transmitted automatically. If you share logs or screenshots to request help, review them first and remove information you do not want to disclose.
+
+EXTERNAL TOOLS
+Kaze may open Finder, System Settings or a page you select, and use macOS, Docker, Xcode or installed tools to perform requested actions. Those tools and the operating system have their own policies and may generate logs or communicate according to their configuration. This notice describes Kaze; it does not replace those tools' policies or control operating system diagnostic features.
+
+MODIFIED VERSIONS
+This notice applies to the Sora Agency distribution. Third-party modifications may change data handling; review their code and notices before use.

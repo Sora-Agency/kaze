@@ -1,0 +1,30 @@
+KAZE · PRIVACIDAD
+Sora Agency · Versión 1.0 · 11 de octubre de 2026
+
+ANÁLISIS LOCAL
+Kaze utiliza nombres, rutas, fechas, tipo de elemento y espacio asignado en disco para mostrar el contenido de las carpetas que eliges. Calcula tamaños mediante metadatos; el explorador no abre el contenido de los documentos ni solicita descargar archivos de iCloud para medirlos. Los resultados del explorador se mantienen en memoria durante la sesión.
+
+La detección de aplicaciones también consulta sus identificadores y metadatos de instalación para localizar datos asociados. Las vistas de recursos consultan las herramientas locales de Docker y Xcode. Las funciones de limpieza actúan sobre los archivos y recursos descritos en sus controles y confirmaciones.
+
+SIN TELEMETRÍA DE SORA
+Kaze no incorpora analítica, publicidad ni envío automático de archivos, listados de carpetas, rutas o registros a Sora Agency. No requiere una cuenta de Sora para funcionar. Las fuentes se incluyen en la app y no se descargan al abrirla.
+
+REGISTROS Y PREFERENCIAS
+La actividad de limpieza, desinstalación y gestión de recursos se registra localmente en:
+~/Library/Logs/LiberarEspacioMac/limpieza.log
+
+El nombre histórico de esta carpeta se conserva para mantener compatibilidad con las versiones anteriores. Los registros pueden contener nombres de aplicaciones, rutas, identificadores y mensajes de herramientas del sistema. Los selectores de apariencia e idioma guardan sus preferencias en el almacenamiento local de preferencias de macOS. La configuración de tareas programadas (horario, condición de espacio, categorías, notificaciones y estado) se guarda en ~/Library/Application Support/Kaze/schedule.json. Cada tarea tiene su identificador y su propio agente de limpieza en ~/Library/LaunchAgents, instalado solo cuando la activas. La app migra la configuración anterior y conserva su respaldo local.
+
+La actualización conserva una copia de la app y de su programación anterior en:
+~/Library/Application Support/Kaze/Backups
+
+CONTROL DEL USUARIO
+Puedes detener un análisis, cambiar de carpeta y conceder o revocar Acceso total al disco desde Ajustes del Sistema. Puedes desactivar la tarea desde Tareas programadas o retirarla con el desinstalador. El desinstalador conserva los registros y los respaldos; puedes eliminarlos manualmente si deseas borrarlos.
+
+Los comandos Copiar ruta y Guardar una copia solo escriben en el portapapeles o en la ubicación que eliges. No se envían automáticamente. Si decides compartir registros o capturas para pedir ayuda, revisa primero su contenido y elimina la información que no quieras revelar.
+
+HERRAMIENTAS EXTERNAS
+Kaze puede abrir Finder, Ajustes del Sistema o una página que selecciones, y utilizar macOS, Docker, Xcode o herramientas instaladas para ejecutar las acciones solicitadas. Esas herramientas y el sistema operativo tienen sus propias políticas y pueden generar registros o realizar comunicaciones según su configuración. Este aviso describe Kaze; no sustituye las políticas de esas herramientas ni controla las funciones de diagnóstico del sistema operativo.
+
+VERSIONES MODIFICADAS
+Este aviso corresponde a la distribución de Sora Agency. Una versión modificada por terceros puede cambiar el tratamiento de datos; revisa su código y sus avisos antes de usarla.

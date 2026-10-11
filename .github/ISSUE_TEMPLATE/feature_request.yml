@@ -1,0 +1,16 @@
+name: Mejora
+description: Propón una mejora concreta para Kaze.
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qué problema quieres resolver
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Cómo debería funcionar
+    validations:
+      required: true

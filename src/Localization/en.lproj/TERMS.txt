@@ -1,0 +1,44 @@
+KAZE · TERMS OF USE
+Sora Agency · Version 1.0 · October 11, 2026
+
+1. ABOUT KAZE
+Kaze is a Sora Agency tool for exploring macOS storage, measuring files and folders, cleaning caches and managing applications and local resources. The project's code is distributed under the MIT license included with this app. These terms explain its operation, risks and allocation of responsibilities. Read them before using cleanup or deletion features.
+
+2. OPEN SOURCE SOFTWARE AND LICENSE
+The MIT license permits using, copying, modifying and redistributing the software, including commercially, provided the notices required by that license are preserved. LICENSE contains the full text in English.
+
+These terms do not add restrictions to rights granted by MIT. If there is a conflict about permissions for the code, the MIT license prevails. Bundled fonts have their own SIL Open Font License, available in the Fonts folder of the app and source code.
+
+A modified or redistributed version does not imply endorsement, certification or support by Sora Agency. The software license does not itself grant trademark rights over third-party names or logos. Do not present a modified version as an official Sora Agency release without authorization.
+
+3. YOUR RESPONSIBILITY WHEN USING THE APP
+You are responsible for deciding what to scan, clean, uninstall or delete, reviewing selections and maintaining adequate backups of your files and settings. Only act on data and devices you are authorized to manage. System permissions alone do not establish that authorization.
+
+Moving an app or its data to the Trash may end sessions, lose settings, affect projects or prevent an app from working. Kaze does not automatically empty the Trash, but being able to restore an item does not guarantee restoration of the app's previous state.
+
+Selected Docker and Xcode resources are removed using their respective tools and may be permanently deleted without going through the Trash. Volumes may contain databases. Running containers may be stopped. Deleted caches may require new downloads, builds or installations. Review the confirmations shown by the app.
+
+Scheduled cleanup is preset for 09:30 and disabled. You can create multiple independent tasks with their own times, conditions and cleanup categories in Scheduled Tasks, disable them there or remove them with the uninstaller. Updating from an old version disables its default schedule; later updates preserve schedules you explicitly enabled. Scheduled cleanup does not use explorer selections to delete documents.
+
+4. SIZES, PERMISSIONS AND LIMITATIONS
+Sizes reflect metadata and allocated disk space during the scan. They do not guarantee how much space will be recovered after deletion. APFS, shared files, links, compression, snapshots, cloud files and changes during a scan may produce differences from other macOS indicators.
+
+Pending, partial or interrupted measurements are identified in the interface. Kaze does not bypass macOS protections. Some folders require Full Disk Access; others may remain inaccessible. Scanning does not guarantee finding all data associated with an app or determining which files matter to you.
+
+5. NO WARRANTIES
+To the maximum extent permitted by applicable law, Kaze is provided “as is” and “as available”, without express or implied warranties, including merchantability, fitness for a particular purpose and noninfringement. Sora Agency and contributors do not guarantee error-free operation, compatibility with all devices or system versions, specific results, ongoing maintenance or file recovery.
+
+6. LIMITATION OF LIABILITY
+To the maximum extent permitted by applicable law, Sora Agency, authors and contributors shall not be liable for claims, loss of data, files or settings, business interruptions, lost income or other direct or indirect damages arising from use, inability to use, modification or redistribution of Kaze, its cleanup and deletion features, or its interaction with third-party tools.
+
+This exclusion does not affect liabilities that cannot legally be excluded or limited, or users' nonwaivable rights. It is not a guarantee of exemption from liability in every jurisdiction. Any additional warranty or obligation expressly assumed in writing is governed by that agreement and applicable law.
+
+7. PRIVACY AND THIRD PARTIES
+Kaze analyzes local storage and includes no telemetry, advertising or automatic transmission of your files, paths or logs to Sora Agency. PRIVACY.txt explains what information the app uses and retains.
+
+macOS, Docker, Xcode, Homebrew and other invoked tools retain their own behavior, terms and policies. External links open only when you select them. The operation of those tools and services does not depend exclusively on Kaze.
+
+8. VERSIONS AND SUPPORT
+Code and documentation may change in future versions. Each distribution includes its applicable notices; changes do not retroactively revoke MIT permissions for a received copy. Free and open source distribution includes no obligation to provide support, updates or data recovery assistance, unless expressly agreed in writing.
+
+If a provision cannot be applied, the remainder shall be interpreted to the extent compatible with applicable law and the software license. Rights that cannot legally be waived are always respected.

@@ -1,0 +1,28 @@
+Kaze · Third-party notices
+
+The original Kaze code is distributed under the MIT License in LICENSE.
+The font files below are unmodified third-party assets and are distributed
+under the SIL Open Font License, Version 1.1. Their licenses and notices
+are included alongside the font files in Fonts.
+
+DM Sans
+Copyright 2014 The DM Sans Project Authors.
+Source: https://github.com/google/fonts/tree/main/ofl/dmsans
+License: Fonts/DM-Sans-OFL.txt
+
+Raleway
+Copyright 2010 The Raleway Project Authors, with Reserved Font Name "Raleway".
+Source: https://github.com/google/fonts/tree/main/ofl/raleway
+License: Fonts/Raleway-OFL.txt
+
+Sora Agency supplies Kaze's visual identity and the original Sora logo.
+The logo vector is preserved in src/Brand/SoraLogo.svg in the source distribution.
+
+Lucide Icons
+Original vector geometry, compiled into native SwiftUI paths without modifications
+to the icon designs. The selected SVGs are included in the source distribution;
+the complete ISC license is bundled in Icons/Lucide. No external icon requests
+occur at runtime.
+Source: https://github.com/lucide-icons/lucide
+Pinned commit: 70562c1ee1c4fdcf736fe97bc893fb8511927934
+License: Icons/Lucide/LICENSE (ISC, including Feather notices).

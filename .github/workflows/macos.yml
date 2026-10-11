@@ -1,0 +1,93 @@
+name: macOS
+
+"on":
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: macos-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+jobs:
+  verify:
+    name: Test and build (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: arm64
+          - runner: macos-15-intel
+            arch: x86_64
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - name: Validate release version
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          KAZE_RELEASE_TAG: ${{ github.ref_name }}
+        run: python3 scripts/prepare-release.py --tag "$KAZE_RELEASE_TAG" --check-only
+      - name: Verify architecture
+        env:
+          KAZE_EXPECTED_ARCH: ${{ matrix.arch }}
+        run: test "$(uname -m)" = "$KAZE_EXPECTED_ARCH"
+      - name: Tests
+        run: scripts/test.sh
+      - name: Build distributable packages
+        run: scripts/build.sh
+      - name: Verify drag-and-drop installer
+        run: python3 tests/DistributionTests.py
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: kaze-${{ matrix.arch }}
+          path: |
+            build/Kaze-Mac-${{ matrix.arch }}.zip
+            build/Kaze-Mac-${{ matrix.arch }}.dmg
+            build/Kaze-SHA256-${{ matrix.arch }}.txt
+            build/Kaze-Source.zip
+          if-no-files-found: error
+          retention-days: 14
+
+  draft-release:
+    name: Prepare draft release
+    needs: verify
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          pattern: kaze-*
+          path: build/release-artifacts
+          merge-multiple: false
+      - name: Validate and assemble release assets
+        env:
+          KAZE_RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python3 scripts/prepare-release.py --tag "$KAZE_RELEASE_TAG" \
+            --artifacts build/release-artifacts --output build/release-assets
+          cd build/release-assets
+          sha256sum --check SHA256SUMS
+      - name: Create or complete draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          KAZE_RELEASE_TAG: ${{ github.ref_name }}
+          KAZE_RELEASE_COMMIT: ${{ github.sha }}
+        run: |
+          scripts/create-draft-release.sh "$KAZE_RELEASE_TAG" \
+            build/release-assets docs/RELEASE_NOTES.md

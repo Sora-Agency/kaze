@@ -1,0 +1,34 @@
+name: Error
+description: Describe un problema reproducible en Kaze.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: No adjuntes nombres de usuario, carpetas personales, registros sin revisar ni credenciales.
+  - type: input
+    id: version
+    attributes:
+      label: Versión de Kaze
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: macOS y arquitectura
+      placeholder: macOS 15 · Apple Silicon
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Pasos para reproducirlo
+      description: Utiliza archivos de ejemplo y rutas anónimas.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado y resultado observado
+    validations:
+      required: true

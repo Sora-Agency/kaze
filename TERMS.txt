@@ -1,0 +1,44 @@
+KAZE · TÉRMINOS DE USO
+Sora Agency · Versión 1.0 · 11 de octubre de 2026
+
+1. SOBRE KAZE
+Kaze es una herramienta de Sora Agency para explorar el almacenamiento de macOS, medir archivos y carpetas, limpiar cachés y gestionar aplicaciones y recursos locales. El código del proyecto se distribuye bajo la licencia MIT que acompaña a esta aplicación. Estos términos explican su funcionamiento, los riesgos y la distribución de responsabilidades. Debes leerlos antes de utilizar funciones de limpieza o eliminación.
+
+2. SOFTWARE OPEN SOURCE Y LICENCIA
+La licencia MIT permite utilizar, copiar, modificar y redistribuir el software, incluso con fines comerciales, siempre que se conserven los avisos exigidos por esa licencia. El archivo LICENSE contiene el texto completo en inglés.
+
+Estos términos no añaden restricciones a los derechos otorgados por la licencia MIT. En caso de conflicto sobre los permisos del código, prevalece la licencia MIT. Las fuentes tipográficas incluidas tienen su propia licencia SIL Open Font License, disponible en la carpeta Fonts de la aplicación y del código fuente.
+
+Una versión modificada o redistribuida no implica respaldo, certificación ni soporte de Sora Agency. La licencia del software no concede por sí misma derechos de marca sobre nombres o logotipos ajenos. No presentes una versión modificada como una publicación oficial de Sora Agency sin autorización.
+
+3. TU RESPONSABILIDAD AL UTILIZAR LA APP
+Eres responsable de decidir qué analizar, limpiar, desinstalar o eliminar, revisar las selecciones y mantener copias de seguridad adecuadas de tus archivos y configuraciones. Solo debes actuar sobre datos y dispositivos que estés autorizado a gestionar. Los permisos del sistema no demuestran por sí solos esa autorización.
+
+Mover una aplicación o sus datos a la Papelera puede cerrar sesiones, perder configuraciones, afectar proyectos o impedir que una aplicación funcione. Kaze no vacía automáticamente la Papelera, pero poder restaurar un elemento no garantiza recuperar el estado anterior de la aplicación.
+
+Los recursos Docker y Xcode seleccionados se eliminan con sus herramientas respectivas y pueden borrarse permanentemente sin pasar por la Papelera. Los volúmenes pueden contener bases de datos. Los contenedores activos pueden detenerse. Las cachés eliminadas pueden requerir nuevas descargas, compilaciones o instalaciones. Revisa las confirmaciones que muestra la app.
+
+La limpieza programada viene preconfigurada para las 09:30 y desactivada. Puedes crear varias tareas independientes, cada una con su horario, condiciones y categorías de limpieza, desde Tareas programadas, y desactivarla desde esa misma pestaña o retirarla con el desinstalador. Al actualizar desde una versión antigua se desactiva la programación predeterminada; las actualizaciones posteriores conservan la programación que hayas activado expresamente. La limpieza programada no utiliza las selecciones del explorador para borrar documentos.
+
+4. TAMAÑOS, PERMISOS Y LIMITACIONES
+Los tamaños reflejan metadatos y espacio asignado en disco durante el análisis. No constituyen una garantía de cuánto espacio se recuperará al eliminar un elemento. APFS, archivos compartidos, enlaces, compresión, instantáneas, archivos en la nube y cambios durante el análisis pueden producir diferencias respecto de otros indicadores de macOS.
+
+Los tamaños pendientes, parciales o interrumpidos se identifican en la interfaz. Kaze no evita las protecciones de macOS. Algunas carpetas requieren Acceso total al disco; otras pueden seguir siendo inaccesibles. El análisis no garantiza localizar todos los datos asociados a una aplicación ni determinar qué archivos son importantes para ti.
+
+5. SIN GARANTÍAS
+En la máxima medida permitida por la legislación aplicable, Kaze se proporciona «tal cual» y «según disponibilidad», sin garantías expresas ni implícitas, incluidas las de comerciabilidad, idoneidad para un propósito particular y ausencia de infracción. Sora Agency y los colaboradores no garantizan un funcionamiento libre de errores, compatibilidad con todos los dispositivos o versiones del sistema, resultados determinados, mantenimiento continuo ni recuperación de archivos.
+
+6. LIMITACIÓN DE RESPONSABILIDAD
+En la máxima medida permitida por la legislación aplicable, Sora Agency, los autores y los colaboradores no serán responsables de reclamaciones, pérdidas de datos, archivos o configuraciones, interrupciones de actividad, pérdida de ingresos ni otros daños directos o indirectos que resulten del uso, la imposibilidad de uso, la modificación o la redistribución de Kaze, de sus funciones de limpieza y eliminación, o de su interacción con herramientas de terceros.
+
+Esta exclusión no afecta las responsabilidades que no puedan excluirse o limitarse legalmente ni los derechos irrenunciables de los usuarios. No es una garantía de exención de responsabilidad en todas las jurisdicciones. Cualquier garantía u obligación adicional expresamente asumida por escrito se rige por ese acuerdo y por la legislación aplicable.
+
+7. PRIVACIDAD Y TERCEROS
+Kaze analiza el almacenamiento local y no incorpora telemetría, publicidad ni envío automático a Sora Agency de tus archivos, rutas o registros. El documento PRIVACY.txt explica qué información utiliza y conserva la app.
+
+macOS, Docker, Xcode, Homebrew y otras herramientas invocadas mantienen sus propios comportamientos, condiciones y políticas. Los enlaces externos solo se abren cuando los eliges. El funcionamiento de esas herramientas y servicios no depende exclusivamente de Kaze.
+
+8. VERSIONES Y SOPORTE
+El código y la documentación pueden cambiar en futuras versiones. Cada distribución incluye los avisos que le corresponden; los cambios no revocan retroactivamente los permisos de la licencia MIT de una copia recibida. La distribución gratuita y open source no incluye una obligación de soporte, actualizaciones ni asistencia para recuperar datos, salvo acuerdo expreso por escrito.
+
+Si una disposición no puede aplicarse, el resto se interpretará en la medida compatible con la legislación aplicable y con la licencia del software. Se respetan en todo caso los derechos que la ley no permite renunciar.
