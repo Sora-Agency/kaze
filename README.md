@@ -32,6 +32,11 @@ A product by **Sora Agency** · macOS 13+ · SwiftUI · MIT License
 [Storage intelligence guide and limits](docs/STORAGE_ANALYSIS.md).
 
 
+- **Recovery:** rescue readable APFS files from external disks or raw images, with read-only access and a copy report.
+- **Startup apps:** enable or disable login apps and keep references to turn them back on.
+
+[Recovery and startup guide](docs/RECOVERY_AND_STARTUP.md).
+
 - **Explore files and folders:** see total folder sizes without opening them,
   including hidden items, app bundles and accessible external drives.
 - **Find the largest items:** sort by size, name, type or date and filter by

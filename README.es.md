@@ -31,6 +31,11 @@ Un producto de **Sora Agency** · macOS 13+ · SwiftUI · Licencia MIT
 
 [Guía de análisis y límites](docs/STORAGE_ANALYSIS.es.md).
 
+- **Recuperación:** rescatar archivos APFS legibles de discos externos o imágenes, con lectura del origen e informe de copia.
+- **Apps al inicio:** activar o desactivar apps de inicio de sesión y conservar referencias para volver a activarlas.
+
+[Guía de recuperación y apps al inicio](docs/RECOVERY_AND_STARTUP.es.md).
+
 - **Explorar archivos y carpetas:** ver su espacio total sin entrar, incluidos
   elementos ocultos, paquetes de aplicaciones y discos externos accesibles.
 - **Encontrar lo más pesado:** ordenar por tamaño, nombre, tipo o fecha y

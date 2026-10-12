@@ -121,6 +121,8 @@ for updates. The first build fetches a checksum-pinned Sparkle 2.10.0 distributi
 embeds its complete framework and helpers with preserved symlinks and signatures,
 and links with a bundle-relative rpath. Each build selects its architecture's
 GitHub Releases latest-download feed in the bundled Info.plist.
+The dependency cache keeps the framework, signing tools and license; Sparkle's
+demo app and debug symbols are discarded after archive verification.
 
 Both the feed and DMG are EdDSA signed and verified before extraction. System
 profiling and unattended installation are disabled. Tag builds use a repository
@@ -223,3 +225,30 @@ removed on teardown. Settings and safety exposes monitor choices and protection
 status first; signatures and each rule's audit details remain in disclosure groups.
 Assistant accents use the shared brand palette; success/warning colors retain
 their semantic meaning.
+
+## Recovery and startup apps
+
+RecoveryModel and StartupItemsModel own their serial utility queues and keep
+work off the main actor. Their initialization does not inventory disks, read
+login items or request authorization. The navigation shell retains both models
+while switching sections. Recovery entries, devices, volumes and outcomes live
+in Domain; parser internals and recovery-specific errors stay in Infrastructure/Recovery.
+Recovery's APFS reader is split into container,
+B-tree, index, compression and extraction adapters; the independent copy operation
+owns destination creation and reports. RecoverySource authorizes device descriptors
+through a small C adapter using posix_spawn/authopen with O_RDONLY and cancellation.
+Disk topology checks require an external APFS source and a separate physical
+output disk. Raw images are regular files opened with O_RDONLY/O_NOFOLLOW.
+Parser caches and record counts are bounded; cancellation propagates through
+forgiving traversal rather than being swallowed as corruption.
+
+StartupItemsService injects LoginItemsManaging. Its System Events adapter passes
+JSON arguments to a fixed JXA script, with bounded output and a timeout. Mutations
+save disabled references atomically, use a per-user mutation lease, and verify
+macOS state afterward. StartupItemsError belongs to Domain. ToolCommandRunner
+and the thread-safe OperationCancellation are shared infrastructure and do not
+depend on APFS types. Startup tests compile without the recovery parser or C
+authorization adapter, enforcing that boundary. Modern background services stay
+in Apple's native settings.
+Tests never mutate actual user login items. See docs/RECOVERY_AND_STARTUP.md for
+scope, persistence and recovery limits.
