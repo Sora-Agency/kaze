@@ -549,3 +549,11 @@
 "Crecimiento reciente (hasta 1 h): %@" = "Recent growth (up to 1 h): %@";
 "Finder aún no confirmó el traslado. Revisa la Papelera; el resultado queda pendiente de verificar." = "Finder has not confirmed the move yet. Check Trash; the outcome awaits verification.";
 "Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder." = "Trash: capacity not verifiable or moved across volumes; may require manual restoration in Finder.";
+
+"Comprobando cambios…" = "Checking for changes…";
+"Actualizando cambios…" = "Updating changes…";
+"Guardado: %@" = "Saved: %@";
+"Medido: %@" = "Measured: %@";
+"Recuperando análisis…" = "Restoring analysis…";
+"Análisis guardado" = "Saved analysis";
+"Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar." = "Results from the last session. Scan again to check for changes before cleaning.";

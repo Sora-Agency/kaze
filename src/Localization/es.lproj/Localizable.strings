@@ -549,3 +549,11 @@
 "Crecimiento reciente (hasta 1 h): %@" = "Crecimiento reciente (hasta 1 h): %@";
 "Finder aún no confirmó el traslado. Revisa la Papelera; el resultado queda pendiente de verificar." = "Finder aún no confirmó el traslado. Revisa la Papelera; el resultado queda pendiente de verificar.";
 "Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder." = "Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder.";
+
+"Comprobando cambios…" = "Comprobando cambios…";
+"Actualizando cambios…" = "Actualizando cambios…";
+"Guardado: %@" = "Guardado: %@";
+"Medido: %@" = "Medido: %@";
+"Recuperando análisis…" = "Recuperando análisis…";
+"Análisis guardado" = "Análisis guardado";
+"Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar." = "Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar.";

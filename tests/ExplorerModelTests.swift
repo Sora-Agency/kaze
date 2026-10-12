@@ -5,14 +5,16 @@ struct ExplorerModelTests {
     @MainActor
     static func main() throws {
         let fm = FileManager.default
-        let root = fm.temporaryDirectory.appendingPathComponent("kaze-model-\(UUID())")
+        let root = URL(fileURLWithPath: canonicalFilePath(fm.temporaryDirectory)).appendingPathComponent("kaze-model-\(UUID())")
         let nested = root.appendingPathComponent("nested")
         try fm.createDirectory(at: nested, withIntermediateDirectories: true)
-        defer { try? fm.removeItem(at: root) }
+        let cacheDirectory = root.deletingLastPathComponent().appendingPathComponent("kaze-cache-\(UUID())")
+        defer { try? fm.removeItem(at: root); try? fm.removeItem(at: cacheDirectory) }
         let one = nested.appendingPathComponent("one.bin")
         try Data(repeating: 1, count: 32_768).write(to: one)
         try fm.linkItem(at: one, to: root.appendingPathComponent("shared.bin"))
-        let model = FileExplorerModel(folder: root)
+        let model = FileExplorerModel(folder: root, home: root,
+            cache: AnalysisCache(home: root, directory: cacheDirectory))
         func check(_ condition: @autoclosure () -> Bool, _ message: String) {
             guard condition() else { fatalError(message) }; print("PASS: \(message)")
         }
@@ -42,7 +44,7 @@ struct ExplorerModelTests {
         check(model.error == nil && model.entries.count == 2, "A stale failure cannot overwrite a newer scan")
         model.scan(); model.stop()
         RunLoop.main.run(until: Date().addingTimeInterval(0.1))
-        check(model.cancelled && !model.isScanning && model.entries.isEmpty, "Stop rejects updates from a cancelled scan")
+        check(model.cancelled && !model.isScanning && model.entries.count == 2, "Stop rejects late updates and preserves visible results")
         model.scan(); finish()
         check(model.incompleteCount == 0 && !model.cancelled, "Refresh completes a stopped scan")
         print("All explorer model tests passed.")
