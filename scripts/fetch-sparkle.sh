@@ -20,6 +20,9 @@ actual="$(shasum -a 256 "$work_dir/Sparkle.tar.xz")"
 [[ "${actual%% *}" == "$checksum" ]] || { print -u2 'Sparkle: SHA-256 incorrecto.'; exit 1; }
 mkdir "$work_dir/distribution"
 tar -xf "$work_dir/Sparkle.tar.xz" -C "$work_dir/distribution"
+# Keep the signed framework, release tools and license. The demo app and
+# upstream debugging symbols are not used by Kaze's build or release workflow.
+rm -rf -- "$work_dir/distribution/Sparkle Test App.app" "$work_dir/distribution/Symbols"
 touch "$work_dir/distribution/.verified-$checksum"
 rm -rf -- "$destination"
 mv "$work_dir/distribution" "$destination"
