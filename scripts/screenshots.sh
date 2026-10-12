@@ -16,6 +16,8 @@ for language in es en; do
   if [[ "$language" == en ]]; then language_dir="$output_dir/en"; fi
   mkdir -p "$language_dir"
   "$work_dir/preview" "$language_dir/smart-dark.png" --dark --smart --access-granted
+  "$work_dir/preview" "$language_dir/assistant-dark.png" --dark --assistant
+  "$work_dir/preview" "$language_dir/assistant-ready-dark.png" --dark --assistant --assistant-ready
   "$work_dir/preview" "$language_dir/map-light.png" --map --access-granted
   "$work_dir/preview" "$language_dir/explorer-dark.png" --dark
   "$work_dir/preview" "$language_dir/explorer-light.png"

@@ -29,8 +29,12 @@ export KAZE_LANGUAGE="${KAZE_LANGUAGE:-es}"
 "$work_dir/preview" "$preview_dir/Kaze-smart-light.png" --smart --access-granted
 "$work_dir/preview" "$preview_dir/Kaze-map-dark.png" --dark --map --access-granted
 "$work_dir/preview" "$preview_dir/Kaze-map-light.png" --map --access-granted
-for section in duplicates system-data development rules history; do
+for section in duplicates system-data development assistant rules history; do
   "$work_dir/preview" "$preview_dir/Kaze-$section-dark.png" --dark "--$section" --access-granted
 done
 
 "$work_dir/preview" "$preview_dir/Kaze-smart-busy.png" --dark --smart --compact --scanning
+"$work_dir/preview" "$preview_dir/Kaze-assistant-light.png" --assistant --compact
+"$work_dir/preview" "$preview_dir/Kaze-assistant-ready.png" --dark --assistant --assistant-ready --compact
+
+"$work_dir/preview" "$preview_dir/Kaze-assistant-welcome.png" --dark --assistant --assistant-ready --assistant-empty --compact

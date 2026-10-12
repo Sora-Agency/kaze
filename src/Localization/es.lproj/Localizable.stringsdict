@@ -210,5 +210,21 @@
 			<string>%ld recursos internos · %@ medibles</string>
 		</dict>
 	</dict>
+	<key>assistant.items</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>%ld elemento</string>
+			<key>other</key>
+			<string>%ld elementos</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

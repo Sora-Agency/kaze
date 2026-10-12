@@ -33,7 +33,7 @@ struct Preview {
             : CommandLine.arguments.contains("--scheduled") ? .scheduled
             : CommandLine.arguments.contains("--cleanup") ? .cleanup : .explorer
         let analysisSections: [String: AppSection] = ["--smart": .smart, "--map": .spaceMap, "--duplicates": .duplicates,
-            "--system-data": .systemData, "--development": .resources, "--rules": .rules, "--history": .history]
+            "--system-data": .systemData, "--development": .resources, "--assistant": .assistant, "--rules": .rules, "--history": .history]
         let shownSection = interactive ? AppSection.smart : analysisSections.first { CommandLine.arguments.contains($0.key) }?.value ?? section
         let resources = interactive ? Bundle.main.resourceURL! : URL(fileURLWithPath: fm.currentDirectoryPath).appendingPathComponent("package/Kaze.app/Contents/Resources")
         if CommandLine.arguments.contains("--scheduled") {
@@ -64,10 +64,14 @@ struct Preview {
         }
         let analysis = SmartScanModel(home: home, resources: interactive ? resources : URL(fileURLWithPath: fm.currentDirectoryPath).appendingPathComponent("src"),
             initialIndex: index, initialDuplicates: DuplicateReport(exact: [DuplicateGroup(id: "fixture-sha", nodes: copied, similar: false, potential: 4_000_000_000)], examined: 144), journal: journal)
+        let assistantReady = interactive || CommandLine.arguments.contains("--assistant-ready")
+        let assistantEmpty = CommandLine.arguments.contains("--assistant-empty")
+        let assistant = LocalAssistantModel(service: LocalAIService(home: root), initialReady: assistantReady,
+            initialResponse: assistantReady && !assistantEmpty ? L10n.text("El análisis encontró oportunidades de limpieza. Revisa su recuperación y cierra las aplicaciones indicadas antes de continuar. APFS puede conservar espacio; los bytes potenciales no son una promesa de recuperación.") : "", initialQuestion: assistantReady && !assistantEmpty ? L10n.text("¿Qué puedo borrar sin romper mis proyectos?") : "")
         if CommandLine.arguments.contains("--scanning") { analysis.previewScanning(visited: 92_160) }
         let rootView = ContentView(model: model, explorer: explorer, scheduler: scheduler, previewAppearance: dark ? .dark : .light,
                                    initialSection: shownSection, resourceDirectory: resources, homeURL: home, languageStore: language,
-                                   diskAccessStore: DiskAccessStore(initialStatus: CommandLine.arguments.contains("--access-granted") ? .available : .restricted), analysisModel: analysis)
+                                   diskAccessStore: DiskAccessStore(initialStatus: CommandLine.arguments.contains("--access-granted") ? .available : .restricted), analysisModel: analysis, assistantModel: assistant)
         SoraFonts.register(directory: resources.appendingPathComponent("Fonts"))
         var edited = scheduler.tasks.last ?? ScheduledCleanupTask()
         if CommandLine.arguments.contains("--weekly") { edited.configuration.frequency = .weekly }

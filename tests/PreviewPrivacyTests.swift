@@ -17,6 +17,11 @@ struct PreviewPrivacyTests {
         }
         check(cleaner.storage.total == 512_000_000_000 && cleaner.storage.free == 164_000_000_000,
               "Public previews use seeded storage instead of host disk statistics")
+        let assistantService = LocalAIService(home: root)
+        let assistant = LocalAssistantModel(service: assistantService)
+        assistant.checkAvailability(); assistant.install()
+        check(assistant.phase == .missing && !manager.fileExists(atPath: assistantService.directory.path),
+              "Public assistant previews never download models or create an installation")
         let access = DiskAccessStore(initialStatus: .available)
         access.refresh()
         check(access.status == .available, "Preview access indicators preserve fixtures without probing protected host files")

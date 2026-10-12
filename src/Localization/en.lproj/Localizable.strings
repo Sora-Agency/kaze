@@ -550,13 +550,53 @@
 "Finder aún no confirmó el traslado. Revisa la Papelera; el resultado queda pendiente de verificar." = "Finder has not confirmed the move yet. Check Trash; the outcome awaits verification.";
 "Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder." = "Trash: capacity not verifiable or moved across volumes; may require manual restoration in Finder.";
 
-"Comprobando cambios…" = "Checking for changes…";
-"Actualizando cambios…" = "Updating changes…";
-"Guardado: %@" = "Saved: %@";
-"Medido: %@" = "Measured: %@";
-"Recuperando análisis…" = "Restoring analysis…";
-"Análisis guardado" = "Saved analysis";
-"Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar." = "Results from the last session. Scan again to check for changes before cleaning.";
+"Preguntas sobre tu disco, con una IA que corre en tu Mac." = "Questions about your disk, with AI running on your Mac.";
+
+"IA local, solo si la quieres" = "Local AI, only if you want it";
+
+"Descarga el motor y el modelo una sola vez. Después puedes consultar sin conexión. Tus preguntas y los datos del análisis se quedan en tu Mac." = "Download the engine and model once. Then ask questions offline. Your questions and scan data stay on your Mac.";
+
+"Opcional" = "Optional";
+
+"Sin suscripción" = "No subscription";
+
+"Comprobando la IA local…" = "Checking local AI…";
+
+"Descargando y verificando…" = "Downloading and verifying…";
+
+"Descargar IA local" = "Download local AI";
+
+"La app no instala la IA automáticamente. El motor se inicia solo al consultar y se cierra al terminar." = "The app does not install AI automatically. The engine starts only when you ask a question and closes when finished.";
+
+"Smart Scan y sus reglas verificadas siguen disponibles sin descargar la IA." = "Smart Scan and its verified rules remain available without downloading AI.";
+
+"IA local lista" = "Local AI ready";
+
+"Preparando una respuesta en tu Mac…" = "Preparing an answer on your Mac…";
+
+"Respuesta del asistente" = "Assistant response";
+
+"Recomendaciones verificadas" = "Verified recommendations";
+
+"La IA puede equivocarse. Revisa las reglas y los resultados medidos antes de limpiar; el asistente no borra archivos." = "AI can make mistakes. Review the rules and measured results before cleaning; the assistant does not delete files.";
+
+"No se pudo verificar la IA local. Vuelve a descargarla." = "Local AI could not be verified. Download it again.";
+
+"No se pudo completar la descarga. Comprueba la conexión e inténtalo otra vez." = "The download could not be completed. Check your connection and try again.";
+
+"La IA local requiere macOS 13.3 o posterior." = "Local AI requires macOS 13.3 or later.";
+
+"Necesitas al menos 1,5 GB libres para descargar y preparar la IA local." = "You need at least 1.5 GB free to download and prepare local AI.";
+
+"Descarga la IA local para consultar al asistente." = "Download local AI to ask the assistant questions.";
+
+"Operación cancelada. Puedes volver a intentarlo cuando quieras." = "Operation canceled. You can try again whenever you want.";
+
+"El motor local no pudo generar una respuesta. Puedes seguir revisando Smart Scan." = "The local engine could not generate an answer. You can continue reviewing Smart Scan.";
+
+"La consulta tardó demasiado y se detuvo. Prueba con una pregunta más corta." = "The query took too long and was stopped. Try a shorter question.";
+
+"El análisis encontró oportunidades de limpieza. Revisa su recuperación y cierra las aplicaciones indicadas antes de continuar. APFS puede conservar espacio; los bytes potenciales no son una promesa de recuperación." = "The scan found cleanup opportunities. Review recovery steps and close the listed apps before continuing. APFS may retain space; potential bytes are not a promise of recovery.";
 
 "Firma no verificada" = "Unverified signature";
 
@@ -573,6 +613,64 @@
 "Resultados del análisis" = "Scan results";
 
 "No hay resultados en esta categoría." = "There are no results in this category.";
+
+"Menos dudas. Más espacio." = "Less guesswork. More space.";
+
+"Tu consulta" = "Your question";
+
+"Solo en tu Mac" = "Only on your Mac";
+
+"Entiende tu espacio.\nDecide con calma." = "Understand your space.\nDecide with confidence.";
+
+"Haz una pregunta sobre tu último análisis. Te ayudo a entender los tamaños, las cachés y qué conviene revisar." = "Ask about your latest scan. Understand sizes, caches and what needs a closer look.";
+
+"Entiende qué ocupa espacio" = "Understand what takes up space";
+
+"Revisa dependencias y reconstrucción" = "Review dependencies and rebuilding";
+
+"Abrir Smart Scan" = "Open Smart Scan";
+
+"Consulta privada" = "Private question";
+
+"Análisis en curso" = "Scan in progress";
+
+"Pregunta sobre tu disco…" = "Ask about your disk…";
+
+"La IA puede equivocarse. Tú revisas y decides; Kaze no limpia desde el chat." = "AI can make mistakes. You review and decide; Kaze does not clean from chat.";
+
+"Una ayuda para decidir mejor" = "A little help to make better decisions";
+
+"Entiende System Data" = "Understand System Data";
+
+"Ponle contexto a los tamaños medidos." = "Put measured sizes in context.";
+
+"Cuida tus proyectos" = "Look after your projects";
+
+"Consulta qué se puede reconstruir." = "Ask what can be rebuilt.";
+
+"Revisa antes de limpiar" = "Review before cleaning";
+
+"Las reglas verificadas siguen a la vista." = "Verified rules stay in view.";
+
+"IA local opcional" = "Optional local AI";
+
+"Una descarga. Sin suscripción." = "One download. No subscription.";
+
+"Tu análisis" = "Your scan";
+
+"Las recomendaciones aparecerán después del análisis." = "Recommendations will appear after a scan.";
+
+"%@ elementos" = "%@ items";
+
+"Revisión manual" = "Manual review";
+
+"Comprobando cambios…" = "Checking for changes…";
+"Actualizando cambios…" = "Updating changes…";
+"Guardado: %@" = "Saved: %@";
+"Medido: %@" = "Measured: %@";
+"Recuperando análisis…" = "Restoring analysis…";
+"Análisis guardado" = "Saved analysis";
+"Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar." = "Results from the last session. Scan again to check for changes before cleaning.";
 
 "Ajustes y seguridad" = "Settings and safety";
 "Personaliza Kaze y consulta cómo protege tus archivos." = "Customize Kaze and see how it protects your files.";

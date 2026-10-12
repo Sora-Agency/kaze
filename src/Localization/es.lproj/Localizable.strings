@@ -550,13 +550,53 @@
 "Finder aún no confirmó el traslado. Revisa la Papelera; el resultado queda pendiente de verificar." = "Finder aún no confirmó el traslado. Revisa la Papelera; el resultado queda pendiente de verificar.";
 "Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder." = "Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder.";
 
-"Comprobando cambios…" = "Comprobando cambios…";
-"Actualizando cambios…" = "Actualizando cambios…";
-"Guardado: %@" = "Guardado: %@";
-"Medido: %@" = "Medido: %@";
-"Recuperando análisis…" = "Recuperando análisis…";
-"Análisis guardado" = "Análisis guardado";
-"Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar." = "Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar.";
+"Preguntas sobre tu disco, con una IA que corre en tu Mac." = "Preguntas sobre tu disco, con una IA que corre en tu Mac.";
+
+"IA local, solo si la quieres" = "IA local, solo si la quieres";
+
+"Descarga el motor y el modelo una sola vez. Después puedes consultar sin conexión. Tus preguntas y los datos del análisis se quedan en tu Mac." = "Descarga el motor y el modelo una sola vez. Después puedes consultar sin conexión. Tus preguntas y los datos del análisis se quedan en tu Mac.";
+
+"Opcional" = "Opcional";
+
+"Sin suscripción" = "Sin suscripción";
+
+"Comprobando la IA local…" = "Comprobando la IA local…";
+
+"Descargando y verificando…" = "Descargando y verificando…";
+
+"Descargar IA local" = "Descargar IA local";
+
+"La app no instala la IA automáticamente. El motor se inicia solo al consultar y se cierra al terminar." = "La app no instala la IA automáticamente. El motor se inicia solo al consultar y se cierra al terminar.";
+
+"Smart Scan y sus reglas verificadas siguen disponibles sin descargar la IA." = "Smart Scan y sus reglas verificadas siguen disponibles sin descargar la IA.";
+
+"IA local lista" = "IA local lista";
+
+"Preparando una respuesta en tu Mac…" = "Preparando una respuesta en tu Mac…";
+
+"Respuesta del asistente" = "Respuesta del asistente";
+
+"Recomendaciones verificadas" = "Recomendaciones verificadas";
+
+"La IA puede equivocarse. Revisa las reglas y los resultados medidos antes de limpiar; el asistente no borra archivos." = "La IA puede equivocarse. Revisa las reglas y los resultados medidos antes de limpiar; el asistente no borra archivos.";
+
+"No se pudo verificar la IA local. Vuelve a descargarla." = "No se pudo verificar la IA local. Vuelve a descargarla.";
+
+"No se pudo completar la descarga. Comprueba la conexión e inténtalo otra vez." = "No se pudo completar la descarga. Comprueba la conexión e inténtalo otra vez.";
+
+"La IA local requiere macOS 13.3 o posterior." = "La IA local requiere macOS 13.3 o posterior.";
+
+"Necesitas al menos 1,5 GB libres para descargar y preparar la IA local." = "Necesitas al menos 1,5 GB libres para descargar y preparar la IA local.";
+
+"Descarga la IA local para consultar al asistente." = "Descarga la IA local para consultar al asistente.";
+
+"Operación cancelada. Puedes volver a intentarlo cuando quieras." = "Operación cancelada. Puedes volver a intentarlo cuando quieras.";
+
+"El motor local no pudo generar una respuesta. Puedes seguir revisando Smart Scan." = "El motor local no pudo generar una respuesta. Puedes seguir revisando Smart Scan.";
+
+"La consulta tardó demasiado y se detuvo. Prueba con una pregunta más corta." = "La consulta tardó demasiado y se detuvo. Prueba con una pregunta más corta.";
+
+"El análisis encontró oportunidades de limpieza. Revisa su recuperación y cierra las aplicaciones indicadas antes de continuar. APFS puede conservar espacio; los bytes potenciales no son una promesa de recuperación." = "El análisis encontró oportunidades de limpieza. Revisa su recuperación y cierra las aplicaciones indicadas antes de continuar. APFS puede conservar espacio; los bytes potenciales no son una promesa de recuperación.";
 
 "Firma no verificada" = "Firma no verificada";
 
@@ -573,6 +613,64 @@
 "Resultados del análisis" = "Resultados del análisis";
 
 "No hay resultados en esta categoría." = "No hay resultados en esta categoría.";
+
+"Menos dudas. Más espacio." = "Menos dudas. Más espacio.";
+
+"Tu consulta" = "Tu consulta";
+
+"Solo en tu Mac" = "Solo en tu Mac";
+
+"Entiende tu espacio.\nDecide con calma." = "Entiende tu espacio.\nDecide con calma.";
+
+"Haz una pregunta sobre tu último análisis. Te ayudo a entender los tamaños, las cachés y qué conviene revisar." = "Haz una pregunta sobre tu último análisis. Te ayudo a entender los tamaños, las cachés y qué conviene revisar.";
+
+"Entiende qué ocupa espacio" = "Entiende qué ocupa espacio";
+
+"Revisa dependencias y reconstrucción" = "Revisa dependencias y reconstrucción";
+
+"Abrir Smart Scan" = "Abrir Smart Scan";
+
+"Consulta privada" = "Consulta privada";
+
+"Análisis en curso" = "Análisis en curso";
+
+"Pregunta sobre tu disco…" = "Pregunta sobre tu disco…";
+
+"La IA puede equivocarse. Tú revisas y decides; Kaze no limpia desde el chat." = "La IA puede equivocarse. Tú revisas y decides; Kaze no limpia desde el chat.";
+
+"Una ayuda para decidir mejor" = "Una ayuda para decidir mejor";
+
+"Entiende System Data" = "Entiende System Data";
+
+"Ponle contexto a los tamaños medidos." = "Ponle contexto a los tamaños medidos.";
+
+"Cuida tus proyectos" = "Cuida tus proyectos";
+
+"Consulta qué se puede reconstruir." = "Consulta qué se puede reconstruir.";
+
+"Revisa antes de limpiar" = "Revisa antes de limpiar";
+
+"Las reglas verificadas siguen a la vista." = "Las reglas verificadas siguen a la vista.";
+
+"IA local opcional" = "IA local opcional";
+
+"Una descarga. Sin suscripción." = "Una descarga. Sin suscripción.";
+
+"Tu análisis" = "Tu análisis";
+
+"Las recomendaciones aparecerán después del análisis." = "Las recomendaciones aparecerán después del análisis.";
+
+"%@ elementos" = "%@ elementos";
+
+"Revisión manual" = "Revisión manual";
+
+"Comprobando cambios…" = "Comprobando cambios…";
+"Actualizando cambios…" = "Actualizando cambios…";
+"Guardado: %@" = "Guardado: %@";
+"Medido: %@" = "Medido: %@";
+"Recuperando análisis…" = "Recuperando análisis…";
+"Análisis guardado" = "Análisis guardado";
+"Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar." = "Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar.";
 
 "Ajustes y seguridad" = "Ajustes y seguridad";
 "Personaliza Kaze y consulta cómo protege tus archivos." = "Personaliza Kaze y consulta cómo protege tus archivos.";

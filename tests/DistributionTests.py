@@ -81,6 +81,10 @@ with tempfile.TemporaryDirectory(prefix="kaze-distribution-") as directory:
         assert (app / "Contents/Resources/Sparkle/LICENSE").is_file()
         for name in ("rules-v1.json", "rules-v1.signature"):
             assert (app / "Contents/Resources/Rules" / name).read_bytes() == (project / "src/Rules" / name).read_bytes()
+        for name in ("Qwen-LICENSE.txt", "llama-LICENSE.txt"):
+            assert (app / "Contents/Resources/AI" / name).read_bytes() == (project / "src/AI" / name).read_bytes()
+        assert not list(app.rglob("*.gguf")) and not list(app.rglob("engine.tar.gz"))
+        assert not list(app.rglob("llama-completion"))
         subprocess.run(["xcrun", "swift", str(project / "scripts/verify-rules.swift"), str(project)], check=True)
         assert b"@rpath/Sparkle.framework" in run("otool", "-L", str(app / "Contents/MacOS/Kaze"))
         run("codesign", "--verify", "--deep", "--strict", str(app))

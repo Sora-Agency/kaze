@@ -39,6 +39,8 @@ analysis_sources=(
 run_swift_test AnalysisEngineTests "${analysis_sources[@]}"
 run_swift_test AnalysisRemovalTests "${analysis_sources[@]}"
 run_swift_test AnalysisCacheTests "${analysis_sources[@]}" src/Infrastructure/ExplorerSnapshotBuilder.swift src/Features/Explorer/FileExplorerModel.swift
+run_swift_test LocalAITests "${analysis_sources[@]}" src/Infrastructure/LocalAIService.swift \
+  src/Infrastructure/SpotlightUsage.swift src/Features/SmartScan/SmartScanModel.swift src/Features/Assistant/LocalAssistantModel.swift
 run_swift_test ScheduleTests "${schedule_sources[@]}"
 run_swift_test IdentityTests src/App/AppIdentity.swift
 run_swift_test DiskAccessTests src/Infrastructure/DiskAccessStore.swift

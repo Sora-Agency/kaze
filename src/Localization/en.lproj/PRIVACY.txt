@@ -1,10 +1,18 @@
 KAZE · PRIVACY
-Sora Agency · Version 1.1 · October 12, 2026
+Sora Agency · Version 1.2 · October 12, 2026
 
 LOCAL ANALYSIS
 Kaze uses names, paths, dates, item types and allocated disk space to display the contents of folders you select. It calculates sizes using metadata; the explorer does not open document contents or request iCloud downloads to measure them. Explorer results remain in memory during the session.
 
 Application discovery also reads identifiers and installation metadata to locate related data. Resource views query local Docker and Xcode tools. Cleanup features act on the files and resources described in their controls and confirmations.
+
+DUPLICATES, ASSISTANT AND MONITOR
+Smart Scan shares metadata locally across storage views. Exact duplicate detection reads eligible local file contents in bounded blocks to compute SHA-256 hashes. Explicit photo comparison reads eligible images and creates thumbnails for Apple Vision feature prints entirely on the Mac. Cloud providers, backups and Photos libraries are excluded from duplicate candidates; visual similarities are for review only. Quick Look may read the item you explicitly open. Hashes, thumbnails and feature prints stay in memory for the session and are not sent externally.
+
+Assistant AI is optional. Only choosing Download local AI downloads a llama.cpp engine and Qwen model from GitHub, Hugging Face and their distribution servers; they receive your IP address and standard connection metadata. Kaze checks pinned sizes and SHA-256 before use. It does not install or download AI on launch. Questions and a bounded scan summary are processed entirely on your Mac, without transmitting paths, questions or results. The engine runs only during a query, with no persistent server. AI files remain in ~/Library/Application Support/Kaze/AI until manually removed, including after uninstalling Kaze. Temporary query files are removed when finished; responses stay in session memory. AI can make mistakes and cannot perform cleanup: rules and deletion controls remain independent verifications. The menu bar monitor uses the same app process to read filesystem capacity once per minute. Optional low-space notifications require macOS permission; monitor and alert preferences are stored locally. Disabling the monitor stops its timer.
+
+OPERATION HISTORY
+New cleanup operations record dates, paths or resource identifiers, affected allocation, result, rule version and, when available, the Trash destination and change metadata in ~/Library/Application Support/Kaze/Operations. These local records enable restoration without overwriting existing files and may contain sensitive paths. Moving to Trash does not free space; native irreversible actions cannot be undone. Observed free-space changes may include unrelated macOS activity. History, logs and backups remain until you remove them manually, including after uninstalling Kaze.
 
 NO SORA TELEMETRY
 Kaze includes no analytics, advertising or automatic transmission of files, folder listings, paths or logs to Sora Agency. No Sora account is required. Fonts are bundled and are not downloaded when the app opens.
@@ -20,6 +28,9 @@ This historical folder name is retained for compatibility with earlier versions.
 
 The Instalar.command installer preserves a copy of the app and its previous scheduling configuration under:
 ~/Library/Application Support/Kaze/Backups
+
+ANALYSIS CACHE
+Kaze stores metadata from the last Smart Scan and visited folders locally in ~/Library/Caches/Kaze/Analysis-v1: paths, sizes, dates, file identifiers and duplicate results. This cache contains no file contents and is not transmitted. It is limited to 128 MiB and 32 folders; macOS or the user may remove it and Kaze will measure again. Restored results show their date and do not authorize deletion without a fresh scan. Explorer checks macOS filesystem events and updates changes in the background while its section is visible.
 
 USER CONTROL
 You can stop a scan, change folders and grant or revoke Full Disk Access in System Settings. You can disable tasks in Scheduled Tasks or remove them with the uninstaller. The uninstaller retains logs and backups; you can delete them manually if you wish.
