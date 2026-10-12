@@ -33,7 +33,7 @@ struct Preview {
             : CommandLine.arguments.contains("--scheduled") ? .scheduled
             : CommandLine.arguments.contains("--cleanup") ? .cleanup : .explorer
         let analysisSections: [String: AppSection] = ["--smart": .smart, "--map": .spaceMap, "--duplicates": .duplicates,
-            "--system-data": .systemData, "--development": .resources, "--assistant": .assistant, "--rules": .rules, "--history": .history, "--recovery": .recovery]
+            "--system-data": .systemData, "--development": .resources, "--assistant": .assistant, "--rules": .rules, "--history": .history, "--recovery": .recovery, "--startup": .startup]
         let shownSection = interactive ? AppSection.smart : analysisSections.first { CommandLine.arguments.contains($0.key) }?.value ?? section
         let resources = interactive ? Bundle.main.resourceURL! : URL(fileURLWithPath: fm.currentDirectoryPath).appendingPathComponent("package/Kaze.app/Contents/Resources")
         if CommandLine.arguments.contains("--scheduled") {
@@ -76,8 +76,11 @@ struct Preview {
                                     APFSEntry(name: "Documents", id: 12, parent: 2, kind: "dir", size: 0),
                                     APFSEntry(name: "Photos", id: 13, parent: 2, kind: "dir", size: 0),
                                     APFSEntry(name: "Archive.zip", id: 14, parent: 2, kind: "file", size: 780_000_000),
-                                    APFSEntry(name: "Notes.txt", id: 15, parent: 2, kind: "file", size: 2400)] : nil))
-
+                                    APFSEntry(name: "Notes.txt", id: 15, parent: 2, kind: "file", size: 2400)] : nil),
+                                   startupModel: StartupItemsModel(service: StartupItemsService(home: root), initialItems: [
+                                    StartupItem(name: "Music", path: "/Applications/Music.app", hidden: false, enabled: true),
+                                    StartupItem(name: "Example Notes", path: "/Applications/Example Notes.app", hidden: false, enabled: false),
+                                    StartupItem(name: "Example Calendar", path: "/Applications/Example Calendar.app", hidden: true, enabled: true)]))
         SoraFonts.register(directory: resources.appendingPathComponent("Fonts"))
         var edited = scheduler.tasks.last ?? ScheduledCleanupTask()
         if CommandLine.arguments.contains("--weekly") { edited.configuration.frequency = .weekly }

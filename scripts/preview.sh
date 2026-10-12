@@ -13,7 +13,7 @@ xcrun swiftc -swift-version 5 -I src/Infrastructure/Recovery -D KAZE_PREVIEW -ta
 export KAZE_LOCALIZATION_RESOURCES="$PWD/src/Localization"
 export KAZE_LANGUAGE="${KAZE_LANGUAGE:-es}"
 if [[ "${1:-}" == "--management-only" ]]; then
-  for section in recovery; do
+  for section in recovery startup; do
     "$work_dir/preview" "$preview_dir/Kaze-$section-dark.png" --dark "--$section" --compact
     "$work_dir/preview" "$preview_dir/Kaze-$section-light.png" "--$section" --compact
   done
@@ -48,7 +48,7 @@ done
 
 "$work_dir/preview" "$preview_dir/Kaze-assistant-welcome.png" --dark --assistant --assistant-ready --assistant-empty --compact
 
-for section in recovery; do
+for section in recovery startup; do
   "$work_dir/preview" "$preview_dir/Kaze-$section-dark.png" --dark "--$section" --compact
   "$work_dir/preview" "$preview_dir/Kaze-$section-light.png" "--$section" --compact
 done

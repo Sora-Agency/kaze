@@ -28,6 +28,8 @@ command_sources=(src/Infrastructure/OperationCancellation.swift src/Infrastructu
 recovery_sources=(src/Domain/RecoveryModels.swift src/Infrastructure/Recovery/*.swift "${command_sources[@]}")
 run_swift_test RecoveryTests "${recovery_sources[@]}" "$test_dir/AuthDisk.o"
 run_swift_test RecoveryImageTests "${recovery_sources[@]}" "$test_dir/AuthDisk.o"
+run_swift_test StartupItemsTests "${command_sources[@]}" src/Domain/StartupItem.swift src/Domain/StartupItemsError.swift \
+  src/Infrastructure/MutationLease.swift src/Infrastructure/LoginItemsAutomation.swift src/Infrastructure/StartupItemsService.swift
 if [[ "${1:-}" == "--management-only" ]]; then exit 0; fi
 for test_name in ScannerTests ExplorerModelTests DeletionSafetyTests; do
   run_swift_test "$test_name" "${explorer_sources[@]}"

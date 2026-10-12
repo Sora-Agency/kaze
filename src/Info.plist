@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Kaze uses System Events to manage apps that open when you log in, only when you choose to load or change them.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Kaze</string>
 	<key>CFBundleDevelopmentRegion</key>

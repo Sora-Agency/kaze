@@ -681,11 +681,16 @@
 "Detalles de las reglas de limpieza" = "Cleanup rule details";
 "Información avanzada sobre alcance y recuperación." = "Advanced information about scope and recovery.";
 
-/* Recovery */
+/* Recovery and startup apps */
 "Recuperación" = "Recovery";
+"Apps al inicio" = "Startup apps";
 "Abre el origen primero." = "Open a source first.";
 "Abriendo el origen en modo de solo lectura…" = "Opening the source in read-only mode…";
+"Abrir al iniciar sesión" = "Open at login";
+"Ajustes de macOS" = "macOS settings";
 "Atributo de compresión interno demasiado grande" = "Inline compression attribute is too large";
+"Añadir al inicio" = "Add to startup";
+"Añadir app" = "Add app";
 "Bloque APFS fuera del contenedor" = "APFS block is outside the container";
 "Bloque APFS fuera del contenedor: %@" = "APFS block is outside the container: %@";
 "Bloque comprimido demasiado grande" = "Compressed block is too large";
@@ -693,6 +698,8 @@
 "Bloque LZVN demasiado grande" = "LZVN block is too large";
 "Cabecera de compresión APFS inválida" = "Invalid APFS compression header";
 "Campo fuera de un bloque APFS" = "Field is outside an APFS block";
+"Carga tus apps de inicio. macOS puede pedir permiso para que Kaze controle Eventos del Sistema." = "Load your startup apps. macOS may ask you to allow Kaze to control System Events.";
+"Cargar apps" = "Load apps";
 "Cerrar origen" = "Close source";
 "Ciclo o profundidad excesiva en B-tree" = "Cycle or excessive depth in B-tree";
 "Compresión APFS tipo %@ aún no soportada" = "APFS compression type %@ is not supported yet";
@@ -709,9 +716,11 @@
 "El desplazamiento de la imagen no es válido." = "The image offset is invalid.";
 "El mapa APFS supera el límite de lectura" = "The APFS object map exceeds the read limit";
 "El origen debe ser una partición APFS de un disco externo." = "The source must be an APFS partition on an external disk.";
+"El registro de apps al inicio supera el límite de lectura." = "The startup app record exceeds the read limit.";
 "El sistema no respondió a tiempo. Inténtalo otra vez." = "The system did not respond in time. Try again.";
 "El árbol APFS supera el límite de lectura" = "The APFS tree exceeds the read limit";
 "El índice APFS supera el límite de memoria. Abre una imagen más pequeña." = "The APFS index exceeds the memory limit. Open a smaller image.";
+"Elige cómo empieza tu día." = "Choose how your day begins.";
 "Elige el origen" = "Choose a source";
 "Elige un disco externo o una imagen APFS para empezar." = "Choose an external disk or APFS image to get started.";
 "Elige una partición APFS externa válida." = "Choose a valid external APFS partition.";
@@ -726,24 +735,29 @@
 "Guarda en otro disco" = "Save to another disk";
 "Guarda la recuperación en otro disco físico para proteger el origen." = "Save the recovery to a different physical disk to protect the source.";
 "Guardar recuperación" = "Save recovery";
+"Hay demasiados elementos de inicio para mostrarlos." = "There are too many login items to display.";
+"La aplicación ya no está instalada en esa ubicación." = "The app is no longer installed at that location.";
 "La descompresión produjo %@ de %@ bytes" = "Decompression produced %@ of %@ bytes";
 "La entrada sin datos no tiene un tamaño local completo" = "The dataless entry does not have a complete local size";
 "La entrada sin datos no tiene bloques locales recuperables" = "The dataless entry has no recoverable local blocks";
 "La imagen debe ser un archivo local regular." = "The image must be a regular local file.";
 "La respuesta del sistema supera el límite de lectura." = "The system response exceeds the read limit.";
 "La ruta no es un archivo regular" = "The path is not a regular file";
+"Las apps desactivadas aquí pueden habilitarse de nuevo. Los servicios en segundo plano se administran en Ajustes de macOS." = "Apps disabled here can be enabled again. Manage background services in macOS settings.";
 "Lectura detenida." = "Reading stopped.";
 "Lectura demasiado grande" = "Read request is too large";
 "Longitud de bloque APFS inválida" = "Invalid APFS block length";
 "Los volúmenes cifrados aún no están soportados" = "Encrypted volumes are not supported yet";
 "Los volúmenes sellados aún no están soportados" = "Sealed volumes are not supported yet";
 "No busca archivos borrados, no repara ni formatea. Los volúmenes cifrados, sellados y algunos tipos de compresión no están soportados." = "Does not search for deleted files, repair or format disks. Encrypted and sealed volumes and some compression types are not supported.";
+"No hay apps configuradas para abrirse al iniciar sesión." = "No apps are configured to open at login.";
 "No hay una cabecera APFS en este dispositivo" = "No APFS header on this device";
 "No se autorizó la lectura del origen." = "Reading the source was not authorized.";
 "No se encontraron los bloques de datos de este archivo" = "Could not find this file's data blocks";
 "No se encontró un checkpoint APFS válido" = "No valid APFS checkpoint found";
 "No se encontró un volumen APFS compatible sin cifrar" = "No compatible unencrypted APFS volume found";
 "No se encontró una partición APFS externa. Puedes abrir una imagen." = "No external APFS partition found. You can open an image instead.";
+"No se pudieron actualizar las apps al inicio. Comprueba el permiso de Automatización y vuelve a cargar la lista." = "Could not update startup apps. Check Automation permission and reload the list.";
 "No se pudo comprobar el disco de destino." = "Could not verify the destination disk.";
 "No se pudo leer la información del disco." = "Could not read disk information.";
 "No se pudo reservar memoria" = "Could not allocate memory";
@@ -753,6 +767,7 @@
 "Opciones de imagen" = "Image options";
 "Origen en solo lectura" = "Read-only source";
 "Partición APFS · /dev/rdisk4s2" = "APFS partition · /dev/rdisk4s2";
+"Permite que Kaze controle Eventos del Sistema en Ajustes → Privacidad y seguridad → Automatización." = "Allow Kaze to control System Events in Settings → Privacy & Security → Automation.";
 "Recuperación detenida. Se conservaron los archivos completos." = "Recovery stopped. Completed files were kept.";
 "Recuperación finalizada." = "Recovery finished.";
 "Recuperar selección" = "Recover selection";
@@ -760,6 +775,7 @@
 "Rescata tus archivos. Dale otra oportunidad a tu disco." = "Rescue your files. Give your disk another chance.";
 "Lo importante merece volver." = "Bring back what matters.";
 "Ruta de recuperación inválida." = "Invalid recovery path.";
+"Solo se pueden modificar aplicaciones de inicio." = "Only startup applications can be changed.";
 "Tabla B-tree inválida" = "Invalid B-tree table";
 "Tabla de bloques comprimidos inválida" = "Invalid compressed block table";
 "Tabla de compresión demasiado grande" = "Compression table is too large";
@@ -767,12 +783,15 @@
 "Tamaño de archivo inválido" = "Invalid file size";
 "Tamaño de bloque APFS no soportado: %@" = "Unsupported APFS block size: %@";
 "Tamaño de bloque sin compresión inesperado" = "Unexpected uncompressed block size";
+"Tú decides qué se abre al iniciar sesión." = "You decide what opens when you log in.";
 "Un bloque de datos apunta a una zona vacía" = "A data block points to an empty area";
+"Un inicio más tranquilo para tu Mac." = "A calmer start for your Mac.";
 "Una carpeta nueva y un informe de resultados." = "A new folder and a report of the results.";
 "Marca archivos o carpetas para recuperar." = "Select files or folders to recover.";
 "Usa 0 para una imagen del contenedor; indica el inicio de la partición para una imagen completa." = "Use 0 for a container image; enter the partition offset for a whole-disk image.";
 "Ver archivos e informe" = "View files and report";
 "Volumen" = "Volume";
+"macOS no confirmó el cambio. Vuelve a cargar la lista." = "macOS did not confirm the change. Reload the list.";
 "Área de checkpoints inválida" = "Invalid checkpoint area";
 "%@ · Solo lectura · %@ registros ilegibles" = "%@ · Read only · %@ unreadable records";
 "%@ archivos copiados · %@" = "%@ files copied · %@";
@@ -781,3 +800,4 @@
 "Entrada B-tree fuera del bloque" = "B-tree entry is outside the block";
 "Abrir imagen" = "Open image";
 "Abrir origen" = "Open source";
+"Activada" = "Enabled";
