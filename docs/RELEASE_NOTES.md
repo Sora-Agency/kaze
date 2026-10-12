@@ -1,3 +1,60 @@
+# Kaze 1.2.5
+
+- Smoothly fade and collapse Smart Scan headings and category cards while keeping the three summary cards visible. Respect Reduce Motion and avoid viewport-driven collapse/expand loops.
+- Use Kaze's turquoise accent throughout the optional AI assistant, including icons, focus borders and download progress.
+- Replace the technical Rules and safety landing page with Settings and safety: menu bar preferences and cleanup protection first, signed rules and per-rule details collapsed by default.
+
+# Kaze 1.2.4
+
+- Restore the last Smart Scan, Space Map, duplicate results and measured recommendations across app sessions without rescanning or rehashing at launch.
+- Persist Explorer folder measurements, show the measurement date and refresh changed branches in the background using macOS filesystem events.
+- Reuse Smart Scan on the first Explorer entry; retain visible rows when updating or stopping a scan.
+- Bound private metadata caches and fall back to full scans for missing history, changed volumes, incomplete results or cross-folder hard links.
+- Restored analysis clears selections and requires a fresh scan before cleaning; existing live deletion checks remain in place.
+
+# Kaze 1.2.3
+
+- Redesigned local assistant with a focused question/answer view, a fixed composer and measured scan context alongside verified recommendations.
+- Recommendations are grouped by rule, with counts and expandable recovery instructions instead of repeated cards for every matching project.
+- Smart Scan keeps its three summary cards visible and compact when scrolling, hides category cards until returning to the top, and gives more room to readable result rows.
+- Analysis status stays visible; full APFS, partial-scan and rule-verification details remain available in a popover.
+- Optional AI installation and existing scan, selection and cleanup safeguards are preserved.
+
+# Kaze 1.2.2
+
+- Aligned Smart Scan category cards and scan progress controls, with subtle category colors.
+- New brain icon and optional local AI assistant: one button downloads a pinned llama.cpp engine and Qwen3 0.6B model (about 650 MB).
+- No automatic AI installation, model downloads on launch, or persistent AI service. Availability checks and integrity verification run off the main thread.
+- Cancellable downloads and queries, verified SHA-256 assets, measured scan context and verified recommendations alongside AI answers.
+- Local AI requires macOS 13.3+; all existing disk features remain available on macOS 13+ without AI.
+
+# Kaze 1.2.1
+
+Fix an unresponsive window at startup caused by the menu bar monitor writing its
+existing insertion state back to preferences on every scene update. Ignore
+unchanged insertion values so the native interface settles after launch.
+
+Validated native startup with the monitor enabled/disabled and light/dark appearance.
+
+# Kaze 1.2.0
+
+Storage intelligence for Kaze, with a shared scan index and a reorganized sidebar.
+
+- Smart Scan groups safe cleanup, review items, apps, exact duplicates and development resources.
+- Interactive Space Map with folder zoom, Quick Look, Finder and Explorer navigation.
+- Streaming SHA-256 duplicate checks and explicit local Apple Vision photo comparison.
+- Verifiable app-data attribution, shared dependency review and helper-process checks.
+- Operation history and restoration from Trash without overwriting existing files.
+- System Data explanations, local snapshot inventory and logical/allocated/recoverable distinctions.
+- Developer inventories for Node, pnpm/npm, Gradle, CocoaPods, Python, simulators, Docker and local AI models.
+- Same-process menu bar monitor with optional low-space notifications.
+- Bundled versioned Ed25519-signed rules and a deterministic local assistant.
+- English/Spanish UI, explicit scans, cancellable comparisons and bounded map detail.
+
+APFS clones and snapshots may retain blocks; recovery is a potential range.
+Visual similarities, shared app data, project dependencies and model stores require review.
+Trash operations can be restored while intact; cache clearing and Docker/simctl deletion have no undo.
+
 # Kaze 1.1.0
 
 Kaze now checks for new versions and lets you download, install and relaunch from its update window.
