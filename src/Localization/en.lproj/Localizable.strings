@@ -557,3 +557,28 @@
 "Recuperando análisis…" = "Restoring analysis…";
 "Análisis guardado" = "Saved analysis";
 "Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar." = "Results from the last session. Scan again to check for changes before cleaning.";
+
+"Firma no verificada" = "Unverified signature";
+
+"Vuelve a analizar" = "Scan again";
+
+"Análisis parcial" = "Partial scan";
+
+"Revisa el análisis" = "Review the scan";
+
+"Análisis disponible" = "Scan available";
+
+"Detalles del análisis" = "Scan details";
+
+"Resultados del análisis" = "Scan results";
+
+"No hay resultados en esta categoría." = "There are no results in this category.";
+
+"Ajustes y seguridad" = "Settings and safety";
+"Personaliza Kaze y consulta cómo protege tus archivos." = "Customize Kaze and see how it protects your files.";
+"Barra de menús y alertas" = "Menu bar and alerts";
+"Muestra el espacio disponible y accesos rápidos en la barra de menús." = "Show available space and quick actions in the menu bar.";
+"Protección de limpieza activa" = "Cleanup protection active";
+"Kaze verifica qué puede limpiar y vuelve a comprobar los archivos antes de borrarlos." = "Kaze verifies what it can clean and checks files again before removing them.";
+"Detalles de las reglas de limpieza" = "Cleanup rule details";
+"Información avanzada sobre alcance y recuperación." = "Advanced information about scope and recovery.";

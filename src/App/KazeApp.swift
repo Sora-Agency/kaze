@@ -10,14 +10,17 @@ extension Notification.Name {
 struct KazeApp: App {
     @StateObject private var language = AppLanguageStore.shared
     @StateObject private var updater = AppUpdater.shared
+    @StateObject private var monitor = StorageMonitor.shared
+    @AppStorage("kaze.monitor.enabled") private var monitorEnabled = true
     init() {
         OperationCLI.runIfRequested()
         AppIdentity.migratePreferences()
     }
     var body: some Scene {
-        WindowGroup("Kaze · Sora") {
+        WindowGroup("Kaze · Sora", id: "main") {
             ContentView().environment(\.locale, language.locale)
-                .onAppear { updater.start() }
+                .onAppear { updater.start(); monitor.setEnabled(monitorEnabled) }
+                .onChange(of: monitorEnabled) { monitor.setEnabled($0) }
         }
         .windowStyle(.titleBar)
         .commands {
@@ -28,6 +31,7 @@ struct KazeApp: App {
                 }
             }
             CommandGroup(after: .appInfo) {
+                Toggle(L10n.text("Monitor ligero en la barra de menús"), isOn: $monitorEnabled)
                 Button(L10n.text("Buscar actualizaciones…")) { updater.checkForUpdates() }
                     .disabled(!updater.canCheckForUpdates)
                 Toggle(L10n.text("Buscar actualizaciones automáticamente"), isOn: Binding(
@@ -41,6 +45,17 @@ struct KazeApp: App {
                     NotificationCenter.default.post(name: .showKazeLegal, object: nil)
                 }
             }
+        }
+        // AppKit can echo the current insertion state during scene updates.
+        // Writing it back to AppStorage would invalidate both scenes again.
+        MenuBarExtra(isInserted: Binding(
+            get: { monitorEnabled },
+            set: { if monitorEnabled != $0 { monitorEnabled = $0 } }
+        )) {
+            MonitorMenu(monitor: monitor)
+        } label: {
+            Label(monitor.measured == nil ? "Kaze" : "Kaze " + formatDiskBytes(monitor.free),
+                  systemImage: monitor.low ? "externaldrive.badge.exclamationmark" : "externaldrive")
         }
     }
 }
