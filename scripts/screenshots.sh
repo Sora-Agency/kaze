@@ -6,9 +6,10 @@ output_dir="$PWD/docs/images"
 mkdir -p "$output_dir"
 work_dir="$(mktemp -d -t kaze-screenshots)"
 trap 'rm -rf -- "$work_dir"' EXIT
+xcrun clang -target "$(uname -m)-apple-macosx13.0" -O2 -Wall -Wextra -c src/Infrastructure/Recovery/AuthDisk.c -o "$work_dir/AuthDisk.o"
 sources=(src/**/*.swift)
-xcrun swiftc -swift-version 5 -D KAZE_PREVIEW -target "$(uname -m)-apple-macosx13.0" \
-  "${sources[@]}" tests/Preview.swift tests/PreviewFixtures.swift -o "$work_dir/preview"
+xcrun swiftc -swift-version 5 -I src/Infrastructure/Recovery -D KAZE_PREVIEW -target "$(uname -m)-apple-macosx13.0" \
+  "${sources[@]}" "$work_dir/AuthDisk.o" tests/Preview.swift tests/PreviewFixtures.swift -o "$work_dir/preview"
 export KAZE_LOCALIZATION_RESOURCES="$PWD/src/Localization"
 for language in es en; do
   export KAZE_LANGUAGE="$language"

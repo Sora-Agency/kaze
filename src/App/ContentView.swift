@@ -3,10 +3,13 @@ import AppKit
 
 enum AppSection: String, CaseIterable, Identifiable {
     case smart = "Kaze Smart Scan", spaceMap = "Kaze Space Map", duplicates = "Duplicados", systemData = "System Data", history = "Historial", assistant = "Asistente local", rules = "Ajustes y seguridad"
+    case recovery = "Recuperación", startup = "Apps al inicio"
     case explorer = "Explorador", cleanup = "Limpieza", applications = "Aplicaciones", resources = "Desarrollo", logs = "Actividad", scheduled = "Tareas programadas", legal = "Términos y licencia"
     var id: String { rawValue }
     var icon: String {
         switch self {
+        case .recovery: return "hard-drive"
+        case .startup: return "play"
         case .smart: return "sparkles"
         case .spaceMap: return "layout-grid"
         case .duplicates: return "file"
@@ -32,6 +35,8 @@ struct ContentView: View {
     @StateObject private var scheduler: ScheduledTaskModel
     @StateObject private var analysis: SmartScanModel
     @StateObject private var assistant: LocalAssistantModel
+    @StateObject private var recovery: RecoveryModel
+    @StateObject private var startup: StartupItemsModel
     @StateObject private var diskAccess: DiskAccessStore
     @ViewState private var section: AppSection = .smart
     @AppStorage("kaze.appearance") private var appearance: AppAppearance = .dark
@@ -44,7 +49,7 @@ struct ContentView: View {
     init(model: CleanerModel? = nil, explorer: FileExplorerModel? = nil, scheduler: ScheduledTaskModel? = nil,
          previewAppearance: AppAppearance? = nil, initialSection: AppSection = .smart,
          resourceDirectory: URL? = nil, homeURL: URL = FileManager.default.homeDirectoryForCurrentUser,
-         languageStore: AppLanguageStore = .shared, diskAccessStore: DiskAccessStore? = nil, analysisModel: SmartScanModel? = nil, assistantModel: LocalAssistantModel? = nil) {
+         languageStore: AppLanguageStore = .shared, diskAccessStore: DiskAccessStore? = nil, analysisModel: SmartScanModel? = nil, assistantModel: LocalAssistantModel? = nil, recoveryModel: RecoveryModel? = nil, startupModel: StartupItemsModel? = nil) {
         language = languageStore
         self.homeURL = homeURL
         SoraFonts.register(directory: resourceDirectory?.appendingPathComponent("Fonts"))
@@ -53,6 +58,8 @@ struct ContentView: View {
         _scheduler = StateObject(wrappedValue: scheduler ?? ScheduledTaskModel.shared)
         _analysis = StateObject(wrappedValue: analysisModel ?? SmartScanModel(home: homeURL, resources: resourceDirectory ?? Bundle.main.resourceURL))
         _assistant = StateObject(wrappedValue: assistantModel ?? LocalAssistantModel(service: LocalAIService(home: homeURL)))
+        _recovery = StateObject(wrappedValue: recoveryModel ?? RecoveryModel())
+        _startup = StateObject(wrappedValue: startupModel ?? StartupItemsModel(service: StartupItemsService(home: homeURL)))
         _diskAccess = StateObject(wrappedValue: diskAccessStore ?? DiskAccessStore())
         _section = ViewState(initialValue: initialSection)
         self.previewAppearance = previewAppearance
@@ -68,6 +75,8 @@ struct ContentView: View {
                 SoraDivider()
                 Group {
                     switch section {
+                    case .recovery: RecoveryView(model: recovery)
+                    case .startup: StartupItemsView(model: startup)
                     case .smart: SmartScanView(model: analysis) { section = $0 }
                     case .spaceMap: SpaceMapView(model: analysis) { url in section = .explorer; explorer.open(url) }
                     case .duplicates: DuplicatesView(model: analysis)
@@ -135,7 +144,7 @@ struct ContentView: View {
                     sectionLabel(L10n.text("LIMPIAR")).padding(.top, 12)
                     ForEach([AppSection.cleanup, .applications, .resources]) { navButton($0) }
                     sectionLabel(L10n.text("GESTIONAR")).padding(.top, 12)
-                    ForEach([AppSection.history, .assistant, .scheduled, .rules, .logs, .legal]) { navButton($0) }
+                    ForEach([AppSection.recovery, .startup, .history, .assistant, .scheduled, .rules, .logs, .legal]) { navButton($0) }
                 }.padding(.horizontal, 16)
             }
             Spacer(minLength: 12)

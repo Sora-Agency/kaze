@@ -1,3 +1,37 @@
+# Kaze 1.3.0
+
+Kaze adds two tools under Manage: read-only APFS recovery and reversible startup app management.
+
+- Recover readable files and folders from an external APFS partition or an uncompressed raw image, using the reader adapted from LibreRescateNativo.
+- Browse compatible volumes, choose what to copy and save to a new private folder with a recovery report. Physical disk recovery requires a destination on a different disk; existing files are never overwritten.
+- Stop recovery while keeping completed files. Unsupported entries and unreadable records are reported. The source is never repaired, formatted or written to.
+- Add, disable and re-enable login apps through macOS System Events. Kaze retains disabled app references and hidden preferences locally, and verifies each change with macOS.
+- Open native macOS settings to manage background services and app-managed helpers. Loading login apps may require Automation permission; no disk inventory or Automation request runs at launch.
+- Keep recovery, startup state and shared command execution separate, with bounded parser caches, background work and cancellable operations. Build dependencies no longer retain Sparkle's demo app or debug symbols.
+- English and Spanish interface, documentation, privacy notices and recovery licensing are included.
+
+Requires macOS 13 or later. Choose the Apple Silicon or Intel installer.
+Recovery supports readable files on unencrypted, unsealed APFS volumes; deleted files, compressed DMGs, some compression types and full metadata restoration are not supported. Damaged hardware may prevent complete recovery.
+Update packages and feeds are signed with Sparkle. The app is ad hoc signed and is not notarized by Apple.
+
+## Español
+
+Kaze incorpora dos herramientas en Gestionar: recuperación APFS en solo lectura y gestión reversible de apps al inicio.
+
+- Recupera archivos y carpetas legibles de una partición APFS externa o una imagen sin comprimir, con el lector adaptado de LibreRescateNativo.
+- Explora los volúmenes compatibles, selecciona qué copiar y guarda en una carpeta privada nueva con un informe. Para recuperar un disco físico, el destino debe estar en otro disco; nunca se sobrescriben archivos existentes.
+- Detén la recuperación conservando los archivos completos. Las entradas no compatibles y los registros ilegibles quedan en el informe. El origen no se repara, formatea ni modifica.
+- Añade, desactiva y vuelve a activar apps de inicio mediante Eventos del Sistema. Kaze conserva sus referencias y la preferencia de apertura oculta, y comprueba cada cambio con macOS.
+- Accede a Ajustes de macOS para administrar servicios en segundo plano y helpers de las apps. La carga de apps puede requerir permiso de Automatización; no se detectan discos ni se pide ese permiso al abrir Kaze.
+- Componentes separados para recuperación, inicio y ejecución de comandos, con límites de memoria, trabajo en segundo plano y cancelación. Las dependencias de compilación ya no conservan la app de ejemplo ni los símbolos de depuración de Sparkle.
+- Interfaz, documentación, privacidad y avisos de licencia en inglés y español.
+
+Requiere macOS 13 o posterior. Elige el instalador para Apple Silicon o Intel.
+La recuperación admite archivos legibles en volúmenes APFS sin cifrar ni sellar; no recupera archivos borrados ni admite DMG comprimidos, algunos tipos de compresión o la restauración completa de metadatos. Los daños del disco pueden impedir una recuperación completa.
+Los paquetes de actualización y feeds están firmados con Sparkle. La app tiene firma ad hoc y no está notarizada por Apple.
+
+---
+
 # Kaze 1.2.6
 
 Kaze now brings Smart Scan, Space Map, duplicate detection and cleanup history together, with saved analyses and an optional private AI assistant.

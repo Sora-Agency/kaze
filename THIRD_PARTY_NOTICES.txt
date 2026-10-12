@@ -41,3 +41,8 @@ llama.cpp b10566, MIT License; optional official macOS arm64/x64 archive.
 Source: https://github.com/ggml-org/llama.cpp/releases/tag/b10566
 License: AI/llama-LICENSE.txt; the downloaded archive includes its own notices.
 These components are downloaded only when the user chooses Download local AI.
+
+LibreRescateNativo (MIT)
+Copyright (c) 2026 LibreRescate contributors.
+APFS read-only reader and native authorization adapter adapted into Kaze.
+License: Recovery/LibreRescate-LICENSE.txt. No original standalone binary is bundled.

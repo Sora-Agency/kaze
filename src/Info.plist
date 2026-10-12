@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Kaze uses System Events to manage apps that open when you log in, only when you choose to load or change them.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Kaze</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -21,9 +23,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.6</string>
+	<string>1.3.0</string>
 	<key>CFBundleVersion</key>
-	<string>23</string>
+	<string>24</string>
 	<key>SUFeedURL</key>
 	<string>https://github.com/Sora-Agency/kaze/releases/latest/download/appcast-arm64.xml</string>
 	<key>SUPublicEDKey</key>
