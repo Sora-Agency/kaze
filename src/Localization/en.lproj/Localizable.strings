@@ -319,13 +319,13 @@
 "ANALIZAR" = "ANALYZE";
 "Abrir en Explorador" = "Open in Explorer";
 "Actualizar medición" = "Refresh measurement";
-"Afectado: %@ · liberado confirmado: %@" = "Affected: %@ · confirmed freed: %@";
+"Afectado: %@ · liberado confirmado: %@" = "Affected size: %@ · confirmed space freed: %@";
 "Almacén compartido: puede contener enlaces usados por varios proyectos." = "Shared store: may contain links used by several projects.";
 "Almacén pnpm" = "pnpm store";
 "Analiza el Mac o una carpeta para buscar duplicados exactos." = "Scan your Mac or a folder to find exact duplicates.";
 "Analiza una carpeta para dibujar su mapa de espacio." = "Scan a folder to draw its space map.";
 "Analizar Mac" = "Scan Mac";
-"Análisis cancelado; los resultados anteriores se conservan." = "Scan cancelled; previous results are preserved.";
+"Análisis cancelado; los resultados anteriores se conservan." = "Scan canceled; previous results are preserved.";
 "Análisis del %@" = "Scan from %@";
 "Análisis parcial: hay rutas protegidas, inaccesibles o fuera del límite. No se cuentan como espacio recuperable." = "Partial scan: some paths are protected, inaccessible or outside the scope. They are not counted as recoverable space.";
 "Aplicaciones que estén modificando las copias" = "Applications modifying the copies";
@@ -372,7 +372,7 @@
 "Dependencias del proyecto con manifiesto package.json; revisar scripts y cambios locales." = "Project dependencies with a package.json manifest; review scripts and local changes.";
 "Dependencias descargables de CocoaPods." = "Downloadable CocoaPods dependencies.";
 "Dependencias y resultados de compilación descargables." = "Downloadable dependencies and build results.";
-"Dependencias, cachés y modelos locales, con su coste de reconstrucción." = "Dependencies, caches and local models, with their rebuilding cost.";
+"Dependencias, cachés y modelos locales, con su coste de reconstrucción." = "Dependencies, caches and local models, with the cost of rebuilding or downloading them.";
 "Depuración de pnpm" = "pnpm pruning";
 "Detén el contenedor antes de eliminarlo" = "Stop the container before removing it";
 "Developer Mode" = "Developer Mode";
@@ -384,7 +384,7 @@
 "Docker libera cachés de builds de más de siete días." = "Docker releases build caches older than seven days.";
 "Docker y simuladores" = "Docker and simulators";
 "Duplicados" = "Duplicates";
-"Ejecutar pod install; necesita conexión." = "Run pod install; requires a connection.";
+"Ejecutar pod install; necesita conexión." = "Run pod install; requires an internet connection.";
 "Ejecutar pod install; se pierden modificaciones locales." = "Run pod install; local modifications will be lost.";
 "Ejecutar swift build; recompilación y posibles descargas." = "Run swift build; recompilation and possible downloads.";
 "El disco cambió desde este análisis. Vuelve a analizar antes de limpiar." = "The disk changed since this scan. Scan again before cleaning.";
@@ -409,8 +409,8 @@
 "Gradle reconstruirá su estado local." = "Gradle will rebuild its local state.";
 "Gradle reconstruye y descarga dependencias; coste alto." = "Gradle rebuilds and downloads dependencies; high cost.";
 "Grupo declarado en la firma: %@" = "Group declared in the signature: %@";
-"Hashes exhaustivos" = "Exhaustive hashes";
-"Hashes para copias exactas. Vision para similitudes que debes revisar." = "Hashes for exact copies. Vision for similarities to review.";
+"Hashes exhaustivos" = "Full duplicate comparison";
+"Hashes para copias exactas. Vision para similitudes que debes revisar." = "Find exact duplicates with hashes and similar photos with Vision. Review before deleting.";
 "Historial" = "History";
 "Historial y deshacer" = "History and undo";
 "Homebrew identifica descargas y versiones antiguas." = "Homebrew identifies downloads and old versions.";
@@ -433,7 +433,7 @@
 "Logs" = "Logs";
 "Los gestiona macOS y Time Machine. No se borran automáticamente ni se promete recuperar su tamaño completo." = "Managed by macOS and Time Machine. They are not removed automatically, and their full size is not promised as recoverable.";
 "Los snapshots no tienen un tamaño exclusivo fiable en este inventario. Revisa System Data antes de atribuir todo el espacio a cachés." = "Snapshots have no reliable exclusive size in this inventory. Review System Data before attributing all space to caches.";
-"Los tamaños incluyen todos los metadatos accesibles. El mapa conserva hasta 250.000 detalles; abre una carpeta en el Explorador para ver los restantes." = "Sizes include all accessible metadata. The map keeps up to 250,000 details; open a folder in Explorer to see the rest.";
+"Los tamaños incluyen todos los metadatos accesibles. El mapa conserva hasta 250.000 detalles; abre una carpeta en el Explorador para ver los restantes." = "Sizes are calculated from all accessible metadata. The map shows up to 250,000 items; open a folder in Explorer to see the rest.";
 "Lógico: %@" = "Logical: %@";
 "Mac" = "Mac";
 "Modelos Hugging Face" = "Hugging Face models";
@@ -457,32 +457,32 @@
 "No verificable" = "Not verifiable";
 "Operación terminada; revisa Historial" = "Operation finished; review History";
 "Otros datos del sistema" = "Other system data";
-"Papelera reversible" = "Reversible Trash";
+"Papelera reversible" = "Move to Trash with undo";
 "Papelera: el espacio se libera cuando se vacía y APFS deja de conservarlo." = "Trash: space is freed when emptied and no longer retained by APFS.";
 "Paquetes descargados por pip, sin entornos virtuales." = "Packages downloaded by pip, excluding virtual environments.";
 "Paquetes descargados y ejecuciones temporales; no contiene proyectos." = "Downloaded packages and temporary runs; excludes projects.";
 "Pendiente de verificar" = "Awaiting verification";
-"Poco espacio disponible" = "Low available space";
+"Poco espacio disponible" = "Low disk space";
 "Preferencia ByHost: %@" = "ByHost preference: %@";
 "Primero ejecuta Smart Scan para obtener recomendaciones sobre tu disco." = "Run Smart Scan first to get recommendations for your disk.";
 "Procesos de la aplicación afectada" = "Affected application processes";
 "Proyectos y herramientas" = "Projects and tools";
 "Puede requerir nuevas descargas; las versiones antiguas se pierden." = "May require new downloads; old versions will be lost.";
 "Quick Look" = "Quick Look";
-"Qué hay detrás de los datos del sistema." = "What is behind system data.";
+"Qué hay detrás de los datos del sistema." = "See what makes up System Data.";
 "Raíces analizadas" = "Scanned roots";
 "Recomendaciones explicables, basadas en tu último análisis." = "Explainable recommendations based on your latest scan.";
 "Reconstruir el proyecto en Xcode; puede tardar varios minutos." = "Rebuild the project in Xcode; may take several minutes.";
 "Reconstruir imágenes; puede necesitar red y tiempo." = "Rebuild images; may require a network connection and time.";
 "Reconstruir o descargar las imágenes." = "Rebuild or download the images.";
 "Recrear con los requisitos del proyecto después de revisarlos." = "Recreate using the project requirements after reviewing them.";
-"Recuperación potencial" = "Potential recovery";
-"Recuperación potencial tras vaciar la Papelera: APFS puede conservar clones y snapshots. El tamaño lógico no equivale a espacio liberado." = "Potential recovery after emptying Trash: APFS may retain clones and snapshots. Logical size is not freed space.";
-"Recurso administrado: sin deshacer; tamaño liberado no verificable por archivo." = "Managed resource: no undo; freed size cannot be verified per file.";
+"Recuperación potencial" = "Potential space savings";
+"Recuperación potencial tras vaciar la Papelera: APFS puede conservar clones y snapshots. El tamaño lógico no equivale a espacio liberado." = "Potential space savings after emptying the Trash: APFS may retain clones and snapshots. Logical size does not equal space freed.";
+"Recurso administrado: sin deshacer; tamaño liberado no verificable por archivo." = "Managed resource: no undo; space freed cannot be verified per file.";
 "Recursos Docker seleccionados" = "Selected Docker resources";
 "Recursos de desarrollo" = "Development resources";
 "Reglas y seguridad" = "Rules and safety";
-"Reinstalar con el gestor del proyecto; se pierden modificaciones locales." = "Reinstall with the project manager; local modifications will be lost.";
+"Reinstalar con el gestor del proyecto; se pierden modificaciones locales." = "Reinstall with the project’s package manager; local modifications will be lost.";
 "Respaldos iOS" = "iOS backups";
 "Restaurado" = "Restored";
 "Restaurado en su ubicación original." = "Restored to its original location.";
@@ -493,7 +493,7 @@
 "Resultados de compilación que Xcode puede reconstruir." = "Build results that Xcode can rebuild.";
 "Revisar en Smart Scan" = "Review in Smart Scan";
 "Revisar selección" = "Review selection";
-"Revisión manual: conserva cambios locales y verifica la receta de reconstrucción." = "Manual review: preserve local changes and verify the rebuilding recipe.";
+"Revisión manual: conserva cambios locales y verifica la receta de reconstrucción." = "Manual review: preserve local changes and check how to rebuild.";
 "Salir de Kaze" = "Quit Kaze";
 "Se comprobarán otra vez los archivos y los procesos activos. Los elementos que hayan cambiado o estén en uso se conservarán. Podrás restaurarlos desde Historial." = "Files and active processes will be checked again. Items that changed or are in use will be preserved. You can restore them from History.";
 "Se moverán las apps y los datos atribuibles de forma verificable. Los grupos compartidos, LaunchAgents y coincidencias por nombre se conservarán para revisión. La Papelera no se vacía y puedes restaurar desde Historial." = "Apps and data with verifiable attribution will be moved. Shared groups, LaunchAgents and name matches are preserved for review. Trash is not emptied, and you can restore from History.";
@@ -503,8 +503,8 @@
 "Simuladores" = "Simulators";
 "Simuladores no disponibles" = "Unavailable simulators";
 "Sin deshacer; reinstalar runtimes o recrear dispositivos, cuyos datos se pierden." = "No undo; reinstall runtimes or recreate devices, whose data will be lost.";
-"Sin deshacer; respaldar volúmenes y conservar recetas de reconstrucción." = "No undo; back up volumes and preserve rebuilding recipes.";
-"Sin prometer bytes retenidos por APFS" = "No promise of bytes retained by APFS";
+"Sin deshacer; respaldar volúmenes y conservar recetas de reconstrucción." = "No undo; back up volumes and keep the instructions needed to rebuild.";
+"Sin prometer bytes retenidos por APFS" = "APFS may retain some of this space";
 "Sin recuperación automática" = "No automatic recovery";
 "Snapshots locales" = "Local snapshots";
 "Snapshots no consultados en el análisis de una carpeta" = "Snapshots not queried in a folder scan";
@@ -521,7 +521,7 @@
 "Usar pnpm store prune después de revisar sus dependencias." = "Use pnpm store prune after reviewing dependencies.";
 "Ver System Data" = "View System Data";
 "Visualmente similares · revisar" = "Visually similar · review";
-"Volver a descargar con Ollama; puede costar muchos GB." = "Download again with Ollama; may cost many GB.";
+"Volver a descargar con Ollama; puede costar muchos GB." = "Download again with Ollama; may require several GB of downloads.";
 "Volver a descargar los modelos y datasets necesarios." = "Download the required models and datasets again.";
 "macOS no publica el desglose exacto de su categoría System Data. Este inventario explica las ubicaciones conocidas; los snapshots comparten bloques APFS y no se suman a los archivos." = "macOS does not publish the exact breakdown of System Data. This inventory explains known locations; snapshots share APFS blocks and are not added to files.";
 "npm vuelve a descargar paquetes; necesita conexión." = "npm downloads packages again; requires a connection.";
@@ -536,7 +536,7 @@
 
 "Mostrar más copias" = "Show more copies";
 "Recuperable: 0 – %@" = "Recoverable: 0 – %@";
-"Hashes exhaustivos sobre los candidatos conservados; sin límite de bytes ni tiempo. Vision: %@ fotos comparadas." = "Exhaustive hashes for retained candidates; no byte or time limit. Vision: %@ photos compared.";
+"Hashes exhaustivos sobre los candidatos conservados; sin límite de bytes ni tiempo. Vision: %@ fotos comparadas." = "Full hash comparison of retained candidates; no byte or time limit. Vision: %@ photos compared.";
 "Notificar si quedan menos de 20 GB libres" = "Notify if less than 20 GB are free";
 "Las alertas son opcionales y requieren permiso de macOS. Como máximo se envía una cada seis horas." = "Alerts are optional and require macOS permission. At most one is sent every six hours.";
 "Quedan %@. Abre Kaze Smart Scan para revisar oportunidades de limpieza." = "%@ remaining. Open Kaze Smart Scan to review cleanup opportunities.";
@@ -550,7 +550,7 @@
 "Finder aún no confirmó el traslado. Revisa la Papelera; el resultado queda pendiente de verificar." = "Finder has not confirmed the move yet. Check Trash; the outcome awaits verification.";
 "Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder." = "Trash: capacity not verifiable or moved across volumes; may require manual restoration in Finder.";
 
-"Preguntas sobre tu disco, con una IA que corre en tu Mac." = "Questions about your disk, with AI running on your Mac.";
+"Preguntas sobre tu disco, con una IA que corre en tu Mac." = "Ask about your storage with AI that runs on your Mac.";
 
 "IA local, solo si la quieres" = "Local AI, only if you want it";
 
@@ -596,7 +596,7 @@
 
 "La consulta tardó demasiado y se detuvo. Prueba con una pregunta más corta." = "The query took too long and was stopped. Try a shorter question.";
 
-"El análisis encontró oportunidades de limpieza. Revisa su recuperación y cierra las aplicaciones indicadas antes de continuar. APFS puede conservar espacio; los bytes potenciales no son una promesa de recuperación." = "The scan found cleanup opportunities. Review recovery steps and close the listed apps before continuing. APFS may retain space; potential bytes are not a promise of recovery.";
+"El análisis encontró oportunidades de limpieza. Revisa su recuperación y cierra las aplicaciones indicadas antes de continuar. APFS puede conservar espacio; los bytes potenciales no son una promesa de recuperación." = "The scan found cleanup opportunities. Review how to restore or rebuild the data and close the listed apps before continuing. APFS may retain space, so potential savings are not guaranteed.";
 
 "Firma no verificada" = "Unverified signature";
 
@@ -626,17 +626,17 @@
 
 "Entiende qué ocupa espacio" = "Understand what takes up space";
 
-"Revisa dependencias y reconstrucción" = "Review dependencies and rebuilding";
+"Revisa dependencias y reconstrucción" = "Review dependencies and how to rebuild";
 
 "Abrir Smart Scan" = "Open Smart Scan";
 
-"Consulta privada" = "Private question";
+"Consulta privada" = "Private local chat";
 
 "Análisis en curso" = "Scan in progress";
 
 "Pregunta sobre tu disco…" = "Ask about your disk…";
 
-"La IA puede equivocarse. Tú revisas y decides; Kaze no limpia desde el chat." = "AI can make mistakes. You review and decide; Kaze does not clean from chat.";
+"La IA puede equivocarse. Tú revisas y decides; Kaze no limpia desde el chat." = "AI can make mistakes. Review its advice and decide what to do. Kaze does not delete files through the chat.";
 
 "Una ayuda para decidir mejor" = "A little help to make better decisions";
 
@@ -665,7 +665,7 @@
 "Revisión manual" = "Manual review";
 
 "Comprobando cambios…" = "Checking for changes…";
-"Actualizando cambios…" = "Updating changes…";
+"Actualizando cambios…" = "Refreshing changed items…";
 "Guardado: %@" = "Saved: %@";
 "Medido: %@" = "Measured: %@";
 "Recuperando análisis…" = "Restoring analysis…";
