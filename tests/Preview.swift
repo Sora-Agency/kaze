@@ -50,7 +50,8 @@ struct Preview {
         let scheduler = ScheduledTaskModel(service: ScheduleService(home: root, scriptURL: resources.appendingPathComponent("cleaner.zsh"), runner: PreviewLaunchRunner()), inspectSystem: false)
 
         let rootView = ContentView(model: model, explorer: explorer, scheduler: scheduler, previewAppearance: dark ? .dark : .light,
-                                   initialSection: section, resourceDirectory: resources, homeURL: home, languageStore: language)
+                                   initialSection: section, resourceDirectory: resources, homeURL: home, languageStore: language,
+                                   diskAccessStore: DiskAccessStore(initialStatus: CommandLine.arguments.contains("--access-granted") ? .available : .restricted))
         SoraFonts.register(directory: resources.appendingPathComponent("Fonts"))
         var edited = scheduler.tasks.last ?? ScheduledCleanupTask()
         if CommandLine.arguments.contains("--weekly") { edited.configuration.frequency = .weekly }

@@ -260,7 +260,7 @@
 "Sistema" = "Sistema";
 "Sobre la licencia MIT ↗" = "Sobre la licencia MIT ↗";
 "Solo con menos de %@ GiB libres" = "Solo con menos de %@ GiB libres";
-"Sora Agency · Kaze %@ · Documentos del 11 de octubre de 2026" = "Sora Agency · Kaze %@ · Documentos del 11 de octubre de 2026";
+"Sora Agency · Kaze %@ · Documentos del 12 de octubre de 2026" = "Sora Agency · Kaze %@ · Documentos del 12 de octubre de 2026";
 "Sábado" = "Sábado";
 "TIPO" = "TIPO";
 "TU MAC" = "TU MAC";
@@ -303,3 +303,13 @@
 "¿Eliminar permanentemente estos recursos?" = "¿Eliminar permanentemente estos recursos?";
 "¿Mover los datos seleccionados a la Papelera?" = "¿Mover los datos seleccionados a la Papelera?";
 "¿Reiniciar Docker Desktop?" = "¿Reiniciar Docker Desktop?";
+
+/* Software updates */
+"Buscar actualizaciones…" = "Buscar actualizaciones…";
+"Buscar actualizaciones automáticamente" = "Buscar actualizaciones automáticamente";
+"No se pudo iniciar el actualizador" = "No se pudo iniciar el actualizador";
+
+/* Protected folder access */
+"Acceso a carpetas protegidas verificado" = "Acceso a carpetas protegidas verificado";
+"Acceso a carpetas protegidas pendiente" = "Acceso a carpetas protegidas pendiente";
+"Acceso a carpetas protegidas sin verificar" = "Acceso a carpetas protegidas sin verificar";

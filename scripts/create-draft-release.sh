@@ -15,6 +15,7 @@ assets=(
   "$asset_dir/Kaze-Mac-arm64.zip" "$asset_dir/Kaze-Mac-x86_64.zip"
   "$asset_dir/Kaze-Source.zip" "$asset_dir/Kaze-SHA256-arm64.txt"
   "$asset_dir/Kaze-SHA256-x86_64.txt" "$asset_dir/SHA256SUMS"
+  "$asset_dir/appcast-arm64.xml" "$asset_dir/appcast-x86_64.xml"
 )
 for asset in "${assets[@]}" "$notes"; do [[ -s "$asset" ]]; done
 if draft="$(gh release view "$tag" --repo "$GH_REPO" --json isDraft --jq .isDraft 2>/dev/null)"; then

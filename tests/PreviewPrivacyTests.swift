@@ -17,6 +17,9 @@ struct PreviewPrivacyTests {
         }
         check(cleaner.storage.total == 512_000_000_000 && cleaner.storage.free == 164_000_000_000,
               "Public previews use seeded storage instead of host disk statistics")
+        let access = DiskAccessStore(initialStatus: .available)
+        access.refresh()
+        check(access.status == .available, "Preview access indicators preserve fixtures without probing protected host files")
         check(cleaner.applications.isEmpty && cleaner.managedResources.isEmpty,
               "Public previews skip application and resource discovery")
         RunLoop.main.run(until: Date().addingTimeInterval(1.1))

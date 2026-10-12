@@ -68,7 +68,7 @@ and be uninstalled. New code must use AppIdentity for product identification.
 
 Lucide geometry is compiled into SwiftUI Path code, rendered as vectors with
 consistent 2/24 strokes. `scripts/vendor-lucide.py` updates the pinned subset;
-normal builds and runtime need no network. Motion is scoped to interactions,
+icons need no network at build time or runtime. Motion is scoped to interactions,
 section transitions, presentation and progress; Reduce Motion removes motion
 and scene inactivity pauses animated loading indicators.
 
@@ -103,3 +103,28 @@ for scheduled runs, falling back to macOS preferences when no choice exists.
 Count messages use native plural catalogs. Stored enum values and user-entered
 names are language independent. LegalView resolves translated terms and privacy
 resources; MIT and third-party licenses retain their original wording.
+
+## Updates
+
+AppUpdater owns one main-actor SPUStandardUpdaterController for every window.
+Kaze checks on startup when enabled and Sparkle schedules subsequent checks.
+KVO keeps the sidebar and menu state synchronized; user changes use Sparkle's
+persisted preference API. Preview builds exclude the updater and never check
+for updates. The first build fetches a checksum-pinned Sparkle 2.10.0 distribution,
+embeds its complete framework and helpers with preserved symlinks and signatures,
+and links with a bundle-relative rpath. Each build selects its architecture's
+GitHub Releases latest-download feed in the bundled Info.plist.
+
+Both the feed and DMG are EdDSA signed and verified before extraction. System
+profiling and unattended installation are disabled. Tag builds use a repository
+secret to generate feeds with embedded release notes and verify their signatures
+on macOS. Release assembly validates metadata, architecture and hashes before
+including both feeds in the draft. The private signing key stays out of source
+and release assets; the public key is committed in Info.plist.
+
+DiskAccessStore refreshes on launch and when the app becomes active. Its shield
+indicator reflects whether the app can open a protected file, without reading
+or changing its contents. Because macOS has no public Full Disk Access status
+API, this is a capability probe, not an authoritative TCC setting query. Missing
+files and UNIX permission errors remain unverified; a successful probe enables
+the green shield-check. Previews inject fixed states and do not probe host files.

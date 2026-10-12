@@ -17,8 +17,8 @@ python3 tests/DistributionTests.py
 open package/Kaze.app
 ```
 
-La compilación utiliza los recursos incluidos en el proyecto y no descarga
-dependencias. Docker, Homebrew y el Xcode completo son opcionales y solo hacen
+La primera compilación descarga Sparkle 2.10.0 y verifica su SHA-256 fijado;
+las siguientes usan la caché local. Los demás recursos están incluidos. Docker, Homebrew y el Xcode completo son opcionales y solo hacen
 falta para probar sus integraciones respectivas.
 
 ## Scripts del proyecto

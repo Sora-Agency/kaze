@@ -9,9 +9,13 @@ extension Notification.Name {
 @main
 struct KazeApp: App {
     @StateObject private var language = AppLanguageStore.shared
+    @StateObject private var updater = AppUpdater.shared
     init() { AppIdentity.migratePreferences() }
     var body: some Scene {
-        WindowGroup("Kaze · Sora") { ContentView().environment(\.locale, language.locale) }
+        WindowGroup("Kaze · Sora") {
+            ContentView().environment(\.locale, language.locale)
+                .onAppear { updater.start() }
+        }
         .windowStyle(.titleBar)
         .commands {
             CommandGroup(replacing: .appInfo) {
@@ -19,6 +23,15 @@ struct KazeApp: App {
                 Button(L10n.text("Términos, privacidad y licencia")) {
                     NotificationCenter.default.post(name: .showKazeLegal, object: nil)
                 }
+            }
+            CommandGroup(after: .appInfo) {
+                Button(L10n.text("Buscar actualizaciones…")) { updater.checkForUpdates() }
+                    .disabled(!updater.canCheckForUpdates)
+                Toggle(L10n.text("Buscar actualizaciones automáticamente"), isOn: Binding(
+                    get: { updater.automaticallyChecksForUpdates },
+                    set: { updater.setAutomaticChecks($0) }
+                ))
+                Divider()
             }
             CommandGroup(replacing: .help) {
                 Button(L10n.text("Términos y licencia de Kaze")) {

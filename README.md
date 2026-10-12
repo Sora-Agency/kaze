@@ -29,6 +29,8 @@ A product by **Sora Agency** · macOS 13+ · SwiftUI · MIT License
   and Xcode simulators and runtimes.
 - **Schedule multiple cleanups:** give each task its own name, time, frequency,
   free-space condition and categories; edit or disable each independently.
+- **In-app updates:** checks on launch, a Check for Updates button and signed
+  downloads with an install-and-relaunch window. Automatic checks can be disabled.
 - **English and Spanish:** the interface, errors, cleanup notifications and legal
   documents can be switched instantly from the language selector inside Kaze.
 
@@ -75,7 +77,12 @@ Release drafts are visible to repository maintainers until published.
 
 ![Kaze drag-to-Applications installer](docs/images/installer.png)
 
-Close Kaze before replacing an existing installation. If you also have a copy
+Starting with 1.1.0, Kaze checks for updates and offers download, installation
+and relaunch from the app. Use **Check for Updates…** in the sidebar or Kaze menu;
+automatic checks can be disabled from the same menu. Users of 1.0.0 must install
+1.1.0 once to get the updater. Updates preserve preferences and scheduled tasks.
+
+Close Kaze before manually replacing an existing installation. If you also have a copy
 in `~/Applications`, keep a single copy to avoid opening the old one.
 
 Packages built by this project are ad hoc signed and **not notarized by Apple**.
@@ -122,7 +129,8 @@ scripts/build.sh
 open package/Kaze.app
 ```
 
-Normal builds download no dependencies: fonts, logo and icons are bundled.
+The first build downloads Sparkle 2.10.0 from its official release and verifies
+its pinned SHA-256. Later builds use the local cache. Fonts, logo and icons are bundled.
 Node.js, npm and an `.xcodeproj` are not required. The build targets the
 architecture of the Mac running it.
 
@@ -150,8 +158,8 @@ See the [architecture](ARCHITECTURE.md), [contribution guide](CONTRIBUTING.md)
 and [publishing guide](docs/PUBLISHING.md).
 
 To prepare a release, update the version and release notes, then push a tag such
-as `v1.0.0`. GitHub Actions checks Apple Silicon and Intel and creates a draft
-with DMGs, ZIPs, source and hashes. Review and publish it from **Releases**.
+as `v1.1.0`. GitHub Actions checks Apple Silicon and Intel and creates a draft
+with DMGs, ZIPs, source, signed update feeds and hashes. Review and publish it from **Releases**.
 
 ## Sizes and indicators
 
@@ -176,6 +184,7 @@ selection and keep backups.
 
 Kaze works locally, with no accounts, advertising or Sora telemetry. Explorer
 results remain in memory. Preferences, tasks and logs are stored on your Mac;
+update checks connect to GitHub without sending file lists or scan results;
 external tools such as Docker and Homebrew retain their own behavior. See the
 [privacy notice](src/Localization/en.lproj/PRIVACY.txt).
 

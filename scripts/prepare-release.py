@@ -5,6 +5,9 @@ import plistlib
 import re
 import shutil
 import zipfile
+import runpy
+
+validate_appcast = runpy.run_path(str(pathlib.Path(__file__).with_name("validate-appcast.py")))["validate_appcast"]
 
 
 def validate_version(project, tag):
@@ -25,7 +28,7 @@ def digest(path):
 
 
 def verify_artifact(folder, architecture):
-    expected = {f"Kaze-Mac-{architecture}.dmg", f"Kaze-Mac-{architecture}.zip", "Kaze-Source.zip"}
+    expected = {f"Kaze-Mac-{architecture}.dmg", f"Kaze-Mac-{architecture}.zip", "Kaze-Source.zip", f"appcast-{architecture}.xml"}
     manifest = folder / f"Kaze-SHA256-{architecture}.txt"
     verified = set()
     for line in manifest.read_text().splitlines():
@@ -59,6 +62,8 @@ def prepare_release(project, tag, artifacts, output):
     for architecture in architectures:
         folder = artifacts / f"kaze-{architecture}"
         verify_artifact(folder, architecture)
+        validate_appcast(folder / f"appcast-{architecture}.xml",
+                         folder / f"Kaze-Mac-{architecture}.dmg", info, architecture, tag)
         sources.append(source_contents(folder / "Kaze-Source.zip"))
     if sources[0] != sources[1]:
         raise ValueError("Las dos arquitecturas no contienen el mismo código fuente.")
@@ -69,7 +74,7 @@ def prepare_release(project, tag, artifacts, output):
     output.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(artifacts / "kaze-arm64/Kaze-Source.zip", output / "Kaze-Source.zip")
     for architecture in architectures:
-        names = [f"Kaze-Mac-{architecture}.{extension}" for extension in ("dmg", "zip")]
+        names = [f"Kaze-Mac-{architecture}.{extension}" for extension in ("dmg", "zip")] + [f"appcast-{architecture}.xml"]
         for name in names:
             shutil.copyfile(artifacts / f"kaze-{architecture}" / name, output / name)
         write_manifest(output / f"Kaze-SHA256-{architecture}.txt", output, names + ["Kaze-Source.zip"])

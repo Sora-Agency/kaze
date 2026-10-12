@@ -17,7 +17,8 @@ python3 tests/DistributionTests.py
 open package/Kaze.app
 ```
 
-Builds use bundled resources and do not download dependencies. Docker, Homebrew
+The first build downloads Sparkle 2.10.0 and verifies its pinned SHA-256;
+subsequent builds use the local cache. Other resources are bundled. Docker, Homebrew
 and full Xcode are optional and needed only to test their integrations.
 
 ## Project scripts

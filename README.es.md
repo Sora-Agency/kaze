@@ -28,6 +28,8 @@ Un producto de **Sora Agency** · macOS 13+ · SwiftUI · Licencia MIT
   y cachés de Docker.
 - **Gestionar aplicaciones y recursos:** revisar apps y datos asociados,
   recursos de Docker, simuladores y runtimes de Xcode.
+- **Actualizaciones dentro de la app:** búsqueda al abrir, botón para buscar
+  versiones y descargas firmadas con ventana para instalar y reiniciar.
 - **Inglés y español:** interfaz, errores, notificaciones, términos y privacidad
   con un selector dentro de Kaze para cambiar al instante.
 - **Programar varias limpiezas:** dar a cada tarea un nombre, horario,
@@ -80,6 +82,12 @@ para quienes mantienen el repositorio hasta que se publican.
 
 ![Instalador de Kaze para arrastrar a Aplicaciones](docs/images/installer.png)
 
+Desde 1.1.0, Kaze busca versiones nuevas y ofrece descargar, instalar y
+reiniciar desde la app. Usa **Buscar actualizaciones…** en el menú lateral o el menú
+Kaze; puedes desactivar la búsqueda automática desde ese menú. Quienes usan
+1.0.0 deben instalar 1.1.0 una vez para incorporar el updater. Las siguientes
+actualizaciones conservan las preferencias y las tareas programadas.
+
 Si actualizas una instalación, cierra Kaze antes de reemplazarla. Si tenías una
 copia en `~/Applications`, conserva una sola copia para evitar abrir la anterior.
 
@@ -129,7 +137,8 @@ scripts/build.sh
 open package/Kaze.app
 ```
 
-No hay dependencias que descargar para la compilación normal: fuentes, logo e
+La primera compilación descarga Sparkle 2.10.0 desde su release oficial y
+verifica el SHA-256 fijado; las siguientes usan la caché local. Fuentes, logo e
 iconos se incluyen en el proyecto. No necesitas Node.js, npm ni un `.xcodeproj`.
 El script compila para la arquitectura del Mac que lo ejecuta.
 
@@ -157,8 +166,8 @@ Consulta [la arquitectura](ARCHITECTURE.md), [la guía de contribución](CONTRIB
 y [la guía de publicación](docs/PUBLISHING.es.md) para trabajar en el proyecto.
 
 Para preparar una release, actualiza la versión y las notas y sube un tag como
-`v1.0.0`. GitHub Actions verifica Apple Silicon e Intel y crea un borrador con
-los DMGs, ZIPs, fuentes y hashes. La publicación se confirma desde **Releases**.
+`v1.1.0`. GitHub Actions verifica Apple Silicon e Intel y crea un borrador con
+los DMGs, ZIPs, fuentes, feeds firmadas y hashes. La publicación se confirma desde **Releases**.
 
 ## Qué significan los tamaños y los colores
 
@@ -184,8 +193,9 @@ tras la confirmación. Revisa tus selecciones y conserva copias de seguridad.
 
 Kaze funciona localmente, sin cuentas, publicidad ni telemetría de Sora.
 Los listados del explorador permanecen en memoria. Las preferencias, tareas
-y registros se guardan en el Mac; herramientas externas como Docker y Homebrew
-mantienen su propio comportamiento. Consulta [PRIVACY.txt](PRIVACY.txt).
+y registros se guardan en el Mac. La búsqueda de actualizaciones consulta GitHub
+sin enviar tus archivos ni resultados del análisis. Herramientas externas como
+Docker y Homebrew mantienen su propio comportamiento. Consulta [PRIVACY.txt](PRIVACY.txt).
 
 Para regenerar las capturas públicas con datos de ejemplo:
 

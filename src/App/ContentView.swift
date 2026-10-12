@@ -22,6 +22,7 @@ struct ContentView: View {
     @StateObject private var model: CleanerModel
     @StateObject private var explorer: FileExplorerModel
     @StateObject private var scheduler: ScheduledTaskModel
+    @StateObject private var diskAccess: DiskAccessStore
     @ViewState private var section: AppSection = .explorer
     @AppStorage("kaze.appearance") private var appearance: AppAppearance = .dark
     private let previewAppearance: AppAppearance?
@@ -33,13 +34,14 @@ struct ContentView: View {
     init(model: CleanerModel? = nil, explorer: FileExplorerModel? = nil, scheduler: ScheduledTaskModel? = nil,
          previewAppearance: AppAppearance? = nil, initialSection: AppSection = .explorer,
          resourceDirectory: URL? = nil, homeURL: URL = FileManager.default.homeDirectoryForCurrentUser,
-         languageStore: AppLanguageStore = .shared) {
+         languageStore: AppLanguageStore = .shared, diskAccessStore: DiskAccessStore? = nil) {
         language = languageStore
         self.homeURL = homeURL
         SoraFonts.register(directory: resourceDirectory?.appendingPathComponent("Fonts"))
         _model = StateObject(wrappedValue: model ?? CleanerModel())
         _explorer = StateObject(wrappedValue: explorer ?? FileExplorerModel())
         _scheduler = StateObject(wrappedValue: scheduler ?? ScheduledTaskModel.shared)
+        _diskAccess = StateObject(wrappedValue: diskAccessStore ?? DiskAccessStore())
         _section = ViewState(initialValue: initialSection)
         self.previewAppearance = previewAppearance
         self.resourceDirectory = resourceDirectory
@@ -54,7 +56,7 @@ struct ContentView: View {
                 SoraDivider()
                 Group {
                     switch section {
-                    case .explorer: ExplorerView(explorer: explorer, cleaner: model)
+                    case .explorer: ExplorerView(explorer: explorer, cleaner: model, diskAccess: diskAccess)
                     case .cleanup: DashboardView(model: model)
                     case .applications: ApplicationsView(model: model)
                     case .resources: ResourcesView(model: model)
@@ -83,6 +85,10 @@ struct ContentView: View {
         .frame(minWidth: 1130, idealWidth: 1280, minHeight: 720, idealHeight: 820)
         .navigationTitle("Kaze · Sora")
         .onReceive(NotificationCenter.default.publisher(for: .showKazeLegal)) { _ in section = .legal }
+        .onAppear { diskAccess.refresh() }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            diskAccess.refresh()
+        }
     }
 
     private var sidebar: some View {
@@ -98,7 +104,7 @@ struct ContentView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 3) {
                     sectionLabel(L10n.text("TU MAC"))
-                    ForEach(AppSection.allCases.filter { $0 != .legal }) { item in
+                    ForEach(AppSection.allCases) { item in
                         navButton(item)
                     }
                     sectionLabel(L10n.text("UBICACIONES")).padding(.top, 22)
@@ -125,17 +131,7 @@ struct ContentView: View {
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(SoraPalette.borderSoft))
                 .padding(.horizontal, 20).padding(.bottom, 16)
             SoraDivider().padding(.horizontal, 20)
-            Button { section = .legal } label: {
-                HStack(spacing: 9) {
-                    LucideIcon("file-text").foregroundStyle(section == .legal ? SoraPalette.accent : SoraPalette.muted)
-                    Text(L10n.text("Términos y licencia")).font(SoraTypography.body(12))
-                    Spacer()
-                    LucideIcon("arrow-up-right", size: 12)
-                }.foregroundStyle(SoraPalette.secondary).contentShape(Rectangle())
-            }.buttonStyle(.plain).padding(.horizontal, 26).padding(.top, 16)
-            Text("Sora Agency")
-                .font(SoraTypography.body(10)).foregroundStyle(SoraPalette.muted)
-                .padding(.horizontal, 26).padding(.top, 10).padding(.bottom, 20)
+            UpdateButton().padding(.horizontal, 16).padding(.top, 8).padding(.bottom, 16)
         }.frame(width: 248).background(SoraPalette.sidebar)
     }
 

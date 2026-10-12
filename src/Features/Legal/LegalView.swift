@@ -52,7 +52,7 @@ struct LegalView: View {
             }.background(SoraPalette.surface, in: RoundedRectangle(cornerRadius: 12))
                 .overlay(RoundedRectangle(cornerRadius: 12).stroke(SoraPalette.borderSoft))
             HStack {
-                Text(L10n.text("Sora Agency · Kaze \(AppIdentity.version) · Documentos del 11 de octubre de 2026"))
+                Text(L10n.text("Sora Agency · Kaze \(AppIdentity.version) · Documentos del 12 de octubre de 2026"))
                     .font(SoraTypography.body(11)).foregroundStyle(SoraPalette.muted)
                 Spacer()
                 Link(L10n.text("Sobre la licencia MIT ↗"), destination: URL(string: "https://opensource.org/license/mit")!)

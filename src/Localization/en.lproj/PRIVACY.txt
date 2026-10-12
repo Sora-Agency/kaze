@@ -1,5 +1,5 @@
 KAZE · PRIVACY
-Sora Agency · Version 1.0 · October 11, 2026
+Sora Agency · Version 1.1 · October 12, 2026
 
 LOCAL ANALYSIS
 Kaze uses names, paths, dates, item types and allocated disk space to display the contents of folders you select. It calculates sizes using metadata; the explorer does not open document contents or request iCloud downloads to measure them. Explorer results remain in memory during the session.
@@ -9,13 +9,16 @@ Application discovery also reads identifiers and installation metadata to locate
 NO SORA TELEMETRY
 Kaze includes no analytics, advertising or automatic transmission of files, folder listings, paths or logs to Sora Agency. No Sora account is required. Fonts are bundled and are not downloaded when the app opens.
 
+UPDATES
+Kaze checks for updates on launch and periodically using Sparkle. You can disable automatic checking in the Kaze menu and check manually. Checks and downloads connect to GitHub and its distribution servers, which receive your IP address and standard connection metadata, including Kaze and Sparkle versions in the user agent. Your files, paths and scan results are not transmitted. System profiling is disabled. The app verifies feed and download signatures before installation, and asks you to install and relaunch.
+
 LOGS AND PREFERENCES
 Cleanup, uninstallation and resource management activity is logged locally at:
 ~/Library/Logs/LiberarEspacioMac/limpieza.log
 
 This historical folder name is retained for compatibility with earlier versions. Logs may contain app names, paths, identifiers and system tool messages. The appearance toggle and language selector store their preferences in local macOS preferences. Scheduled task settings (time, free-space condition, categories, notifications and state) are stored in ~/Library/Application Support/Kaze/schedule.json. Each task has its own identifier and cleanup agent under ~/Library/LaunchAgents, installed only when enabled. The app migrates earlier settings and retains a local backup.
 
-Updates preserve a copy of the app and its previous scheduling configuration under:
+The Instalar.command installer preserves a copy of the app and its previous scheduling configuration under:
 ~/Library/Application Support/Kaze/Backups
 
 USER CONTROL

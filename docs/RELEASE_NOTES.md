@@ -1,4 +1,12 @@
-# Kaze 1.0.0
+# Kaze 1.1.0
+
+Kaze now checks for new versions and lets you download, install and relaunch from its update window.
+
+- Signed updates with Sparkle, separate Apple Silicon and Intel feeds.
+- Check for Updates in the sidebar and Kaze menu; optional automatic checks.
+- Terms and License is now a regular sidebar item, with a cleaner footer.
+- Disk access shows a soft green shield with a check when access is available, and a neutral shield while permission is pending.
+- Existing 1.0.0 users must install 1.1.0 once to enable future in-app updates.
 
 A native Sora Agency app to explore Mac storage, clean caches and organize maintenance tasks.
 
@@ -31,6 +39,14 @@ and terms.
 ---
 
 ## Español
+
+Kaze ahora busca versiones nuevas y permite descargar, instalar y reiniciar desde su ventana de actualización.
+
+- Actualizaciones firmadas con Sparkle, para Apple Silicon e Intel.
+- Buscar actualizaciones en el menú lateral y el menú Kaze; búsqueda automática opcional.
+- Términos y licencia pasa a ser un ítem del menú lateral; se elimina «Sora Agency» del pie.
+- El acceso al disco muestra un escudo verde suave con un check cuando está disponible, y un escudo neutro mientras el permiso está pendiente.
+- Quienes usan 1.0.0 deben instalar 1.1.0 una vez para habilitar las siguientes actualizaciones dentro de la app.
 
 Una app nativa de Sora Agency para explorar el almacenamiento de tu Mac,
 limpiar cachés y organizar tareas de mantenimiento.

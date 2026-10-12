@@ -22,6 +22,7 @@ enum SoraPalette {
     static let accent = color(light: 0x08afc0, dark: 0x00b2c4)
     static let accentHover = color(light: 0x0496a6, dark: 0x20c5d4)
     static let danger = color(light: 0xc84141, dark: 0xf17878)
+    static let success = color(light: 0x28764b, dark: 0x91c5a3)
     static let border = color(light: 0xd5d5ce, dark: 0x363638)
     static let borderSoft = color(light: 0xe2e1da, dark: 0x2d2e30)
     static let inputBorder = color(light: 0xd1d2cb, dark: 0x404247)

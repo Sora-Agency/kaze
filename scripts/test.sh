@@ -26,6 +26,7 @@ for test_name in ScannerTests ExplorerModelTests DeletionSafetyTests; do
 done
 run_swift_test ScheduleTests "${schedule_sources[@]}"
 run_swift_test IdentityTests src/App/AppIdentity.swift
+run_swift_test DiskAccessTests src/Infrastructure/DiskAccessStore.swift
 xcrun swiftc "${swift_flags[@]}" src/Localization/L10n.swift src/Domain/ScheduledCleanupTask.swift \
   tests/LocalizationTests.swift -o "$test_dir/LocalizationTests"
 for language in en es; do
@@ -43,6 +44,7 @@ xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" \
 tests/LegacyScheduleTests.zsh
 tests/CleanerLockTests.zsh
 python3 tests/ReleaseTests.py
+tests/UpdaterTests.zsh
 python3 tests/DetachImageTests.py
 for script in src/*.command src/*.zsh scripts/*.sh tests/*.zsh; do
   zsh -n "$script"

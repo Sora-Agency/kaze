@@ -54,12 +54,57 @@ No se versionan binarios, preferencias, respaldos ni datos del equipo.
 Las instalaciones anteriores se detectan localmente para migrarlas; los bundles
 y tareas nuevas usan `com.soraagency.kaze`.
 
+## Configurar las actualizaciones una vez
+
+Kaze incorpora Sparkle 2.10.0. La clave pública `SUPublicEDKey` está en
+`src/Info.plist`; la privada de esta distribución se conserva en el llavero de
+inicio de sesión, cuenta `com.soraagency.kaze`. Mantén un respaldo seguro de la
+clave: las apps ya instaladas confían en esa clave pública.
+
+Configura el secret de Actions `KAZE_SPARKLE_PRIVATE_KEY` con la exportación de
+Sparkle. No lo pongas en el repositorio, notas ni adjuntos. Para exportarlo a un
+archivo temporal y subirlo sin mostrarlo en la terminal:
+
+```sh
+sparkle_dir="$(scripts/fetch-sparkle.sh)"
+key_dir="$(mktemp -d -t kaze-key)"
+"$sparkle_dir/bin/generate_keys" --account com.soraagency.kaze -x "$key_dir/key"
+gh secret set KAZE_SPARKLE_PRIVATE_KEY --repo Sora-Agency/kaze < "$key_dir/key"
+rm "$key_dir/key"
+rmdir "$key_dir"
+```
+
+Un colaborador sin esa clave puede compilar y probar; para firmar releases debe
+usar la clave original. Para una distribución independiente genera otra clave y
+actualiza `SUPublicEDKey` antes de distribuir la primera versión.
+
+Los tags generan y verifican firmas EdDSA del DMG y del feed para cada
+arquitectura. Si falta el secret o las firmas no coinciden con la clave de la
+app, el proceso falla antes de crear el borrador. Para probar localmente:
+
+```sh
+scripts/build.sh
+scripts/generate-appcast.sh v1.1.0
+```
+
+Publica ambas feeds junto con los instaladores y marca la release estable como
+**Latest**. Las URLs `releases/latest/download/appcast-arm64.xml` y
+`appcast-x86_64.xml` apuntan a esa release; un borrador o prerelease no activa
+actualizaciones. No edites las feeds después de firmarlas. Incrementa siempre
+`CFBundleVersion`: Sparkle compara ese número, no solo la versión visible.
+
+Quienes tienen 1.0.0 necesitan instalar 1.1.0 una vez. A partir de esa instalación,
+la ventana de Sparkle permite descargar, instalar y reiniciar. Se conservan
+las preferencias y tareas fuera del bundle; el respaldo del instalador ZIP
+no se aplica a Sparkle. Las ventanas nativas de Sparkle siguen el idioma de
+macOS; los controles de Kaze siguen el selector interno.
+
 ## Crear una release en borrador
 
 1. Actualiza `CFBundleShortVersionString` y aumenta `CFBundleVersion` en
-   `src/Info.plist`. La versión preparada es **1.0.0**, build **15**.
+   `src/Info.plist`. La versión preparada es **1.1.0**, build **16**.
 2. Actualiza [RELEASE_NOTES.md](RELEASE_NOTES.md). Su primera línea debe coincidir
-   con la versión: por ejemplo, `# Kaze 1.0.0`. Estas notas serán el texto inicial
+   con la versión: por ejemplo, `# Kaze 1.1.0`. Estas notas serán el texto inicial
    del borrador.
 3. Incorpora los cambios a `main` y espera a que las comprobaciones pasen.
 4. Crea un tag anotado sobre ese commit y súbelo. Para la versión actual:
@@ -67,20 +112,20 @@ y tareas nuevas usan `com.soraagency.kaze`.
    ```sh
    git switch main
    git pull --ff-only
-   git tag -a v1.0.0 -m "Kaze 1.0.0"
-   git push origin v1.0.0
+   git tag -a v1.1.0 -m "Kaze 1.1.0"
+   git push origin v1.1.0
    ```
 
 5. Sigue la ejecución de **macOS** en **Actions**. El tag vuelve a ejecutar
    pruebas, compilación y verificación del DMG en ambas arquitecturas.
-6. Cuando termine, abre **Releases**, revisa el borrador **Kaze 1.0.0** y pulsa
+6. Cuando termine, abre **Releases**, revisa el borrador **Kaze 1.1.0** y pulsa
    **Publish release** cuando esté listo. Puedes editar las notas antes de publicar.
 
 Los tags admitidos tienen formato `vMAJOR.MINOR.PATCH` y deben coincidir con
 la versión de la app. Los PRs, pushes de ramas y ejecuciones manuales solo
 verifican y compilan; la creación del borrador requiere un push de tag.
 
-El borrador contiene estos ocho adjuntos:
+El borrador contiene estos diez adjuntos:
 
 | Archivo | Contenido |
 | --- | --- |
@@ -89,9 +134,11 @@ El borrador contiene estos ocho adjuntos:
 | `Kaze-Mac-arm64.zip` | App y scripts de instalación para Apple Silicon |
 | `Kaze-Mac-x86_64.zip` | App y scripts de instalación para Intel |
 | `Kaze-Source.zip` | Código, documentación y capturas |
-| `Kaze-SHA256-arm64.txt` | Hashes del DMG, ZIP binario y fuentes compartidas |
-| `Kaze-SHA256-x86_64.txt` | Hashes del DMG, ZIP binario y fuentes compartidas |
-| `SHA256SUMS` | Hashes de los siete archivos anteriores |
+| `Kaze-SHA256-arm64.txt` | Hashes del DMG, ZIP binario, fuentes compartidas y feed |
+| `Kaze-SHA256-x86_64.txt` | Hashes del DMG, ZIP binario, fuentes compartidas y feed |
+| `appcast-arm64.xml` | Feed firmado de actualizaciones para Apple Silicon |
+| `appcast-x86_64.xml` | Feed firmado de actualizaciones para Intel |
+| `SHA256SUMS` | Hashes de los nueve archivos anteriores |
 
 Antes de crear el borrador se verifican los hashes y que ambas arquitecturas
 incluyan el mismo código fuente. No se crea una release si falla un build.

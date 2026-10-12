@@ -5,6 +5,7 @@ struct ExplorerView: View {
     @ObservedObject private var language = AppLanguageStore.shared
     @ObservedObject var explorer: FileExplorerModel
     @ObservedObject var cleaner: CleanerModel
+    @ObservedObject var diskAccess: DiskAccessStore
     @ViewState private var pathText = ""
     @ViewState private var editingPath = false
 
@@ -232,8 +233,7 @@ struct ExplorerView: View {
             Spacer()
             Text(L10n.text("\(explorer.visibleEntries.count) visibles / \(explorer.entries.count) · tamaños asignados en disco"))
                 .font(SoraTypography.body(12)).foregroundStyle(SoraPalette.secondary)
-            Button { cleaner.openFullDiskAccessSettings() } label: { LucideIcon("shield-alert") }
-                .help(L10n.text("Abrir Acceso total al disco para carpetas protegidas"))
+            DiskAccessButton(access: diskAccess) { cleaner.openFullDiskAccessSettings() }
         }.padding(.horizontal, 28).padding(.vertical, 14)
     }
 

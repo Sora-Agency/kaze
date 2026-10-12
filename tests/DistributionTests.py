@@ -74,6 +74,13 @@ with tempfile.TemporaryDirectory(prefix="kaze-distribution-") as directory:
         assert struct.unpack_from(">H", finder_info, 8)[0] & 0x0400
         info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
         assert info["CFBundleIdentifier"] == "com.soraagency.kaze"
+        assert info["SUFeedURL"] == f"https://github.com/Sora-Agency/kaze/releases/latest/download/appcast-{architecture}.xml"
+        assert info["SURequireSignedFeed"] and info["SUVerifyUpdateBeforeExtraction"]
+        framework = app / "Contents/Frameworks/Sparkle.framework"
+        assert framework.is_dir() and (framework / "Sparkle").is_file()
+        assert (app / "Contents/Resources/Sparkle/LICENSE").is_file()
+        assert b"@rpath/Sparkle.framework" in run("otool", "-L", str(app / "Contents/MacOS/Kaze"))
+        run("codesign", "--verify", "--deep", "--strict", str(app))
         assert run("lipo", "-archs", str(app / "Contents/MacOS/Kaze")).decode().strip() == architecture
         for name in ("LICENSE", "TERMS.txt", "PRIVACY.txt", "THIRD_PARTY_NOTICES.txt"):
             assert (app / "Contents/Resources" / name).read_bytes() == (project / name).read_bytes()

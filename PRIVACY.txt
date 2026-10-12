@@ -1,5 +1,5 @@
 KAZE · PRIVACIDAD
-Sora Agency · Versión 1.0 · 11 de octubre de 2026
+Sora Agency · Versión 1.1 · 12 de octubre de 2026
 
 ANÁLISIS LOCAL
 Kaze utiliza nombres, rutas, fechas, tipo de elemento y espacio asignado en disco para mostrar el contenido de las carpetas que eliges. Calcula tamaños mediante metadatos; el explorador no abre el contenido de los documentos ni solicita descargar archivos de iCloud para medirlos. Los resultados del explorador se mantienen en memoria durante la sesión.
@@ -9,13 +9,16 @@ La detección de aplicaciones también consulta sus identificadores y metadatos 
 SIN TELEMETRÍA DE SORA
 Kaze no incorpora analítica, publicidad ni envío automático de archivos, listados de carpetas, rutas o registros a Sora Agency. No requiere una cuenta de Sora para funcionar. Las fuentes se incluyen en la app y no se descargan al abrirla.
 
+ACTUALIZACIONES
+Kaze busca actualizaciones al abrirse y periódicamente mediante Sparkle. Puedes desactivar la búsqueda automática en el menú Kaze y buscar manualmente. Estas consultas y las descargas se conectan a GitHub y sus servidores de distribución, que reciben la dirección IP y metadatos habituales de conexión, incluida la versión de Kaze y Sparkle en el agente de usuario. No se envían tus archivos, rutas ni resultados de análisis. El perfilado del sistema está desactivado. La app verifica las firmas del feed y la descarga antes de instalar, y pide tu intervención para instalar y reiniciar.
+
 REGISTROS Y PREFERENCIAS
 La actividad de limpieza, desinstalación y gestión de recursos se registra localmente en:
 ~/Library/Logs/LiberarEspacioMac/limpieza.log
 
 El nombre histórico de esta carpeta se conserva para mantener compatibilidad con las versiones anteriores. Los registros pueden contener nombres de aplicaciones, rutas, identificadores y mensajes de herramientas del sistema. Los selectores de apariencia e idioma guardan sus preferencias en el almacenamiento local de preferencias de macOS. La configuración de tareas programadas (horario, condición de espacio, categorías, notificaciones y estado) se guarda en ~/Library/Application Support/Kaze/schedule.json. Cada tarea tiene su identificador y su propio agente de limpieza en ~/Library/LaunchAgents, instalado solo cuando la activas. La app migra la configuración anterior y conserva su respaldo local.
 
-La actualización conserva una copia de la app y de su programación anterior en:
+El instalador Instalar.command conserva una copia de la app y de su programación anterior en:
 ~/Library/Application Support/Kaze/Backups
 
 CONTROL DEL USUARIO

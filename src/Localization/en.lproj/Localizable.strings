@@ -260,7 +260,7 @@
 "Sistema" = "System";
 "Sobre la licencia MIT ↗" = "About the MIT license ↗";
 "Solo con menos de %@ GiB libres" = "Only when less than %@ GiB is free";
-"Sora Agency · Kaze %@ · Documentos del 11 de octubre de 2026" = "Sora Agency · Kaze %@ · Documents dated October 11, 2026";
+"Sora Agency · Kaze %@ · Documentos del 12 de octubre de 2026" = "Sora Agency · Kaze %@ · Documents dated October 12, 2026";
 "Sábado" = "Saturday";
 "TIPO" = "TYPE";
 "TU MAC" = "YOUR MAC";
@@ -303,3 +303,13 @@
 "¿Eliminar permanentemente estos recursos?" = "Permanently delete these resources?";
 "¿Mover los datos seleccionados a la Papelera?" = "Move the selected data to the Trash?";
 "¿Reiniciar Docker Desktop?" = "Restart Docker Desktop?";
+
+/* Software updates */
+"Buscar actualizaciones…" = "Check for Updates…";
+"Buscar actualizaciones automáticamente" = "Automatically Check for Updates";
+"No se pudo iniciar el actualizador" = "Unable to start the updater";
+
+/* Protected folder access */
+"Acceso a carpetas protegidas verificado" = "Protected folder access verified";
+"Acceso a carpetas protegidas pendiente" = "Protected folder access needed";
+"Acceso a carpetas protegidas sin verificar" = "Protected folder access not verified";

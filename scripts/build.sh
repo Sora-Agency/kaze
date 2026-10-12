@@ -4,6 +4,7 @@ project_dir="${0:A:h:h}"
 cd "$project_dir"
 build_dir="$project_dir/build"
 architecture="$(uname -m)"
+sparkle_dir="$(scripts/fetch-sparkle.sh)"
 binary_archive="Kaze-Mac-$architecture.zip"
 disk_image="Kaze-Mac-$architecture.dmg"
 package_dir="$build_dir/staging.noindex/package"
@@ -23,8 +24,13 @@ xcrun swift scripts/GenerateIcon.swift src/Brand/SoraLogo.svg "$assets"
 iconutil -c icns "$assets/AppIcon.iconset" -o "$resources/AppIcon.icns"
 sources=(src/**/*.swift)
 xcrun swiftc -swift-version 5 -target "$architecture-apple-macosx13.0" -O \
+  -F "$sparkle_dir" -framework Sparkle -Xlinker -rpath -Xlinker '@executable_path/../Frameworks' \
   "${sources[@]}" -o "$app/Contents/MacOS/Kaze"
 cp src/Info.plist "$app/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c "Set :SUFeedURL https://github.com/Sora-Agency/kaze/releases/latest/download/appcast-$architecture.xml" "$app/Contents/Info.plist"
+mkdir -p "$app/Contents/Frameworks" "$resources/Sparkle"
+ditto "$sparkle_dir/Sparkle.framework" "$app/Contents/Frameworks/Sparkle.framework"
+cp "$sparkle_dir/LICENSE" "$resources/Sparkle/LICENSE"
 cp "$assets/SoraLogo.png" src/cleaner.zsh src/cleanup-lock.zsh src/localization.zsh "$resources/"
 cp LICENSE TERMS.txt PRIVACY.txt THIRD_PARTY_NOTICES.txt "$resources/"
 for language in en es; do
@@ -39,6 +45,7 @@ cp LICENSE TERMS.txt PRIVACY.txt THIRD_PARTY_NOTICES.txt "$staged_package/"
 chmod +x "$staged_package/disable-legacy-schedule.zsh" "$staged_package/Instalar.command" "$staged_package/Desinstalar.command"
 codesign --force --sign - "$app"
 codesign --verify --strict "$app"
+codesign --verify --deep --strict "$app"
 plutil -lint "$app/Contents/Info.plist"
 ditto -c -k --sequesterRsrc --keepParent "$staged_package" "$work_dir/$binary_archive"
 scripts/build-dmg.sh "$app" "$work_dir/$disk_image"
@@ -54,6 +61,11 @@ ditto -c -k --norsrc --noextattr --noqtn --keepParent "$source_bundle" "$work_di
 rm -rf -- "$package_dir"
 mv "$staged_package" "$package_dir"
 mv "$work_dir/$binary_archive" "$work_dir/$disk_image" "$work_dir/Kaze-Source.zip" "$build_dir/"
+# A previously signed feed refers to the previous archive bytes. Regenerate it
+# after this build, rather than leaving an apparently usable stale update feed.
+if [[ -f "$build_dir/appcast-$architecture.xml" ]]; then
+  rm -- "$build_dir/appcast-$architecture.xml"
+fi
 (cd "$build_dir" && shasum -a 256 "$disk_image" "$binary_archive" Kaze-Source.zip > "Kaze-SHA256-$architecture.txt")
 if [[ ! -L package ]]; then ln -s build/staging.noindex/package package; fi
 print -r -- "App: $package_dir/Kaze.app"

@@ -26,3 +26,8 @@ occur at runtime.
 Source: https://github.com/lucide-icons/lucide
 Pinned commit: 70562c1ee1c4fdcf736fe97bc893fb8511927934
 License: Icons/Lucide/LICENSE (ISC, including Feather notices).
+
+Sparkle 2.10.0
+Native macOS software update framework. Included unmodified, with its helper tools.
+Source: https://github.com/sparkle-project/Sparkle
+License: Sparkle/LICENSE (MIT and included third-party notices).
