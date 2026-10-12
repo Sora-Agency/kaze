@@ -79,6 +79,9 @@ with tempfile.TemporaryDirectory(prefix="kaze-distribution-") as directory:
         framework = app / "Contents/Frameworks/Sparkle.framework"
         assert framework.is_dir() and (framework / "Sparkle").is_file()
         assert (app / "Contents/Resources/Sparkle/LICENSE").is_file()
+        for name in ("rules-v1.json", "rules-v1.signature"):
+            assert (app / "Contents/Resources/Rules" / name).read_bytes() == (project / "src/Rules" / name).read_bytes()
+        subprocess.run(["xcrun", "swift", str(project / "scripts/verify-rules.swift"), str(project)], check=True)
         assert b"@rpath/Sparkle.framework" in run("otool", "-L", str(app / "Contents/MacOS/Kaze"))
         run("codesign", "--verify", "--deep", "--strict", str(app))
         assert run("lipo", "-archs", str(app / "Contents/MacOS/Kaze")).decode().strip() == architecture

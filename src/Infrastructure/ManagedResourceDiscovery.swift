@@ -99,8 +99,8 @@ extension CleanerOperations {
                     detail: .verbatim([image, status].filter { !$0.isEmpty }.joined(separator: " · ")),
                     sizeText: size.map(LocalizedText.verbatim) ?? .message("Tamaño no informado"),
                     sizeBytes: parseByteCount(size ?? ""),
-                    canSelect: true,
-                    blockedReason: isRunning ? .message("Está activo: se detendrá al confirmar su eliminación") : nil
+                    canSelect: !isRunning,
+                    blockedReason: isRunning ? .message("Detén el contenedor antes de eliminarlo") : nil
                 ))
             }
         }

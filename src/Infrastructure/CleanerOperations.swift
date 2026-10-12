@@ -8,42 +8,59 @@ enum CleanerOperations {
             .appendingPathComponent("Library/Logs/LiberarEspacioMac/limpieza.log")
     }
 
-    nonisolated static func recycle(_ url: URL, label: String) {
-        let manager = FileManager.default
-        guard manager.fileExists(atPath: url.path) else { return }
-        let log = logURL
+    @discardableResult
+    nonisolated static func recycle(_ url: URL, label: String, bytes: Int64? = nil) -> Bool {
+        guard DiskScanner.metadata(url) != nil else { return false }
         do {
-            var resultingURL: NSURL?
-            try manager.trashItem(at: url, resultingItemURL: &resultingURL)
-            writeLog(L10n.text("A Papelera: \(label) — \(url.path)"), to: log)
-        } catch {
-            let firstError = error.localizedDescription
-            let semaphore = DispatchSemaphore(value: 0)
-            var workspaceError: Error?
-            DispatchQueue.main.async {
-                NSWorkspace.shared.recycle([url]) { _, error in
-                    workspaceError = error
-                    semaphore.signal()
+            let catalog = try RuleCatalog.bundled(); try catalog.authorizeNative("trash")
+            try OperationJournal.shared.trash(url, title: label, bytes: bytes, ruleVersion: catalog.manifest.version) { source in
+                do {
+                    var destination: NSURL?
+                    try FileManager.default.trashItem(at: source, resultingItemURL: &destination)
+                    return destination as URL?
+                } catch {
+                    let initialError = error
+                    let semaphore = DispatchSemaphore(value: 0)
+                    var destination: URL?
+                    DispatchQueue.main.async {
+                        NSWorkspace.shared.recycle([source]) { mapping, _ in
+                            destination = mapping[source]
+                            semaphore.signal()
+                        }
+                    }
+                    guard semaphore.wait(timeout: .now() + 45) == .success else { throw AnalysisActionError.pendingTrash }
+                    if DiskScanner.metadata(source) == nil { return destination }
+                    if let privileged = privilegedRecycle(source, label: label, log: logURL) { return privileged }
+                    throw initialError
                 }
             }
-
-            if semaphore.wait(timeout: .now() + 45) == .success,
-               !manager.fileExists(atPath: url.path) {
-                writeLog(L10n.text("A Papelera mediante Finder: \(label) — \(url.path)"), to: log)
-            } else if privilegedRecycle(url, label: label, log: log) {
-                return
-            } else {
-                let detail = workspaceError?.localizedDescription ?? firstError
-                writeLog(
-                    L10n.text("ERROR al mover \(label) a la Papelera: \(url.path) — \(detail). ")
-                    + L10n.text("Activa Acceso total al disco para esta app en Ajustes del Sistema y vuelve a intentarlo."),
-                    to: log
-                )
-            }
+            writeLog(L10n.text("A Papelera: \(label) — \(url.path)"), to: logURL)
+            return true
+        } catch {
+            writeLog(L10n.text("ERROR al mover \(label) a la Papelera: \(url.path) — \(error.localizedDescription). "), to: logURL)
+            return false
         }
     }
 
-    nonisolated static func privilegedRecycle(_ url: URL, label: String, log: URL) -> Bool {
+    nonisolated static func closeApplication(_ identifier: String, bundleURL: URL? = nil) -> Bool {
+        let target = bundleURL.map(canonicalFilePath)
+        func belongs(_ app: NSRunningApplication) -> Bool {
+            guard let target, let url = app.bundleURL else { return true }
+            return canonicalFilePath(url) == target
+        }
+        let apps = NSRunningApplication.runningApplications(withBundleIdentifier: identifier).filter(belongs)
+        apps.forEach { _ = $0.terminate() }
+        let deadline = Date().addingTimeInterval(5)
+        while apps.contains(where: { !$0.isTerminated }), Date() < deadline { Thread.sleep(forTimeInterval: 0.1) }
+        guard NSRunningApplication.runningApplications(withBundleIdentifier: identifier).filter(belongs).isEmpty else { return false }
+        guard let bundleURL else { return true }
+        let processes = runCommand("/bin/ps", arguments: ["-axo", "comm="], timeout: 3)
+        guard processes.status == 0 else { return false }
+        let prefix = canonicalFilePath(bundleURL) + "/"
+        return !processes.output.split(separator: "\n").contains { $0.trimmingCharacters(in: .whitespaces).hasPrefix(prefix) }
+    }
+
+    nonisolated static func privilegedRecycle(_ url: URL, label: String, log: URL) -> URL? {
         let manager = FileManager.default
         let trash = manager.homeDirectoryForCurrentUser.appendingPathComponent(".Trash", isDirectory: true)
         var destination = trash.appendingPathComponent(url.lastPathComponent)
@@ -64,16 +81,16 @@ enum CleanerOperations {
         let script = """
         set sourcePath to "\(escaped(url.path))"
         set destinationPath to "\(escaped(destination.path))"
-        do shell script "/bin/mv " & quoted form of sourcePath & " " & quoted form of destinationPath with administrator privileges with prompt "\(escaped(prompt))"
+        do shell script "/bin/mv -n " & quoted form of sourcePath & " " & quoted form of destinationPath with administrator privileges with prompt "\(escaped(prompt))"
         """
         let result = runCommand("/usr/bin/osascript", arguments: ["-e", script], timeout: 180)
         if result.status == 0 && !manager.fileExists(atPath: url.path) {
             writeLog(L10n.text("A Papelera con autorización: \(label) — \(url.path)"), to: log)
-            return true
+            return destination
         }
         let detail = result.output.trimmingCharacters(in: .whitespacesAndNewlines)
         writeLog(L10n.text("Autorización fallida para \(label): \(detail)"), to: log)
-        return false
+        return nil
     }
 
     nonisolated static func writeLog(_ message: String, to destination: URL) {

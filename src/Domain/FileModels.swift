@@ -1,6 +1,6 @@
 import Foundation
 
-struct DiskMeasurement: Equatable {
+struct DiskMeasurement: Equatable, Codable {
     var bytes: Int64 = 0
     var unreadableCount = 0
     var fileCount = 0

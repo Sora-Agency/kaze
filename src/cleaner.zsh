@@ -17,6 +17,8 @@ readonly LOG_DIR="$USER_HOME/Library/Logs/LiberarEspacioMac"
 readonly LOG_FILE="$LOG_DIR/limpieza.log"
 readonly LOCK_DIR="/tmp/com.soraagency.kaze.lock"
 
+journal_executable="${0:A:h}/../MacOS/Kaze"
+
 run_mode="manual"
 dry_run=0
 show_dialog=1
@@ -109,6 +111,9 @@ is_allowed_clean_target() {
   fi
   case "$target" in
     "$USER_HOME/Library/Caches"|\
+    "$USER_HOME/Library/Caches/Google/Chrome"|\
+    "$USER_HOME/Library/Caches/com.google.Chrome"|\
+    "$USER_HOME/Library/Caches/com.apple.Safari"|\
     "$USER_HOME/.cache"|\
     "$USER_HOME/.gradle/caches"|\
     "$USER_HOME/.gradle/daemon"|\
@@ -141,13 +146,22 @@ clean_contents() {
   fi
 
   local before
-  before="$(path_kib "$target")"
   if (( dry_run )); then
+    before="$(path_kib "$target")"
     log "$(kaze_text 'SIMULACIÓN: %s ocupa %s GiB' "$label" "$(format_gib "$before")")"
     return 0
   fi
 
-  /usr/bin/find "$target" -mindepth 1 -maxdepth 1 -exec /bin/rm -rf -- {} + 2>>"$LOG_FILE" || true
+  local before_bytes
+  if [[ ! -x "$journal_executable" ]] || ! before_bytes="$("$journal_executable" --kaze-authorize-cleanup "$target")"; then
+    log "$(kaze_text 'BLOQUEADO: regla no verificada o aplicación en uso: %s' "$target")"
+    return 1
+  fi
+  before=$(( before_bytes / 1024 ))
+  local operation_id cleanup_result=0 free_before="$(free_kib)"
+  operation_id="$("$journal_executable" --kaze-journal-begin "$target" "$label" "$(( before * 1024 ))")" || return 1
+  /usr/bin/find "$target" -mindepth 1 -maxdepth 1 -exec /bin/rm -rf -- {} + 2>>"$LOG_FILE" || cleanup_result=$?
+  "$journal_executable" --kaze-journal-finish "$operation_id" "$cleanup_result" 'Limpieza irreversible de caché regenerable; los bloques retenidos por APFS no se consideran liberados.' "$(( ($(free_kib) - free_before) * 1024 ))" || return 1
   log "$(kaze_text 'Limpieza: %s; tamaño previo %s GiB' "$label" "$(format_gib "$before")")"
 }
 
@@ -167,10 +181,23 @@ if [[ "$run_mode" == "scheduled" && "$dry_run" -eq 0 && "$always_clean" -eq 0 &&
   exit 0
 fi
 
+run_audited_command() {
+  local label="$1" target="$2"
+  shift 2
+  [[ -x "$journal_executable" ]] || return 1
+  "$journal_executable" --kaze-authorize-command "$@" || { log "$(kaze_text 'BLOQUEADO: regla no verificada o aplicación en uso: %s' "$label")"; return 1; }
+  local operation_id command_result=0 free_before="$(free_kib)"
+  operation_id="$("$journal_executable" --kaze-journal-begin "$target" "$label" unknown)" || return 1
+  "$@" >>"$LOG_FILE" 2>&1 || command_result=$?
+  "$journal_executable" --kaze-journal-finish "$operation_id" "$command_result" 'Recurso administrado: sin deshacer; tamaño liberado no verificable por archivo.' "$(( ($(free_kib) - free_before) * 1024 ))" || return 1
+  return "$command_result"
+}
+
 if (( clean_general )); then
   log "[PROGRESS] $(kaze_text 'Limpiando cachés generales')"
-  clean_contents "$(kaze_text 'cachés generales del usuario')" "$USER_HOME/Library/Caches"
-  clean_contents "$(kaze_text 'cachés multiplataforma')" "$USER_HOME/.cache"
+  clean_contents "Chrome" "$USER_HOME/Library/Caches/Google/Chrome"
+  clean_contents "Chrome" "$USER_HOME/Library/Caches/com.google.Chrome"
+  clean_contents "Safari" "$USER_HOME/Library/Caches/com.apple.Safari"
   clean_contents "$(kaze_text 'caché de Discord')" "$USER_HOME/Library/Application Support/discord/Cache"
   clean_contents "$(kaze_text 'Code Cache de Discord')" "$USER_HOME/Library/Application Support/discord/Code Cache"
   clean_contents "$(kaze_text 'GPUCache de Discord')" "$USER_HOME/Library/Application Support/discord/GPUCache"
@@ -178,33 +205,26 @@ fi
 
 if (( clean_development )); then
   log "[PROGRESS] $(kaze_text 'Limpiando cachés de desarrollo')"
-  for nx_cache in "$USER_HOME"/.nx/*/cache(N/); do
-    clean_contents "$(kaze_text 'caché de compilación Nx')" "$nx_cache"
-  done
   clean_contents "$(kaze_text 'cachés de Gradle')" "$USER_HOME/.gradle/caches"
-  clean_contents "$(kaze_text 'daemons de Gradle')" "$USER_HOME/.gradle/daemon"
-  clean_contents "$(kaze_text 'temporales nativos de Gradle')" "$USER_HOME/.gradle/native"
-  clean_contents "$(kaze_text 'notificaciones de Gradle')" "$USER_HOME/.gradle/notifications"
-  clean_contents "$(kaze_text 'temporales de Gradle')" "$USER_HOME/.gradle/.tmp"
   clean_contents "$(kaze_text 'caché de npm')" "$USER_HOME/.npm/_cacache"
   clean_contents "$(kaze_text 'ejecuciones temporales de npx')" "$USER_HOME/.npm/_npx"
-  clean_contents "$(kaze_text 'logs de npm')" "$USER_HOME/.npm/_logs"
   clean_contents "$(kaze_text 'DerivedData de Xcode')" "$USER_HOME/Library/Developer/Xcode/DerivedData"
   clean_contents "$(kaze_text 'caché de CoreSimulator')" "$USER_HOME/Library/Developer/CoreSimulator/Caches"
 fi
 
 if (( ! dry_run && clean_development )); then
   if command -v pnpm >/dev/null 2>&1; then
-    pnpm store prune >>"$LOG_FILE" 2>&1 || true
+    run_audited_command "pnpm" "$USER_HOME/Library/pnpm/store" pnpm store prune || true
   fi
 
   if command -v xcrun >/dev/null 2>&1; then
-    xcrun simctl delete unavailable >>"$LOG_FILE" 2>&1 || true
+    run_audited_command "CoreSimulator" "$USER_HOME/Library/Developer/CoreSimulator/Devices" xcrun simctl delete unavailable || true
   fi
 fi
 
 if (( ! dry_run && clean_general )) && command -v brew >/dev/null 2>&1; then
-  HOMEBREW_NO_AUTO_UPDATE=1 brew cleanup --prune=all >>"$LOG_FILE" 2>&1 || true
+  export HOMEBREW_NO_AUTO_UPDATE=1
+  run_audited_command "Homebrew" "$USER_HOME/Library/Caches/Homebrew" brew cleanup --prune=all || true
 fi
 
 docker_raw="$USER_HOME/Library/Containers/com.docker.docker/Data/vms/0/data/Docker.raw"
@@ -233,9 +253,13 @@ elif (( docker_raw_kib > 10485760 )); then
   fi
 
   if (( docker_ready )); then
-    docker builder prune -af --filter 'until=168h' >>"$LOG_FILE" 2>&1 || true
-    docker image prune -f >>"$LOG_FILE" 2>&1 || true
-    log "$(kaze_text 'Docker: se limpiaron cachés de build antiguas y objetos dangling; volúmenes y contenedores preservados.')"
+    if run_audited_command "Docker build cache" "$docker_raw" docker builder prune -af --filter until=168h; then docker_build_result=0; else docker_build_result=1; fi
+    if run_audited_command "Docker dangling images" "$docker_raw" docker image prune -f; then docker_image_result=0; else docker_image_result=1; fi
+    if (( docker_build_result == 0 && docker_image_result == 0 )); then
+      log "$(kaze_text 'Docker: se limpiaron cachés de build antiguas y objetos dangling; volúmenes y contenedores preservados.')"
+    else
+      log "$(kaze_text 'Docker: hubo operaciones omitidas o fallidas; revisa Historial y Actividad.')"
+    fi
   else
     log "$(kaze_text 'Docker: no fue posible iniciar la API; Docker.raw no se modificó.')"
   fi
@@ -251,14 +275,14 @@ if (( reclaimed_kib < 0 )); then
   reclaimed_kib=0
 fi
 
-log "$(kaze_text 'Fin; libres: %s GiB; recuperados: %s GiB' "$(format_gib "$final_free")" "$(format_gib "$reclaimed_kib")")"
+log "$(kaze_text 'Fin; libres: %s GiB; cambio observado: %s GiB' "$(format_gib "$final_free")" "$(format_gib "$reclaimed_kib")")"
 
 if (( dry_run )); then
   print -r -- "$(kaze_text 'Simulación completada. Revisa: %s' "$LOG_FILE")"
   exit 0
 fi
 
-summary="$(kaze_text 'Limpieza terminada. Recuperados: %s GB. Espacio libre: %s GB.' "$(format_gib "$reclaimed_kib")" "$(format_gib "$final_free")")"
+summary="$(kaze_text 'Limpieza terminada. Cambio observado en espacio libre: %s GB. Espacio libre: %s GB.' "$(format_gib "$reclaimed_kib")" "$(format_gib "$final_free")")"
 if (( final_free < 41943040 )); then
   summary="$summary $(kaze_text 'El disco sigue por debajo de 40 GB libres; revisa Docker, aplicaciones y archivos grandes.')"
 fi

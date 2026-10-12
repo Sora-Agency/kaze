@@ -1,12 +1,21 @@
 import Foundation
 import AppKit
+import Darwin
 
 extension CleanerOperations {
-    nonisolated static func discoverApplications(home: URL) -> [InstalledApplication] {
+    nonisolated static func discoverApplications(home: URL, index: StorageIndex? = nil) -> [InstalledApplication] {
         let manager = FileManager.default
         let roots = [URL(fileURLWithPath: "/Applications"), home.appendingPathComponent("Applications")]
         var seen = Set<String>()
         var result: [InstalledApplication] = []
+        let appURLs = roots.flatMap { (try? manager.contentsOfDirectory(at: $0, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles])) ?? [] }.filter { $0.pathExtension.lowercased() == "app" }
+        var groupOwners: [String: [String]] = [:]
+        var appGroups: [String: [String]] = [:]
+        var identifierOwners: [String: [String]] = [:]
+        for app in appURLs {
+            if let id = Bundle(url: app)?.bundleIdentifier { identifierOwners[id.lowercased(), default: []].append(app.path) }
+        }
+        for app in appURLs { let groups = ApplicationAttribution.groups(app); appGroups[app.path] = groups; for group in groups { groupOwners[group, default: []].append(app.path) } }
 
         for root in roots {
             guard let entries = try? manager.contentsOfDirectory(
@@ -17,7 +26,7 @@ extension CleanerOperations {
 
             for url in entries where url.pathExtension.lowercased() == "app" {
                 let standardized = url.standardizedFileURL.path
-                guard !seen.contains(standardized),
+                guard let metadata = DiskScanner.metadata(url), (metadata.st_mode & S_IFMT) == S_IFDIR, !seen.contains(standardized),
                       !AppIdentity.ownedBundleIdentifiers.contains(Bundle(url: url)?.bundleIdentifier ?? "") else { continue }
                 seen.insert(standardized)
 
@@ -26,16 +35,18 @@ extension CleanerOperations {
                     ?? (bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String)
                     ?? url.deletingPathExtension().lastPathComponent
                 let identifier = bundle?.bundleIdentifier
-                let related = relatedDataURLs(for: displayName, bundleIdentifier: identifier, home: home)
-                let appSize = diskUsage(of: url)
-                let relatedData = related.map { url in
+                let related = ApplicationAttribution.discover(app: url, name: displayName, identifier: identifier, home: home, groupOwners: groupOwners, cachedGroups: appGroups[url.path], identifierOwners: identifierOwners)
+                let appSize = index.flatMap { snapshot in snapshot.byPath[url.path].flatMap { snapshot.files[$0].partial ? nil : snapshot.files[$0].allocated } } ?? diskUsage(of: url)
+                let relatedData = related.map { attributed in
+                    let url = attributed.url
                     let values = try? url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
                     return ApplicationDataItem(
                         id: url.standardizedFileURL.path,
                         applicationID: standardized,
                         url: url,
-                        bytes: diskUsage(of: url),
-                        isDirectory: values?.isDirectory == true && values?.isSymbolicLink != true
+                        bytes: index.flatMap { snapshot in snapshot.byPath[url.path].flatMap { snapshot.files[$0].partial ? nil : snapshot.files[$0].allocated } } ?? diskUsage(of: url),
+                        isDirectory: values?.isDirectory == true && values?.isSymbolicLink != true,
+                        evidence: attributed.evidence, sharedWith: attributed.sharedWith, verified: attributed.verified, requiresReview: attributed.url.path.contains("/Group Containers/") || attributed.url.path.contains("/LaunchAgents/")
                     )
                 }
 
@@ -51,63 +62,6 @@ extension CleanerOperations {
         }
 
         return result
-    }
-
-    nonisolated static func relatedDataURLs(for name: String, bundleIdentifier: String?, home: URL) -> [URL] {
-        let library = home.appendingPathComponent("Library")
-        var candidates: [URL] = []
-
-        if let identifier = bundleIdentifier, !identifier.isEmpty {
-            candidates += [
-                library.appendingPathComponent("Caches/\(identifier)"),
-                library.appendingPathComponent("Containers/\(identifier)"),
-                library.appendingPathComponent("HTTPStorages/\(identifier)"),
-                library.appendingPathComponent("WebKit/\(identifier)"),
-                library.appendingPathComponent("Preferences/\(identifier).plist"),
-                library.appendingPathComponent("Saved Application State/\(identifier).savedState")
-            ]
-        }
-
-        candidates.append(library.appendingPathComponent("Application Support/\(name)"))
-
-        let known: [String: [String]] = [
-            "docker": [
-                "Library/Containers/com.docker.docker",
-                "Library/Group Containers/group.com.docker",
-                "Library/Application Support/Docker Desktop",
-                "Library/Application Support/com.docker.install",
-                ".docker"
-            ],
-            "google chrome": [
-                "Library/Application Support/Google/Chrome",
-                "Library/Caches/Google/Chrome"
-            ],
-            "steam": ["Library/Application Support/Steam"],
-            "discord": ["Library/Application Support/discord"],
-            "spotify": ["Library/Application Support/Spotify"],
-            "postman": ["Library/Application Support/Postman"],
-            "figma": ["Library/Application Support/Figma"],
-            "antigravity": ["Library/Application Support/Antigravity"],
-            "antigravity ide": ["Library/Application Support/Antigravity IDE"],
-            "blender": ["Library/Application Support/Blender"],
-            "beekeeper studio": ["Library/Application Support/beekeeper-studio"],
-            "microsoft teams": [
-                "Library/Containers/com.microsoft.teams2",
-                "Library/Containers/com.microsoft.teams2.agent"
-            ],
-            "microsoft outlook": ["Library/Containers/com.microsoft.Outlook"],
-            "whatsapp": ["Library/Containers/net.whatsapp.WhatsApp"]
-        ]
-
-        for relativePath in known[name.lowercased()] ?? [] {
-            candidates.append(home.appendingPathComponent(relativePath))
-        }
-
-        var unique = Set<String>()
-        return candidates
-            .map(\.standardizedFileURL)
-            .filter { FileManager.default.fileExists(atPath: $0.path) }
-            .filter { unique.insert($0.path).inserted }
     }
 
     nonisolated static func discoverDirectoryChildren(
@@ -161,7 +115,7 @@ extension CleanerOperations {
                 applicationID: parent.applicationID,
                 url: standardized,
                 bytes: sizes[standardized.path] ?? fallbackBytes,
-                isDirectory: isDirectory
+                isDirectory: isDirectory, evidence: parent.evidence, sharedWith: parent.sharedWith, verified: parent.verified, requiresReview: parent.requiresReview
             )
         }
         .sorted {

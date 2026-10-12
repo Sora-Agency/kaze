@@ -19,8 +19,9 @@ extension CleanerModel {
     }
 
     func refreshResources(startDocker: Bool = false) {
-        guard !isScanningResources && !isRemovingResources else { return }
+        guard discoveryEnabled, !isScanningResources && !isRemovingResources else { return }
         isScanningResources = true
+        hasLoadedResources = true
         resourceText = startDocker ? .message("Iniciando Docker…") : .message("Analizando recursos…")
         let startedAt = Date()
 
@@ -130,19 +131,7 @@ extension CleanerModel {
             guard let self else { return }
 
             for resource in targets {
-                let result: (output: String, status: Int32)
-                switch resource.kind {
-                case .dockerImage:
-                    result = CleanerOperations.runDocker(arguments: ["image", "rm", resource.identifier])
-                case .dockerContainer:
-                    result = CleanerOperations.runDocker(arguments: ["container", "rm", "--force", resource.identifier])
-                case .dockerVolume:
-                    result = CleanerOperations.runDocker(arguments: ["volume", "rm", resource.identifier])
-                case .xcodeDevice:
-                    result = CleanerOperations.runCommand("/usr/bin/xcrun", arguments: ["simctl", "delete", resource.identifier])
-                case .xcodeRuntime:
-                    result = CleanerOperations.runCommand("/usr/bin/xcrun", arguments: ["simctl", "runtime", "delete", resource.identifier])
-                }
+                let result = ManagedResourceRemoval.remove(resource)
 
                 if result.status == 0 {
                     self.appendLogFromBackground(L10n.text("Recurso eliminado: \(L10n.string(resource.kind.rawValue)) — \(resource.title)"))

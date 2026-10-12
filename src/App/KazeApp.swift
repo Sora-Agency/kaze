@@ -10,7 +10,10 @@ extension Notification.Name {
 struct KazeApp: App {
     @StateObject private var language = AppLanguageStore.shared
     @StateObject private var updater = AppUpdater.shared
-    init() { AppIdentity.migratePreferences() }
+    init() {
+        OperationCLI.runIfRequested()
+        AppIdentity.migratePreferences()
+    }
     var body: some Scene {
         WindowGroup("Kaze · Sora") {
             ContentView().environment(\.locale, language.locale)

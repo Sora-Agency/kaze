@@ -2,6 +2,7 @@
 set -euo pipefail
 project_dir="${0:A:h:h}"
 cd "$project_dir"
+xcrun swift scripts/verify-rules.swift "$project_dir"
 build_dir="$project_dir/build"
 architecture="$(uname -m)"
 sparkle_dir="$(scripts/fetch-sparkle.sh)"
@@ -39,6 +40,7 @@ done
 cp TERMS.txt PRIVACY.txt "$resources/es.lproj/"
 cp src/Icons/Lucide/LICENSE "$resources/Icons/Lucide/"
 ditto src/Fonts "$resources/Fonts"
+ditto src/Rules "$resources/Rules"
 chmod +x "$app/Contents/MacOS/Kaze" "$resources/cleaner.zsh"
 cp src/localization.zsh src/disable-legacy-schedule.zsh src/Instalar.command src/Desinstalar.command src/README.txt src/README.es.txt "$staged_package/"
 cp LICENSE TERMS.txt PRIVACY.txt THIRD_PARTY_NOTICES.txt "$staged_package/"

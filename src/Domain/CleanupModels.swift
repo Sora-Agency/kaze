@@ -14,6 +14,11 @@ struct ApplicationDataItem: Identifiable, Hashable {
     let url: URL
     let bytes: Int64
     let isDirectory: Bool
+    var evidence: LocalizedText = .message("Atribución pendiente de verificar")
+    var sharedWith: [String] = []
+    var verified = false
+    var requiresReview = false
+    var canRemove: Bool { verified && sharedWith.isEmpty && !requiresReview }
 
     var displayPath: String {
         url.path.replacingOccurrences(
@@ -31,7 +36,7 @@ struct InstalledApplication: Identifiable, Hashable {
     let appBytes: Int64
     let relatedData: [ApplicationDataItem]
 
-    var relatedURLs: [URL] { relatedData.map(\.url) }
+    var relatedURLs: [URL] { relatedData.filter(\.canRemove).map(\.url) }
     var relatedBytes: Int64 { relatedData.reduce(0) { $0 + $1.bytes } }
     var totalBytes: Int64 { appBytes + relatedBytes }
 }
