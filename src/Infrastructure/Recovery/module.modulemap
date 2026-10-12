@@ -1,0 +1,4 @@
+module KazeRecoveryAuth {
+    header "AuthDisk.h"
+    export *
+}

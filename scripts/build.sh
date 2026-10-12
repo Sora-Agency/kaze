@@ -23,10 +23,11 @@ assets="$work_dir/assets"
 mkdir -p "$app/Contents/MacOS" "$resources/Icons/Lucide"
 xcrun swift scripts/GenerateIcon.swift src/Brand/SoraLogo.svg "$assets"
 iconutil -c icns "$assets/AppIcon.iconset" -o "$resources/AppIcon.icns"
+xcrun clang -target "$(uname -m)-apple-macosx13.0" -O2 -Wall -Wextra -c src/Infrastructure/Recovery/AuthDisk.c -o "$work_dir/AuthDisk.o"
 sources=(src/**/*.swift)
-xcrun swiftc -swift-version 5 -target "$architecture-apple-macosx13.0" -O \
+xcrun swiftc -swift-version 5 -I src/Infrastructure/Recovery -target "$architecture-apple-macosx13.0" -O \
   -F "$sparkle_dir" -framework Sparkle -Xlinker -rpath -Xlinker '@executable_path/../Frameworks' \
-  "${sources[@]}" -o "$app/Contents/MacOS/Kaze"
+  "${sources[@]}" "$work_dir/AuthDisk.o" -o "$app/Contents/MacOS/Kaze"
 cp src/Info.plist "$app/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Set :SUFeedURL https://github.com/Sora-Agency/kaze/releases/latest/download/appcast-$architecture.xml" "$app/Contents/Info.plist"
 mkdir -p "$app/Contents/Frameworks" "$resources/Sparkle"
@@ -42,6 +43,7 @@ cp src/Icons/Lucide/LICENSE "$resources/Icons/Lucide/"
 ditto src/Fonts "$resources/Fonts"
 ditto src/Rules "$resources/Rules"
 ditto src/AI "$resources/AI"
+ditto src/Recovery "$resources/Recovery"
 chmod +x "$app/Contents/MacOS/Kaze" "$resources/cleaner.zsh"
 cp src/localization.zsh src/disable-legacy-schedule.zsh src/Instalar.command src/Desinstalar.command src/README.txt src/README.es.txt "$staged_package/"
 cp LICENSE TERMS.txt PRIVACY.txt THIRD_PARTY_NOTICES.txt "$staged_package/"

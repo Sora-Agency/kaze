@@ -6,11 +6,20 @@ preview_dir="$PWD/build/previews"
 mkdir -p "$preview_dir"
 work_dir="$(mktemp -d -t kaze-preview)"
 trap 'rm -rf -- "$work_dir"' EXIT
+xcrun clang -target "$(uname -m)-apple-macosx13.0" -O2 -Wall -Wextra -c src/Infrastructure/Recovery/AuthDisk.c -o "$work_dir/AuthDisk.o"
 sources=(src/**/*.swift)
-xcrun swiftc -swift-version 5 -D KAZE_PREVIEW -target "$(uname -m)-apple-macosx13.0" \
-  "${sources[@]}" tests/Preview.swift tests/PreviewFixtures.swift -o "$work_dir/preview"
+xcrun swiftc -swift-version 5 -I src/Infrastructure/Recovery -D KAZE_PREVIEW -target "$(uname -m)-apple-macosx13.0" \
+  "${sources[@]}" "$work_dir/AuthDisk.o" tests/Preview.swift tests/PreviewFixtures.swift -o "$work_dir/preview"
 export KAZE_LOCALIZATION_RESOURCES="$PWD/src/Localization"
 export KAZE_LANGUAGE="${KAZE_LANGUAGE:-es}"
+if [[ "${1:-}" == "--management-only" ]]; then
+  for section in recovery; do
+    "$work_dir/preview" "$preview_dir/Kaze-$section-dark.png" --dark "--$section" --compact
+    "$work_dir/preview" "$preview_dir/Kaze-$section-light.png" "--$section" --compact
+  done
+  "$work_dir/preview" "$preview_dir/Kaze-recovery-browser.png" --dark --recovery --recovery-browser --compact
+  exit 0
+fi
 "$work_dir/preview" "$preview_dir/Kaze-preview-dark.png" --dark
 "$work_dir/preview" "$preview_dir/Kaze-preview-light.png" --compact
 "$work_dir/preview" "$preview_dir/Kaze-legal-preview.png" --dark --legal
@@ -38,3 +47,9 @@ done
 "$work_dir/preview" "$preview_dir/Kaze-assistant-ready.png" --dark --assistant --assistant-ready --compact
 
 "$work_dir/preview" "$preview_dir/Kaze-assistant-welcome.png" --dark --assistant --assistant-ready --assistant-empty --compact
+
+for section in recovery; do
+  "$work_dir/preview" "$preview_dir/Kaze-$section-dark.png" --dark "--$section" --compact
+  "$work_dir/preview" "$preview_dir/Kaze-$section-light.png" "--$section" --compact
+done
+"$work_dir/preview" "$preview_dir/Kaze-recovery-browser.png" --dark --recovery --recovery-browser --compact

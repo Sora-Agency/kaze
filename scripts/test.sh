@@ -5,7 +5,7 @@ export KAZE_LANGUAGE=es
 export KAZE_LOCALIZATION_RESOURCES="$PWD/src/Localization"
 test_dir="$(mktemp -d -t kaze-tests)"
 trap 'rm -rf -- "$test_dir"' EXIT
-swift_flags=(-swift-version 5 -target "$(uname -m)-apple-macosx13.0")
+swift_flags=(-swift-version 5 -I src/Infrastructure/Recovery -target "$(uname -m)-apple-macosx13.0")
 explorer_sources=(
   src/Domain/DeletionSafety.swift src/Domain/Formatting.swift src/Domain/FileModels.swift src/Domain/AnalysisModels.swift
   src/Domain/AnalysisCacheModels.swift src/Infrastructure/AnalysisCache.swift src/Infrastructure/FolderChangeMonitor.swift
@@ -23,6 +23,12 @@ run_swift_test() {
   xcrun swiftc "${swift_flags[@]}" src/Localization/L10n.swift "$@" "tests/$test_name.swift" -o "$test_dir/$test_name"
   "$test_dir/$test_name"
 }
+xcrun clang -target "$(uname -m)-apple-macosx13.0" -O2 -Wall -Wextra -c src/Infrastructure/Recovery/AuthDisk.c -o "$test_dir/AuthDisk.o"
+command_sources=(src/Infrastructure/OperationCancellation.swift src/Infrastructure/ToolCommandRunner.swift)
+recovery_sources=(src/Domain/RecoveryModels.swift src/Infrastructure/Recovery/*.swift "${command_sources[@]}")
+run_swift_test RecoveryTests "${recovery_sources[@]}" "$test_dir/AuthDisk.o"
+run_swift_test RecoveryImageTests "${recovery_sources[@]}" "$test_dir/AuthDisk.o"
+if [[ "${1:-}" == "--management-only" ]]; then exit 0; fi
 for test_name in ScannerTests ExplorerModelTests DeletionSafetyTests; do
   run_swift_test "$test_name" "${explorer_sources[@]}"
 done
@@ -52,13 +58,13 @@ done
 python3 tests/LocalizationCatalogTests.py
 tests/LocalizationRuntimeTests.zsh
 sources=(src/**/*.swift)
-xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" \
+xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" "$test_dir/AuthDisk.o" \
   tests/PreviewFixtures.swift tests/PreviewPrivacyTests.swift -o "$test_dir/PreviewPrivacyTests"
 "$test_dir/PreviewPrivacyTests"
-xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" \
+xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" "$test_dir/AuthDisk.o" \
   tests/PreviewFixtures.swift tests/LanguageSwitchTests.swift -o "$test_dir/LanguageSwitchTests"
 "$test_dir/LanguageSwitchTests"
-xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" \
+xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" "$test_dir/AuthDisk.o" \
   tests/SmartScanModelTests.swift -o "$test_dir/SmartScanModelTests"
 "$test_dir/SmartScanModelTests"
 tests/LegacyScheduleTests.zsh

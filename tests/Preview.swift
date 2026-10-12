@@ -33,7 +33,7 @@ struct Preview {
             : CommandLine.arguments.contains("--scheduled") ? .scheduled
             : CommandLine.arguments.contains("--cleanup") ? .cleanup : .explorer
         let analysisSections: [String: AppSection] = ["--smart": .smart, "--map": .spaceMap, "--duplicates": .duplicates,
-            "--system-data": .systemData, "--development": .resources, "--assistant": .assistant, "--rules": .rules, "--history": .history]
+            "--system-data": .systemData, "--development": .resources, "--assistant": .assistant, "--rules": .rules, "--history": .history, "--recovery": .recovery]
         let shownSection = interactive ? AppSection.smart : analysisSections.first { CommandLine.arguments.contains($0.key) }?.value ?? section
         let resources = interactive ? Bundle.main.resourceURL! : URL(fileURLWithPath: fm.currentDirectoryPath).appendingPathComponent("package/Kaze.app/Contents/Resources")
         if CommandLine.arguments.contains("--scheduled") {
@@ -71,7 +71,13 @@ struct Preview {
         if CommandLine.arguments.contains("--scanning") { analysis.previewScanning(visited: 92_160) }
         let rootView = ContentView(model: model, explorer: explorer, scheduler: scheduler, previewAppearance: dark ? .dark : .light,
                                    initialSection: shownSection, resourceDirectory: resources, homeURL: home, languageStore: language,
-                                   diskAccessStore: DiskAccessStore(initialStatus: CommandLine.arguments.contains("--access-granted") ? .available : .restricted), analysisModel: analysis, assistantModel: assistant)
+                                   diskAccessStore: DiskAccessStore(initialStatus: CommandLine.arguments.contains("--access-granted") ? .available : .restricted), analysisModel: analysis, assistantModel: assistant,
+                                   recoveryModel: RecoveryModel(initialEntries: CommandLine.arguments.contains("--recovery-browser") ? [
+                                    APFSEntry(name: "Documents", id: 12, parent: 2, kind: "dir", size: 0),
+                                    APFSEntry(name: "Photos", id: 13, parent: 2, kind: "dir", size: 0),
+                                    APFSEntry(name: "Archive.zip", id: 14, parent: 2, kind: "file", size: 780_000_000),
+                                    APFSEntry(name: "Notes.txt", id: 15, parent: 2, kind: "file", size: 2400)] : nil))
+
         SoraFonts.register(directory: resources.appendingPathComponent("Fonts"))
         var edited = scheduler.tasks.last ?? ScheduledCleanupTask()
         if CommandLine.arguments.contains("--weekly") { edited.configuration.frequency = .weekly }
