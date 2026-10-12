@@ -7,8 +7,10 @@ test_dir="$(mktemp -d -t kaze-tests)"
 trap 'rm -rf -- "$test_dir"' EXIT
 swift_flags=(-swift-version 5 -target "$(uname -m)-apple-macosx13.0")
 explorer_sources=(
-  src/Domain/DeletionSafety.swift src/Domain/Formatting.swift src/Domain/FileModels.swift
-  src/Infrastructure/DiskScanner.swift src/Features/Explorer/FileExplorerModel.swift
+  src/Domain/DeletionSafety.swift src/Domain/Formatting.swift src/Domain/FileModels.swift src/Domain/AnalysisModels.swift
+  src/Domain/AnalysisCacheModels.swift src/Infrastructure/AnalysisCache.swift src/Infrastructure/FolderChangeMonitor.swift
+  src/Infrastructure/ExplorerSnapshotBuilder.swift
+  src/Infrastructure/DiskScanner.swift src/Infrastructure/DeletionClassifier.swift src/Features/Explorer/FileExplorerModel.swift
 )
 schedule_sources=(
   src/App/AppIdentity.swift src/Domain/ScheduledCleanupTask.swift
@@ -24,6 +26,21 @@ run_swift_test() {
 for test_name in ScannerTests ExplorerModelTests DeletionSafetyTests; do
   run_swift_test "$test_name" "${explorer_sources[@]}"
 done
+analysis_sources=(
+  src/App/AppIdentity.swift src/Domain/*.swift
+  src/Infrastructure/DiskScanner.swift src/Infrastructure/DeletionClassifier.swift src/Infrastructure/StorageIndexer.swift
+  src/Infrastructure/AnalysisCache.swift src/Infrastructure/FolderChangeMonitor.swift
+  src/Infrastructure/DuplicateDetector.swift src/Infrastructure/RuleCatalog.swift
+  src/Infrastructure/OperationJournal.swift src/Infrastructure/MutationLease.swift
+  src/Infrastructure/CleanupAuthorization.swift src/Infrastructure/ApplicationAttribution.swift
+  src/Infrastructure/CleanerOperations.swift src/Infrastructure/ManagedResourceDiscovery.swift
+  src/Infrastructure/ManagedResourceRemoval.swift src/Infrastructure/AnalysisRemoval.swift
+)
+run_swift_test AnalysisEngineTests "${analysis_sources[@]}"
+run_swift_test AnalysisRemovalTests "${analysis_sources[@]}"
+run_swift_test AnalysisCacheTests "${analysis_sources[@]}" src/Infrastructure/ExplorerSnapshotBuilder.swift src/Features/Explorer/FileExplorerModel.swift
+run_swift_test LocalAITests "${analysis_sources[@]}" src/Infrastructure/LocalAIService.swift \
+  src/Infrastructure/SpotlightUsage.swift src/Features/SmartScan/SmartScanModel.swift src/Features/Assistant/LocalAssistantModel.swift
 run_swift_test ScheduleTests "${schedule_sources[@]}"
 run_swift_test IdentityTests src/App/AppIdentity.swift
 run_swift_test DiskAccessTests src/Infrastructure/DiskAccessStore.swift
@@ -41,6 +58,9 @@ xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" \
 xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" \
   tests/PreviewFixtures.swift tests/LanguageSwitchTests.swift -o "$test_dir/LanguageSwitchTests"
 "$test_dir/LanguageSwitchTests"
+xcrun swiftc "${swift_flags[@]}" -D KAZE_PREVIEW "${sources[@]}" \
+  tests/SmartScanModelTests.swift -o "$test_dir/SmartScanModelTests"
+"$test_dir/SmartScanModelTests"
 tests/LegacyScheduleTests.zsh
 tests/CleanerLockTests.zsh
 python3 tests/ReleaseTests.py

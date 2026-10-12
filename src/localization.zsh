@@ -24,6 +24,14 @@ kaze_text() {
   shift
   if [[ "$KAZE_LANGUAGE" == en ]]; then
     case "$format" in
+      'Docker: hubo operaciones omitidas o fallidas; revisa Historial y Actividad.') format='Docker: some operations were skipped or failed; review History and Activity.' ;;
+      'BLOQUEADO: regla no verificada o aplicación en uso: %s') format='BLOCKED: unverified rule or application in use: %s' ;;
+      'Limpieza irreversible de caché regenerable; los bloques retenidos por APFS no se consideran liberados.') format='Irreversible regenerable cache cleanup; blocks retained by APFS are not considered freed.' ;;
+      'Recurso administrado: sin deshacer; tamaño liberado no verificable por archivo.') format='Managed resource: no undo; space freed cannot be verified per file.' ;;
+      'Limpieza terminada. Cambio observado en espacio libre: %s GB. Espacio libre: %s GB.') format='Cleanup finished. Observed change in free space: %s GB. Free space: %s GB.' ;;
+      'Fin; libres: %s GiB; cambio observado: %s GiB') format='Finished; free: %s GiB; observed change: %s GiB' ;;
+      'caché de Safari') format='Safari cache' ;;
+      'caché de Chrome') format='Chrome cache' ;;
       'Identificador de tarea no válido.') format='Invalid task identifier.' ;;
       'El umbral debe ser un entero entre 1 y 1024 GiB.') format='The threshold must be an integer between 1 and 1024 GiB.' ;;
       Aceptar) format=OK ;;

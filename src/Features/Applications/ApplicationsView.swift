@@ -77,7 +77,7 @@ struct ApplicationsView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
                     Text(L10n.text("Aplicaciones")).font(SoraTypography.body(28, weight: .bold))
-                    Text(L10n.text("Selecciona apps para moverlas a la Papelera junto con sus datos locales conocidos."))
+                    Text(L10n.text("Selecciona apps y revisa la atribución de sus datos. Los restos compartidos o dudosos se conservan."))
                         .foregroundStyle(SoraPalette.secondary)
                 }
                 Spacer()
@@ -152,11 +152,12 @@ struct ApplicationsView: View {
             }
             .padding(16)
         }
+        .onAppear { if !model.hasLoadedApps { model.scanApplications() } }
         .alert(L10n.text("¿Desinstalar las aplicaciones seleccionadas?"), isPresented: $model.showingRemovalConfirmation) {
             Button(L10n.text("Cancelar"), role: .cancel) {}
             Button(L10n.text("Mover a la Papelera"), role: .destructive) { model.removeSelectedApplications() }
         } message: {
-            Text(L10n.text("Se moverán las apps y sus datos locales relacionados a la Papelera. En Docker esto incluye imágenes, contenedores y volúmenes locales. No se vaciará la Papelera."))
+            Text(L10n.text("Se moverán las apps y los datos atribuibles de forma verificable. Los grupos compartidos, LaunchAgents y coincidencias por nombre se conservarán para revisión. La Papelera no se vacía y puedes restaurar desde Historial."))
         }
         .alert(L10n.text("¿Mover los datos seleccionados a la Papelera?"), isPresented: $model.showingDataRemovalConfirmation) {
             Button(L10n.text("Cancelar"), role: .cancel) {}

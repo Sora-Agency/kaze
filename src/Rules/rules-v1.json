@@ -1,0 +1,496 @@
+{
+  "schema": 1,
+  "version": 1,
+  "rules": [
+    {
+      "id": "xcode-derived",
+      "title": "Compilaciones Xcode",
+      "paths": [
+        "Library/Developer/Xcode/DerivedData"
+      ],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Resultados de compilación que Xcode puede reconstruir.",
+      "recovery": "Reconstruir el proyecto en Xcode; puede tardar varios minutos.",
+      "closedProcesses": [
+        "Xcode",
+        "xcodebuild",
+        "swift"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "simulator-cache",
+      "title": "Caché de simuladores",
+      "paths": [
+        "Library/Developer/CoreSimulator/Caches"
+      ],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Caché regenerable; no incluye los datos de los dispositivos.",
+      "recovery": "Iniciar de nuevo el simulador.",
+      "closedProcesses": [
+        "Simulator",
+        "simulator",
+        "Xcode"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "npm-cache",
+      "title": "Caché npm",
+      "paths": [
+        ".npm/_cacache",
+        ".npm/_npx"
+      ],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Paquetes descargados y ejecuciones temporales; no contiene proyectos.",
+      "recovery": "npm vuelve a descargar paquetes; necesita conexión.",
+      "closedProcesses": [
+        "npm",
+        "node",
+        "npx"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "gradle-cache",
+      "title": "Caché Gradle",
+      "paths": [
+        ".gradle/caches"
+      ],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Dependencias y resultados de compilación descargables.",
+      "recovery": "Gradle reconstruye y descarga dependencias; coste alto.",
+      "closedProcesses": [
+        "gradle",
+        "java",
+        "Android Studio"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "python-cache",
+      "title": "Caché Python",
+      "paths": [
+        "Library/Caches/pip",
+        ".cache/pip"
+      ],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Paquetes descargados por pip, sin entornos virtuales.",
+      "recovery": "pip vuelve a descargar paquetes.",
+      "closedProcesses": [
+        "pip",
+        "python"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "cocoapods-cache",
+      "title": "Caché CocoaPods",
+      "paths": [
+        "Library/Caches/CocoaPods"
+      ],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Dependencias descargables de CocoaPods.",
+      "recovery": "Ejecutar pod install; necesita conexión.",
+      "closedProcesses": [
+        "pod",
+        "ruby",
+        "Xcode"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "node-modules",
+      "title": "Dependencias Node",
+      "paths": [],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Dependencias del proyecto con manifiesto package.json; revisar scripts y cambios locales.",
+      "recovery": "Reinstalar con el gestor del proyecto; se pierden modificaciones locales.",
+      "closedProcesses": [
+        "node",
+        "npm",
+        "pnpm",
+        "yarn"
+      ],
+      "projectFolder": "node_modules",
+      "manifests": [
+        "package.json"
+      ]
+    },
+    {
+      "id": "pods",
+      "title": "Dependencias CocoaPods",
+      "paths": [],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Dependencias del proyecto con Podfile; revisar modificaciones locales.",
+      "recovery": "Ejecutar pod install; se pierden modificaciones locales.",
+      "closedProcesses": [
+        "pod",
+        "Xcode",
+        "xcodebuild"
+      ],
+      "projectFolder": "Pods",
+      "manifests": [
+        "Podfile"
+      ]
+    },
+    {
+      "id": "swift-build",
+      "title": "Compilaciones Swift",
+      "paths": [],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Resultados de Swift Package Manager con Package.swift.",
+      "recovery": "Ejecutar swift build; recompilación y posibles descargas.",
+      "closedProcesses": [
+        "swift",
+        "Xcode",
+        "xcodebuild"
+      ],
+      "projectFolder": ".build",
+      "manifests": [
+        "Package.swift"
+      ]
+    },
+    {
+      "id": "project-gradle",
+      "title": "Compilaciones Gradle",
+      "paths": [],
+      "category": "development",
+      "regenerable": true,
+      "reason": "Estado local de un proyecto Gradle con manifiesto.",
+      "recovery": "Gradle reconstruirá su estado local.",
+      "closedProcesses": [
+        "gradle",
+        "java",
+        "Android Studio"
+      ],
+      "projectFolder": ".gradle",
+      "manifests": [
+        "build.gradle",
+        "build.gradle.kts"
+      ]
+    },
+    {
+      "id": "pnpm-store",
+      "title": "Almacén pnpm",
+      "paths": [
+        "Library/pnpm/store",
+        ".local/share/pnpm/store"
+      ],
+      "category": "development",
+      "regenerable": false,
+      "reason": "Almacén compartido: puede contener enlaces usados por varios proyectos.",
+      "recovery": "Usar pnpm store prune después de revisar sus dependencias.",
+      "closedProcesses": [
+        "pnpm",
+        "node"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "python-environment",
+      "title": "Entornos Python",
+      "paths": [],
+      "category": "development",
+      "regenerable": false,
+      "reason": "Entornos virtuales; pueden contener paquetes o cambios sin receta reproducible.",
+      "recovery": "Recrear con los requisitos del proyecto después de revisarlos.",
+      "closedProcesses": [
+        "python",
+        "pip"
+      ],
+      "projectFolder": ".venv",
+      "manifests": [
+        "pyproject.toml",
+        "requirements.txt"
+      ]
+    },
+    {
+      "id": "ollama-models",
+      "title": "Modelos Ollama",
+      "paths": [
+        ".ollama/models"
+      ],
+      "category": "development",
+      "regenerable": false,
+      "reason": "Modelos y blobs de IA locales; las referencias pueden estar compartidas.",
+      "recovery": "Volver a descargar con Ollama; puede costar muchos GB.",
+      "closedProcesses": [
+        "ollama"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "huggingface",
+      "title": "Modelos Hugging Face",
+      "paths": [
+        ".cache/huggingface"
+      ],
+      "category": "development",
+      "regenerable": false,
+      "reason": "Modelos y datasets locales, posiblemente compartidos entre proyectos.",
+      "recovery": "Volver a descargar los modelos y datasets necesarios.",
+      "closedProcesses": [
+        "python",
+        "llama",
+        "transformers"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "browser-cache",
+      "title": "Caché del navegador",
+      "paths": [
+        "Library/Caches/com.google.Chrome",
+        "Library/Caches/com.apple.Safari",
+        "Library/Caches/Google/Chrome"
+      ],
+      "category": "general",
+      "regenerable": true,
+      "reason": "Caché de navegación; no incluye perfiles, contraseñas ni documentos.",
+      "recovery": "El navegador descargará otra vez el contenido.",
+      "closedProcesses": [
+        "Google Chrome",
+        "Safari",
+        "Google Chrome Helper"
+      ],
+      "projectFolder": null,
+      "manifests": null
+    },
+    {
+      "id": "discord-cache",
+      "title": "Caché Discord",
+      "paths": [
+        "Library/Application Support/discord/Cache",
+        "Library/Application Support/discord/Code Cache",
+        "Library/Application Support/discord/GPUCache"
+      ],
+      "projectFolder": null,
+      "manifests": null,
+      "category": "general",
+      "regenerable": true,
+      "reason": "Cachés de contenido de Discord; conserva sesiones y datos de usuario.",
+      "recovery": "Discord descargará otra vez el contenido.",
+      "closedProcesses": [
+        "Discord"
+      ]
+    },
+    {
+      "id": "pnpm-prune",
+      "title": "Depuración de pnpm",
+      "paths": [],
+      "projectFolder": null,
+      "manifests": null,
+      "category": "development",
+      "regenerable": true,
+      "reason": "pnpm determina qué paquetes no tienen referencias activas.",
+      "recovery": "pnpm volverá a descargar paquetes necesarios.",
+      "closedProcesses": [
+        "pnpm",
+        "node"
+      ],
+      "commands": [
+        [
+          "pnpm",
+          "store",
+          "prune"
+        ]
+      ]
+    },
+    {
+      "id": "simulator-unavailable",
+      "title": "Simuladores no disponibles",
+      "paths": [],
+      "projectFolder": null,
+      "manifests": null,
+      "category": "development",
+      "regenerable": false,
+      "reason": "Elimina dispositivos cuyo runtime ya no está disponible; sus datos no se pueden reconstruir.",
+      "recovery": "No admite deshacer. Conservar cualquier dato necesario antes de ejecutar.",
+      "closedProcesses": [
+        "Simulator",
+        "Xcode"
+      ],
+      "commands": [
+        [
+          "xcrun",
+          "simctl",
+          "delete",
+          "unavailable"
+        ]
+      ]
+    },
+    {
+      "id": "brew-cache",
+      "title": "Caché Homebrew",
+      "paths": [],
+      "projectFolder": null,
+      "manifests": null,
+      "category": "development",
+      "regenerable": true,
+      "reason": "Homebrew identifica descargas y versiones antiguas.",
+      "recovery": "Puede requerir nuevas descargas; las versiones antiguas se pierden.",
+      "closedProcesses": [
+        "brew",
+        "make",
+        "clang"
+      ],
+      "commands": [
+        [
+          "brew",
+          "cleanup",
+          "--prune=all"
+        ]
+      ]
+    },
+    {
+      "id": "docker-build-cache",
+      "title": "Caché de builds Docker",
+      "paths": [],
+      "projectFolder": null,
+      "manifests": null,
+      "category": "development",
+      "regenerable": true,
+      "reason": "Docker libera cachés de builds de más de siete días.",
+      "recovery": "Reconstruir imágenes; puede necesitar red y tiempo.",
+      "closedProcesses": [
+        "docker-build",
+        "buildkitd"
+      ],
+      "commands": [
+        [
+          "docker",
+          "builder",
+          "prune",
+          "-af",
+          "--filter",
+          "until=168h"
+        ]
+      ]
+    },
+    {
+      "id": "docker-dangling",
+      "title": "Imágenes Docker sin referencias",
+      "paths": [],
+      "projectFolder": null,
+      "manifests": null,
+      "category": "development",
+      "regenerable": true,
+      "reason": "Docker determina imágenes dangling sin referencias.",
+      "recovery": "Reconstruir o descargar las imágenes.",
+      "closedProcesses": [
+        "docker-build"
+      ],
+      "commands": [
+        [
+          "docker",
+          "image",
+          "prune",
+          "-f"
+        ]
+      ]
+    },
+    {
+      "id": "local-models",
+      "title": "Modelos LM Studio",
+      "paths": [
+        ".lmstudio/models",
+        "Library/Application Support/LM Studio/models"
+      ],
+      "category": "development",
+      "regenerable": false,
+      "reason": "Modelos de IA locales; pueden ser descargas grandes o versiones personalizadas.",
+      "recovery": "Conservar modelos personalizados y revisar antes de volver a descargar.",
+      "closedProcesses": [
+        "LM Studio",
+        "lms"
+      ]
+    },
+    {
+      "id": "docker-storage",
+      "title": "Disco de Docker Desktop",
+      "paths": [
+        "Library/Containers/com.docker.docker/Data/vms"
+      ],
+      "category": "development",
+      "regenerable": false,
+      "reason": "Disco virtual que comparte imágenes, contenedores y volúmenes; no borrar como una caché.",
+      "recovery": "Usar Docker y simuladores para revisar recursos y respaldar volúmenes.",
+      "closedProcesses": [
+        "Docker",
+        "com.docker"
+      ]
+    },
+    {
+      "id": "native-trash",
+      "nativeAction": "trash",
+      "title": "Papelera reversible",
+      "paths": [],
+      "category": "general",
+      "regenerable": false,
+      "reason": "Solo elementos seleccionados explícitamente; apps y datos con atribución verificable requieren cerrar sus procesos.",
+      "recovery": "Restaurar desde Historial mientras el elemento permanezca intacto en la Papelera.",
+      "closedProcesses": [
+        "Procesos de la aplicación afectada"
+      ]
+    },
+    {
+      "id": "native-duplicates",
+      "nativeAction": "duplicates",
+      "title": "Copias exactas verificadas",
+      "paths": [],
+      "category": "general",
+      "regenerable": false,
+      "reason": "Conserva una copia y vuelve a verificar SHA-256 antes de mover otra; excluye Photos, respaldos y sincronizados.",
+      "recovery": "Restaurar desde Historial; las fotografías visualmente similares solo se revisan.",
+      "closedProcesses": [
+        "Aplicaciones que estén modificando las copias"
+      ]
+    },
+    {
+      "id": "native-docker",
+      "nativeAction": "docker-resource",
+      "title": "Recursos Docker seleccionados",
+      "paths": [],
+      "category": "development",
+      "regenerable": false,
+      "reason": "Usa la API de Docker sin forzar el borrado de recursos en uso; los volúmenes pueden contener datos personales.",
+      "recovery": "Sin deshacer; respaldar volúmenes y conservar recetas de reconstrucción.",
+      "closedProcesses": [
+        "docker-build"
+      ]
+    },
+    {
+      "id": "native-simulator",
+      "nativeAction": "simulator-resource",
+      "title": "Dispositivos y runtimes seleccionados",
+      "paths": [],
+      "category": "development",
+      "regenerable": false,
+      "reason": "Usa simctl y verifica que el dispositivo esté apagado antes de eliminarlo.",
+      "recovery": "Sin deshacer; reinstalar runtimes o recrear dispositivos, cuyos datos se pierden.",
+      "closedProcesses": [
+        "Simulator",
+        "Xcode"
+      ]
+    }
+  ]
+}

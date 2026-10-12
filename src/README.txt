@@ -97,3 +97,12 @@ English texts: Kaze.app/Contents/Resources/en.lproj/TERMS.txt and PRIVACY.txt.
 Spanish texts: TERMS.txt and PRIVACY.txt included with the package.
 Fonts retain their SIL Open Font License; third-party notices are included.
 The package does not itself create a public repository or promise ongoing support.
+
+STORAGE INTELLIGENCE
+Smart Scan shares one index with Space Map, Duplicates, System Data and the local
+assistant. Choose a folder to limit scope. Nothing is removed during analysis.
+SHA-256 checks exact copies; explicit Apple Vision comparison only suggests photos
+for review. History restores intact Trash items without overwriting files;
+permanent cache/Docker/simulator operations have no undo. Recovery is a potential
+range because APFS may retain shared blocks. Menu bar notifications are optional.
+Rules are bundled and Ed25519-signed. See the included source storage guide.

@@ -4,6 +4,7 @@ enum SoraMotion {
     static let interaction = Animation.easeOut(duration: 0.16)
     static let content = Animation.easeInOut(duration: 0.24)
     static let entrance = Animation.spring(response: 0.5, dampingFraction: 0.9)
+    static let collapse = Animation.timingCurve(0.22, 1, 0.36, 1, duration: 0.38)
 }
 
 struct SoraEntrance: ViewModifier {

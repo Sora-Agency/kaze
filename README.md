@@ -18,6 +18,20 @@ A product by **Sora Agency** · macOS 13+ · SwiftUI · MIT License
 
 ## Features
 
+- **Smart Scan:** one explicit scan groups caches, review items, apps, duplicates
+  and development resources, with logical, allocated and potential recovery sizes.
+- **Space Map:** interactive treemap with folder zoom, Quick Look and Finder.
+- **Intelligent duplicates:** SHA-256 verification and optional local Apple Vision
+  comparison; similar photos, Photos libraries, backups and sync folders are protected.
+- **History and undo:** recorded operations and safe restoration from Trash.
+- **System Data and Developer Mode:** explanations, project/tool inventories,
+  shared dependencies and rebuilding guidance.
+- **Menu bar monitor, signed rules and local assistant:** lightweight capacity
+  monitoring, optional alerts, verified recommendations and [optional local AI](docs/LOCAL_AI.md), downloaded with one button.
+
+[Storage intelligence guide and limits](docs/STORAGE_ANALYSIS.md).
+
+
 - **Explore files and folders:** see total folder sizes without opening them,
   including hidden items, app bundles and accessible external drives.
 - **Find the largest items:** sort by size, name, type or date and filter by

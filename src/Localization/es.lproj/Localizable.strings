@@ -313,3 +313,370 @@
 "Acceso a carpetas protegidas verificado" = "Acceso a carpetas protegidas verificado";
 "Acceso a carpetas protegidas pendiente" = "Acceso a carpetas protegidas pendiente";
 "Acceso a carpetas protegidas sin verificar" = "Acceso a carpetas protegidas sin verificar";
+
+/* Storage intelligence and reversible operations. */
+"%@ elementos · selección explícita" = "%@ elementos · selección explícita";
+"ANALIZAR" = "ANALIZAR";
+"Abrir en Explorador" = "Abrir en Explorador";
+"Actualizar medición" = "Actualizar medición";
+"Afectado: %@ · liberado confirmado: %@" = "Afectado: %@ · liberado confirmado: %@";
+"Almacén compartido: puede contener enlaces usados por varios proyectos." = "Almacén compartido: puede contener enlaces usados por varios proyectos.";
+"Almacén pnpm" = "Almacén pnpm";
+"Analiza el Mac o una carpeta para buscar duplicados exactos." = "Analiza el Mac o una carpeta para buscar duplicados exactos.";
+"Analiza una carpeta para dibujar su mapa de espacio." = "Analiza una carpeta para dibujar su mapa de espacio.";
+"Analizar Mac" = "Analizar Mac";
+"Análisis cancelado; los resultados anteriores se conservan." = "Análisis cancelado; los resultados anteriores se conservan.";
+"Análisis del %@" = "Análisis del %@";
+"Análisis parcial: hay rutas protegidas, inaccesibles o fuera del límite. No se cuentan como espacio recuperable." = "Análisis parcial: hay rutas protegidas, inaccesibles o fuera del límite. No se cuentan como espacio recuperable.";
+"Aplicaciones que estén modificando las copias" = "Aplicaciones que estén modificando las copias";
+"Aplicación en uso" = "Aplicación en uso";
+"Asignado en disco" = "Asignado en disco";
+"Asistente local" = "Asistente local";
+"Atribución pendiente de verificar" = "Atribución pendiente de verificar";
+"Bundle ID: %@" = "Bundle ID: %@";
+"Caché CocoaPods" = "Caché CocoaPods";
+"Caché Discord" = "Caché Discord";
+"Caché Gradle" = "Caché Gradle";
+"Caché Homebrew" = "Caché Homebrew";
+"Caché Python" = "Caché Python";
+"Caché de builds Docker" = "Caché de builds Docker";
+"Caché de navegación; no incluye perfiles, contraseñas ni documentos." = "Caché de navegación; no incluye perfiles, contraseñas ni documentos.";
+"Caché de simuladores" = "Caché de simuladores";
+"Caché del navegador" = "Caché del navegador";
+"Caché npm" = "Caché npm";
+"Caché regenerable; no incluye los datos de los dispositivos." = "Caché regenerable; no incluye los datos de los dispositivos.";
+"Cachés" = "Cachés";
+"Cachés de contenido de Discord; conserva sesiones y datos de usuario." = "Cachés de contenido de Discord; conserva sesiones y datos de usuario.";
+"Cada operación, su resultado y las opciones de recuperación." = "Cada operación, su resultado y las opciones de recuperación.";
+"Cambio observado en espacio libre: %@; puede incluir otras operaciones de macOS." = "Cambio observado en espacio libre: %@; puede incluir otras operaciones de macOS.";
+"Cerrar" = "Cerrar";
+"Cerrar: %@" = "Cerrar: %@";
+"Cierra estos procesos antes de limpiar: %@" = "Cierra estos procesos antes de limpiar: %@";
+"Cobertura limitada: %@ archivos comparados; %@ omitidos. Búsqueda rápida de hashes: hasta 8 GiB, 10.000 archivos o 60 s. Vision: hasta 400 fotos de 32 MiB." = "Cobertura limitada: %@ archivos comparados; %@ omitidos. Búsqueda rápida de hashes: hasta 8 GiB, 10.000 archivos o 60 s. Vision: hasta 400 fotos de 32 MiB.";
+"Coincidencia de nombre; conservar y revisar" = "Coincidencia de nombre; conservar y revisar";
+"Comparar fotos con Vision" = "Comparar fotos con Vision";
+"Compartido con %@" = "Compartido con %@";
+"Compilaciones Gradle" = "Compilaciones Gradle";
+"Compilaciones Swift" = "Compilaciones Swift";
+"Compilaciones Xcode" = "Compilaciones Xcode";
+"Completado · sin deshacer" = "Completado · sin deshacer";
+"Conserva una copia y vuelve a verificar SHA-256 antes de mover otra; excluye Photos, respaldos y sincronizados." = "Conserva una copia y vuelve a verificar SHA-256 antes de mover otra; excluye Photos, respaldos y sincronizados.";
+"Conservar modelos personalizados y revisar antes de volver a descargar." = "Conservar modelos personalizados y revisar antes de volver a descargar.";
+"Consultar" = "Consultar";
+"Copias exactas verificadas" = "Copias exactas verificadas";
+"Copias exactas · SHA-256" = "Copias exactas · SHA-256";
+"Crecimiento desde el inicio: %@" = "Crecimiento desde el inicio: %@";
+"Dependencias CocoaPods" = "Dependencias CocoaPods";
+"Dependencias Node" = "Dependencias Node";
+"Dependencias del proyecto con Podfile; revisar modificaciones locales." = "Dependencias del proyecto con Podfile; revisar modificaciones locales.";
+"Dependencias del proyecto con manifiesto package.json; revisar scripts y cambios locales." = "Dependencias del proyecto con manifiesto package.json; revisar scripts y cambios locales.";
+"Dependencias descargables de CocoaPods." = "Dependencias descargables de CocoaPods.";
+"Dependencias y resultados de compilación descargables." = "Dependencias y resultados de compilación descargables.";
+"Dependencias, cachés y modelos locales, con su coste de reconstrucción." = "Dependencias, cachés y modelos locales, con su coste de reconstrucción.";
+"Depuración de pnpm" = "Depuración de pnpm";
+"Detén el contenedor antes de eliminarlo" = "Detén el contenedor antes de eliminarlo";
+"Developer Mode" = "Developer Mode";
+"Disco de Docker Desktop" = "Disco de Docker Desktop";
+"Disco virtual que comparte imágenes, contenedores y volúmenes; no borrar como una caché." = "Disco virtual que comparte imágenes, contenedores y volúmenes; no borrar como una caché.";
+"Discord descargará otra vez el contenido." = "Discord descargará otra vez el contenido.";
+"Dispositivos y runtimes seleccionados" = "Dispositivos y runtimes seleccionados";
+"Docker determina imágenes dangling sin referencias." = "Docker determina imágenes dangling sin referencias.";
+"Docker libera cachés de builds de más de siete días." = "Docker libera cachés de builds de más de siete días.";
+"Docker y simuladores" = "Docker y simuladores";
+"Duplicados" = "Duplicados";
+"Ejecutar pod install; necesita conexión." = "Ejecutar pod install; necesita conexión.";
+"Ejecutar pod install; se pierden modificaciones locales." = "Ejecutar pod install; se pierden modificaciones locales.";
+"Ejecutar swift build; recompilación y posibles descargas." = "Ejecutar swift build; recompilación y posibles descargas.";
+"El disco cambió desde este análisis. Vuelve a analizar antes de limpiar." = "El disco cambió desde este análisis. Vuelve a analizar antes de limpiar.";
+"El elemento cambió o no se pudo verificar; vuelve a analizar." = "El elemento cambió o no se pudo verificar; vuelve a analizar.";
+"El espacio asignado, carpeta por carpeta." = "El espacio asignado, carpeta por carpeta.";
+"El monitor usa el mismo proceso de Kaze y mide el espacio una vez por minuto. Al desactivarlo se detiene el temporizador." = "El monitor usa el mismo proceso de Kaze y mide el espacio una vez por minuto. Al desactivarlo se detiene el temporizador.";
+"El navegador descargará otra vez el contenido." = "El navegador descargará otra vez el contenido.";
+"El simulador está en uso o no se pudo verificar." = "El simulador está en uso o no se pudo verificar.";
+"Elementos movidos a la Papelera. Actualiza el análisis." = "Elementos movidos a la Papelera. Actualiza el análisis.";
+"Elementos para revisar" = "Elementos para revisar";
+"Elimina dispositivos cuyo runtime ya no está disponible; sus datos no se pueden reconstruir." = "Elimina dispositivos cuyo runtime ya no está disponible; sus datos no se pueden reconstruir.";
+"En Papelera" = "En Papelera";
+"Encuentra oportunidades de limpieza" = "Encuentra oportunidades de limpieza";
+"Entornos Python" = "Entornos Python";
+"Entornos virtuales; pueden contener paquetes o cambios sin receta reproducible." = "Entornos virtuales; pueden contener paquetes o cambios sin receta reproducible.";
+"Espacio disponible: %@" = "Espacio disponible: %@";
+"Estado local de un proyecto Gradle con manifiesto." = "Estado local de un proyecto Gradle con manifiesto.";
+"Este asistente usa reglas locales verificadas. No envía tus rutas, no descarga modelos y no inventa datos que no se han medido." = "Este asistente usa reglas locales verificadas. No envía tus rutas, no descarga modelos y no inventa datos que no se han medido.";
+"Estimación" = "Estimación";
+"Firma Ed25519 verificada · reglas v%@" = "Firma Ed25519 verificada · reglas v%@";
+"GESTIONAR" = "GESTIONAR";
+"Gradle reconstruirá su estado local." = "Gradle reconstruirá su estado local.";
+"Gradle reconstruye y descarga dependencias; coste alto." = "Gradle reconstruye y descarga dependencias; coste alto.";
+"Grupo declarado en la firma: %@" = "Grupo declarado en la firma: %@";
+"Hashes exhaustivos" = "Hashes exhaustivos";
+"Hashes para copias exactas. Vision para similitudes que debes revisar." = "Hashes para copias exactas. Vision para similitudes que debes revisar.";
+"Historial" = "Historial";
+"Historial y deshacer" = "Historial y deshacer";
+"Homebrew identifica descargas y versiones antiguas." = "Homebrew identifica descargas y versiones antiguas.";
+"Identificador de recurso no válido" = "Identificador de recurso no válido";
+"Imágenes Docker sin referencias" = "Imágenes Docker sin referencias";
+"Incluye archivos dispersos" = "Incluye archivos dispersos";
+"Iniciar de nuevo el simulador." = "Iniciar de nuevo el simulador.";
+"Inventario de snapshots; tamaño exclusivo no disponible" = "Inventario de snapshots; tamaño exclusivo no disponible";
+"Kaze Smart Scan" = "Kaze Smart Scan";
+"Kaze Space Map" = "Kaze Space Map";
+"LIMPIAR" = "LIMPIAR";
+"La aplicación no se cerró; no se modificaron sus datos." = "La aplicación no se cerró; no se modificaron sus datos.";
+"La copia conservada cambió o ya no coincide; se conserva la selección." = "La copia conservada cambió o ya no coincide; se conserva la selección.";
+"La fecha indica la última modificación; no garantiza el último uso. Los almacenes compartidos, entornos y modelos requieren revisión." = "La fecha indica la última modificación; no garantiza el último uso. Los almacenes compartidos, entornos y modelos requieren revisión.";
+"Las operaciones nuevas aparecerán aquí. Los logs anteriores siguen en Actividad." = "Las operaciones nuevas aparecerán aquí. Los logs anteriores siguen en Actividad.";
+"Las primeras copias se conservan. Fotos, respaldos y archivos sincronizados quedan protegidos." = "Las primeras copias se conservan. Fotos, respaldos y archivos sincronizados quedan protegidos.";
+"Las reglas se distribuyen con la app firmadas por Kaze. No ejecutan comandos arbitrarios ni se actualizan por separado sin verificación." = "Las reglas se distribuyen con la app firmadas por Kaze. No ejecutan comandos arbitrarios ni se actualizan por separado sin verificación.";
+"LaunchAgent con ejecutable dentro de la app; desactivar el agente antes de borrar" = "LaunchAgent con ejecutable dentro de la app; desactivar el agente antes de borrar";
+"Limpieza segura" = "Limpieza segura";
+"Logs" = "Logs";
+"Los gestiona macOS y Time Machine. No se borran automáticamente ni se promete recuperar su tamaño completo." = "Los gestiona macOS y Time Machine. No se borran automáticamente ni se promete recuperar su tamaño completo.";
+"Los snapshots no tienen un tamaño exclusivo fiable en este inventario. Revisa System Data antes de atribuir todo el espacio a cachés." = "Los snapshots no tienen un tamaño exclusivo fiable en este inventario. Revisa System Data antes de atribuir todo el espacio a cachés.";
+"Los tamaños incluyen todos los metadatos accesibles. El mapa conserva hasta 250.000 detalles; abre una carpeta en el Explorador para ver los restantes." = "Los tamaños incluyen todos los metadatos accesibles. El mapa conserva hasta 250.000 detalles; abre una carpeta en el Explorador para ver los restantes.";
+"Lógico: %@" = "Lógico: %@";
+"Mac" = "Mac";
+"Modelos Hugging Face" = "Modelos Hugging Face";
+"Modelos LM Studio" = "Modelos LM Studio";
+"Modelos Ollama" = "Modelos Ollama";
+"Modelos de IA locales; pueden ser descargas grandes o versiones personalizadas." = "Modelos de IA locales; pueden ser descargas grandes o versiones personalizadas.";
+"Modelos y blobs de IA locales; las referencias pueden estar compartidas." = "Modelos y blobs de IA locales; las referencias pueden estar compartidas.";
+"Modelos y datasets locales, posiblemente compartidos entre proyectos." = "Modelos y datasets locales, posiblemente compartidos entre proyectos.";
+"Monitor" = "Monitor";
+"Monitor ligero en la barra de menús" = "Monitor ligero en la barra de menús";
+"Mostrar más resultados" = "Mostrar más resultados";
+"Más elementos" = "Más elementos";
+"No admite deshacer. Conservar cualquier dato necesario antes de ejecutar." = "No admite deshacer. Conservar cualquier dato necesario antes de ejecutar.";
+"No hay una regla verificada que permita esta acción." = "No hay una regla verificada que permita esta acción.";
+"No se elimina nada durante el análisis." = "No se elimina nada durante el análisis.";
+"No se encontraron oportunidades de limpieza respaldadas por las reglas verificadas." = "No se encontraron oportunidades de limpieza respaldadas por las reglas verificadas.";
+"No se pudo consultar Time Machine" = "No se pudo consultar Time Machine";
+"No se pudo medir el espacio disponible." = "No se pudo medir el espacio disponible.";
+"No se pudo verificar la firma de las reglas. La limpieza está bloqueada." = "No se pudo verificar la firma de las reglas. La limpieza está bloqueada.";
+"No se sobrescribe ningún archivo. Si el elemento cambió, falta en la Papelera o la carpeta original ya no existe, la restauración se detiene." = "No se sobrescribe ningún archivo. Si el elemento cambió, falta en la Papelera o la carpeta original ya no existe, la restauración se detiene.";
+"No verificable" = "No verificable";
+"Operación terminada; revisa Historial" = "Operación terminada; revisa Historial";
+"Otros datos del sistema" = "Otros datos del sistema";
+"Papelera reversible" = "Papelera reversible";
+"Papelera: el espacio se libera cuando se vacía y APFS deja de conservarlo." = "Papelera: el espacio se libera cuando se vacía y APFS deja de conservarlo.";
+"Paquetes descargados por pip, sin entornos virtuales." = "Paquetes descargados por pip, sin entornos virtuales.";
+"Paquetes descargados y ejecuciones temporales; no contiene proyectos." = "Paquetes descargados y ejecuciones temporales; no contiene proyectos.";
+"Pendiente de verificar" = "Pendiente de verificar";
+"Poco espacio disponible" = "Poco espacio disponible";
+"Preferencia ByHost: %@" = "Preferencia ByHost: %@";
+"Primero ejecuta Smart Scan para obtener recomendaciones sobre tu disco." = "Primero ejecuta Smart Scan para obtener recomendaciones sobre tu disco.";
+"Procesos de la aplicación afectada" = "Procesos de la aplicación afectada";
+"Proyectos y herramientas" = "Proyectos y herramientas";
+"Puede requerir nuevas descargas; las versiones antiguas se pierden." = "Puede requerir nuevas descargas; las versiones antiguas se pierden.";
+"Quick Look" = "Quick Look";
+"Qué hay detrás de los datos del sistema." = "Qué hay detrás de los datos del sistema.";
+"Raíces analizadas" = "Raíces analizadas";
+"Recomendaciones explicables, basadas en tu último análisis." = "Recomendaciones explicables, basadas en tu último análisis.";
+"Reconstruir el proyecto en Xcode; puede tardar varios minutos." = "Reconstruir el proyecto en Xcode; puede tardar varios minutos.";
+"Reconstruir imágenes; puede necesitar red y tiempo." = "Reconstruir imágenes; puede necesitar red y tiempo.";
+"Reconstruir o descargar las imágenes." = "Reconstruir o descargar las imágenes.";
+"Recrear con los requisitos del proyecto después de revisarlos." = "Recrear con los requisitos del proyecto después de revisarlos.";
+"Recuperación potencial" = "Recuperación potencial";
+"Recuperación potencial tras vaciar la Papelera: APFS puede conservar clones y snapshots. El tamaño lógico no equivale a espacio liberado." = "Recuperación potencial tras vaciar la Papelera: APFS puede conservar clones y snapshots. El tamaño lógico no equivale a espacio liberado.";
+"Recurso administrado: sin deshacer; tamaño liberado no verificable por archivo." = "Recurso administrado: sin deshacer; tamaño liberado no verificable por archivo.";
+"Recursos Docker seleccionados" = "Recursos Docker seleccionados";
+"Recursos de desarrollo" = "Recursos de desarrollo";
+"Reglas y seguridad" = "Reglas y seguridad";
+"Reinstalar con el gestor del proyecto; se pierden modificaciones locales." = "Reinstalar con el gestor del proyecto; se pierden modificaciones locales.";
+"Respaldos iOS" = "Respaldos iOS";
+"Restaurado" = "Restaurado";
+"Restaurado en su ubicación original." = "Restaurado en su ubicación original.";
+"Restaurar" = "Restaurar";
+"Restaurar desde Historial mientras el elemento permanezca intacto en la Papelera." = "Restaurar desde Historial mientras el elemento permanezca intacto en la Papelera.";
+"Restaurar desde Historial; las fotografías visualmente similares solo se revisan." = "Restaurar desde Historial; las fotografías visualmente similares solo se revisan.";
+"Resultados de Swift Package Manager con Package.swift." = "Resultados de Swift Package Manager con Package.swift.";
+"Resultados de compilación que Xcode puede reconstruir." = "Resultados de compilación que Xcode puede reconstruir.";
+"Revisar en Smart Scan" = "Revisar en Smart Scan";
+"Revisar selección" = "Revisar selección";
+"Revisión manual: conserva cambios locales y verifica la receta de reconstrucción." = "Revisión manual: conserva cambios locales y verifica la receta de reconstrucción.";
+"Salir de Kaze" = "Salir de Kaze";
+"Se comprobarán otra vez los archivos y los procesos activos. Los elementos que hayan cambiado o estén en uso se conservarán. Podrás restaurarlos desde Historial." = "Se comprobarán otra vez los archivos y los procesos activos. Los elementos que hayan cambiado o estén en uso se conservarán. Podrás restaurarlos desde Historial.";
+"Se moverán las apps y los datos atribuibles de forma verificable. Los grupos compartidos, LaunchAgents y coincidencias por nombre se conservarán para revisión. La Papelera no se vacía y puedes restaurar desde Historial." = "Se moverán las apps y los datos atribuibles de forma verificable. Los grupos compartidos, LaunchAgents y coincidencias por nombre se conservarán para revisión. La Papelera no se vacía y puedes restaurar desde Historial.";
+"Se muestran 100 de %@ copias en este grupo." = "Se muestran 100 de %@ copias en este grupo.";
+"Se recalcularán los hashes de cada copia y del original conservado. Las fotos similares nunca se eliminan automáticamente." = "Se recalcularán los hashes de cada copia y del original conservado. Las fotos similares nunca se eliminan automáticamente.";
+"Selecciona apps y revisa la atribución de sus datos. Los restos compartidos o dudosos se conservan." = "Selecciona apps y revisa la atribución de sus datos. Los restos compartidos o dudosos se conservan.";
+"Simuladores" = "Simuladores";
+"Simuladores no disponibles" = "Simuladores no disponibles";
+"Sin deshacer; reinstalar runtimes o recrear dispositivos, cuyos datos se pierden." = "Sin deshacer; reinstalar runtimes o recrear dispositivos, cuyos datos se pierden.";
+"Sin deshacer; respaldar volúmenes y conservar recetas de reconstrucción." = "Sin deshacer; respaldar volúmenes y conservar recetas de reconstrucción.";
+"Sin prometer bytes retenidos por APFS" = "Sin prometer bytes retenidos por APFS";
+"Sin recuperación automática" = "Sin recuperación automática";
+"Snapshots locales" = "Snapshots locales";
+"Snapshots no consultados en el análisis de una carpeta" = "Snapshots no consultados en el análisis de una carpeta";
+"Solo elementos seleccionados explícitamente; apps y datos con atribución verificable requieren cerrar sus procesos." = "Solo elementos seleccionados explícitamente; apps y datos con atribución verificable requieren cerrar sus procesos.";
+"System Data" = "System Data";
+"Tamaño lógico" = "Tamaño lógico";
+"Tamaños del último Smart Scan. Actualiza para medir cambios recientes." = "Tamaños del último Smart Scan. Actualiza para medir cambios recientes.";
+"Ubicaciones" = "Ubicaciones";
+"Un solo análisis alimenta el mapa, los duplicados, System Data y las recomendaciones locales." = "Un solo análisis alimenta el mapa, los duplicados, System Data y las recomendaciones locales.";
+"Una mirada de conjunto. Tú decides qué limpiar." = "Una mirada de conjunto. Tú decides qué limpiar.";
+"Usa la API de Docker sin forzar el borrado de recursos en uso; los volúmenes pueden contener datos personales." = "Usa la API de Docker sin forzar el borrado de recursos en uso; los volúmenes pueden contener datos personales.";
+"Usa simctl y verifica que el dispositivo esté apagado antes de eliminarlo." = "Usa simctl y verifica que el dispositivo esté apagado antes de eliminarlo.";
+"Usar Docker y simuladores para revisar recursos y respaldar volúmenes." = "Usar Docker y simuladores para revisar recursos y respaldar volúmenes.";
+"Usar pnpm store prune después de revisar sus dependencias." = "Usar pnpm store prune después de revisar sus dependencias.";
+"Ver System Data" = "Ver System Data";
+"Visualmente similares · revisar" = "Visualmente similares · revisar";
+"Volver a descargar con Ollama; puede costar muchos GB." = "Volver a descargar con Ollama; puede costar muchos GB.";
+"Volver a descargar los modelos y datasets necesarios." = "Volver a descargar los modelos y datasets necesarios.";
+"macOS no publica el desglose exacto de su categoría System Data. Este inventario explica las ubicaciones conocidas; los snapshots comparten bloques APFS y no se suman a los archivos." = "macOS no publica el desglose exacto de su categoría System Data. Este inventario explica las ubicaciones conocidas; los snapshots comparten bloques APFS y no se suman a los archivos.";
+"npm vuelve a descargar paquetes; necesita conexión." = "npm vuelve a descargar paquetes; necesita conexión.";
+"pip vuelve a descargar paquetes." = "pip vuelve a descargar paquetes.";
+"pnpm determina qué paquetes no tienen referencias activas." = "pnpm determina qué paquetes no tienen referencias activas.";
+"pnpm volverá a descargar paquetes necesarios." = "pnpm volverá a descargar paquetes necesarios.";
+"¿Mover la selección a la Papelera?" = "¿Mover la selección a la Papelera?";
+"¿Mover los duplicados seleccionados?" = "¿Mover los duplicados seleccionados?";
+"¿Por qué crece System Data?" = "¿Por qué crece System Data?";
+"¿Qué puedo borrar sin romper mis proyectos?" = "¿Qué puedo borrar sin romper mis proyectos?";
+"¿Restaurar en la ubicación original?" = "¿Restaurar en la ubicación original?";
+
+"Mostrar más copias" = "Mostrar más copias";
+"Recuperable: 0 – %@" = "Recuperable: 0 – %@";
+"Hashes exhaustivos sobre los candidatos conservados; sin límite de bytes ni tiempo. Vision: %@ fotos comparadas." = "Hashes exhaustivos sobre los candidatos conservados; sin límite de bytes ni tiempo. Vision: %@ fotos comparadas.";
+"Notificar si quedan menos de 20 GB libres" = "Notificar si quedan menos de 20 GB libres";
+"Las alertas son opcionales y requieren permiso de macOS. Como máximo se envía una cada seis horas." = "Las alertas son opcionales y requieren permiso de macOS. Como máximo se envía una cada seis horas.";
+"Quedan %@. Abre Kaze Smart Scan para revisar oportunidades de limpieza." = "Quedan %@. Abre Kaze Smart Scan para revisar oportunidades de limpieza.";
+"Cargar operaciones anteriores" = "Cargar operaciones anteriores";
+"Consultar último uso" = "Consultar último uso";
+"Spotlight puede registrar el último uso. Si no hay datos, se indica como desconocido." = "Spotlight puede registrar el último uso. Si no hay datos, se indica como desconocido.";
+"Modificado: %@" = "Modificado: %@";
+"Uso registrado: %@" = "Uso registrado: %@";
+"Último uso desconocido" = "Último uso desconocido";
+"Crecimiento reciente (hasta 1 h): %@" = "Crecimiento reciente (hasta 1 h): %@";
+"Finder aún no confirmó el traslado. Revisa la Papelera; el resultado queda pendiente de verificar." = "Finder aún no confirmó el traslado. Revisa la Papelera; el resultado queda pendiente de verificar.";
+"Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder." = "Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder.";
+
+"Preguntas sobre tu disco, con una IA que corre en tu Mac." = "Preguntas sobre tu disco, con una IA que corre en tu Mac.";
+
+"IA local, solo si la quieres" = "IA local, solo si la quieres";
+
+"Descarga el motor y el modelo una sola vez. Después puedes consultar sin conexión. Tus preguntas y los datos del análisis se quedan en tu Mac." = "Descarga el motor y el modelo una sola vez. Después puedes consultar sin conexión. Tus preguntas y los datos del análisis se quedan en tu Mac.";
+
+"Opcional" = "Opcional";
+
+"Sin suscripción" = "Sin suscripción";
+
+"Comprobando la IA local…" = "Comprobando la IA local…";
+
+"Descargando y verificando…" = "Descargando y verificando…";
+
+"Descargar IA local" = "Descargar IA local";
+
+"La app no instala la IA automáticamente. El motor se inicia solo al consultar y se cierra al terminar." = "La app no instala la IA automáticamente. El motor se inicia solo al consultar y se cierra al terminar.";
+
+"Smart Scan y sus reglas verificadas siguen disponibles sin descargar la IA." = "Smart Scan y sus reglas verificadas siguen disponibles sin descargar la IA.";
+
+"IA local lista" = "IA local lista";
+
+"Preparando una respuesta en tu Mac…" = "Preparando una respuesta en tu Mac…";
+
+"Respuesta del asistente" = "Respuesta del asistente";
+
+"Recomendaciones verificadas" = "Recomendaciones verificadas";
+
+"La IA puede equivocarse. Revisa las reglas y los resultados medidos antes de limpiar; el asistente no borra archivos." = "La IA puede equivocarse. Revisa las reglas y los resultados medidos antes de limpiar; el asistente no borra archivos.";
+
+"No se pudo verificar la IA local. Vuelve a descargarla." = "No se pudo verificar la IA local. Vuelve a descargarla.";
+
+"No se pudo completar la descarga. Comprueba la conexión e inténtalo otra vez." = "No se pudo completar la descarga. Comprueba la conexión e inténtalo otra vez.";
+
+"La IA local requiere macOS 13.3 o posterior." = "La IA local requiere macOS 13.3 o posterior.";
+
+"Necesitas al menos 1,5 GB libres para descargar y preparar la IA local." = "Necesitas al menos 1,5 GB libres para descargar y preparar la IA local.";
+
+"Descarga la IA local para consultar al asistente." = "Descarga la IA local para consultar al asistente.";
+
+"Operación cancelada. Puedes volver a intentarlo cuando quieras." = "Operación cancelada. Puedes volver a intentarlo cuando quieras.";
+
+"El motor local no pudo generar una respuesta. Puedes seguir revisando Smart Scan." = "El motor local no pudo generar una respuesta. Puedes seguir revisando Smart Scan.";
+
+"La consulta tardó demasiado y se detuvo. Prueba con una pregunta más corta." = "La consulta tardó demasiado y se detuvo. Prueba con una pregunta más corta.";
+
+"El análisis encontró oportunidades de limpieza. Revisa su recuperación y cierra las aplicaciones indicadas antes de continuar. APFS puede conservar espacio; los bytes potenciales no son una promesa de recuperación." = "El análisis encontró oportunidades de limpieza. Revisa su recuperación y cierra las aplicaciones indicadas antes de continuar. APFS puede conservar espacio; los bytes potenciales no son una promesa de recuperación.";
+
+"Firma no verificada" = "Firma no verificada";
+
+"Vuelve a analizar" = "Vuelve a analizar";
+
+"Análisis parcial" = "Análisis parcial";
+
+"Revisa el análisis" = "Revisa el análisis";
+
+"Análisis disponible" = "Análisis disponible";
+
+"Detalles del análisis" = "Detalles del análisis";
+
+"Resultados del análisis" = "Resultados del análisis";
+
+"No hay resultados en esta categoría." = "No hay resultados en esta categoría.";
+
+"Menos dudas. Más espacio." = "Menos dudas. Más espacio.";
+
+"Tu consulta" = "Tu consulta";
+
+"Solo en tu Mac" = "Solo en tu Mac";
+
+"Entiende tu espacio.\nDecide con calma." = "Entiende tu espacio.\nDecide con calma.";
+
+"Haz una pregunta sobre tu último análisis. Te ayudo a entender los tamaños, las cachés y qué conviene revisar." = "Haz una pregunta sobre tu último análisis. Te ayudo a entender los tamaños, las cachés y qué conviene revisar.";
+
+"Entiende qué ocupa espacio" = "Entiende qué ocupa espacio";
+
+"Revisa dependencias y reconstrucción" = "Revisa dependencias y reconstrucción";
+
+"Abrir Smart Scan" = "Abrir Smart Scan";
+
+"Consulta privada" = "Consulta privada";
+
+"Análisis en curso" = "Análisis en curso";
+
+"Pregunta sobre tu disco…" = "Pregunta sobre tu disco…";
+
+"La IA puede equivocarse. Tú revisas y decides; Kaze no limpia desde el chat." = "La IA puede equivocarse. Tú revisas y decides; Kaze no limpia desde el chat.";
+
+"Una ayuda para decidir mejor" = "Una ayuda para decidir mejor";
+
+"Entiende System Data" = "Entiende System Data";
+
+"Ponle contexto a los tamaños medidos." = "Ponle contexto a los tamaños medidos.";
+
+"Cuida tus proyectos" = "Cuida tus proyectos";
+
+"Consulta qué se puede reconstruir." = "Consulta qué se puede reconstruir.";
+
+"Revisa antes de limpiar" = "Revisa antes de limpiar";
+
+"Las reglas verificadas siguen a la vista." = "Las reglas verificadas siguen a la vista.";
+
+"IA local opcional" = "IA local opcional";
+
+"Una descarga. Sin suscripción." = "Una descarga. Sin suscripción.";
+
+"Tu análisis" = "Tu análisis";
+
+"Las recomendaciones aparecerán después del análisis." = "Las recomendaciones aparecerán después del análisis.";
+
+"%@ elementos" = "%@ elementos";
+
+"Revisión manual" = "Revisión manual";
+
+"Comprobando cambios…" = "Comprobando cambios…";
+"Actualizando cambios…" = "Actualizando cambios…";
+"Guardado: %@" = "Guardado: %@";
+"Medido: %@" = "Medido: %@";
+"Recuperando análisis…" = "Recuperando análisis…";
+"Análisis guardado" = "Análisis guardado";
+"Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar." = "Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar.";
+
+"Ajustes y seguridad" = "Ajustes y seguridad";
+"Personaliza Kaze y consulta cómo protege tus archivos." = "Personaliza Kaze y consulta cómo protege tus archivos.";
+"Barra de menús y alertas" = "Barra de menús y alertas";
+"Muestra el espacio disponible y accesos rápidos en la barra de menús." = "Muestra el espacio disponible y accesos rápidos en la barra de menús.";
+"Protección de limpieza activa" = "Protección de limpieza activa";
+"Kaze verifica qué puede limpiar y vuelve a comprobar los archivos antes de borrarlos." = "Kaze verifica qué puede limpiar y vuelve a comprobar los archivos antes de borrarlos.";
+"Detalles de las reglas de limpieza" = "Detalles de las reglas de limpieza";
+"Información avanzada sobre alcance y recuperación." = "Información avanzada sobre alcance y recuperación.";

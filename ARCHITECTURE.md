@@ -8,9 +8,10 @@ Kaze is a native macOS app by Sora Agency. The bundle identifier is
 
 - **App/**: entry point, navigation shell, identity and preference migration.
 - **Domain/**: storage, files, deletion assessments, scheduling entities and
-  validation. No SwiftUI views or launchd mutations.
+  validation. No SwiftUI views, filesystem traversal, path resolution or launchd mutations.
 - **Infrastructure/**: metadata scanning, process execution, application and
-  resource discovery, transactional schedule persistence and launchd adapters.
+  resource discovery, path resolution and classification, journaled analysis
+  removal, transactional schedule persistence and launchd adapters.
 - **Features/**: each feature owns its views and observable presentation state.
   Explorer and scheduled tasks have dedicated models. Application and resource
   actions extend the shared CleanerModel to coordinate selections and cleanup.
@@ -25,6 +26,12 @@ Kaze is a native macOS app by Sora Agency. The bundle identifier is
 
 Views submit intent to observable models; filesystem and process work belongs
 in Infrastructure. Background work returns UI mutations to the main actor.
+AnalysisRemoval owns the fresh-file/process checks and journaled Trash move;
+SmartScanModel retains selection, cancellation and presentation state. Tests
+inject the move and process inventory into the same removal path used by the app.
+Shared analysis headers, status notices and finding rows live in Features/Analysis
+and serve Smart Scan, Duplicates, System Data and Development. Assistant download
+and context views are separate components; the screen owns conversation input.
 ScheduleService accepts an injected LaunchCommandRunning adapter and home
 folder; tests never touch real user agents or execute cleanup. The scanner
 reads metadata without following symlinks or downloading file contents.
@@ -128,3 +135,91 @@ or changing its contents. Because macOS has no public Full Disk Access status
 API, this is a capability probe, not an authoritative TCC setting query. Missing
 files and UNIX permission errors remain unverified; a successful probe enables
 the green shield-check. Previews inject fixed states and do not probe host files.
+
+## Storage intelligence
+
+Analysis models, allocation accounting, signed policies, fingerprints and
+operation records live in Domain. Infrastructure owns StorageIndexer,
+DuplicateDetector (streaming SHA-256 and thumbnail Vision), RuleCatalog,
+ApplicationAttribution, OperationJournal and mutation leases. SmartScanModel
+owns a serial utility queue and cancellation generations, publishing one shared
+index for Map, Duplicates, System Data, Developer Mode and Local Assistant.
+AnalysisCache persists bounded, versioned binary plists of metadata in the private
+`~/Library/Caches/Kaze/Analysis-v1` directory: 96 MiB per Smart Scan, 8 MiB per
+folder, 128 MiB total and 32 folder snapshots. Derived index dictionaries are
+rebuilt on loading. Writes are atomic on utility queues; invalid, missing or
+oversized cache data falls back to scanning. File contents and deletion authority
+are never persisted. Restored Smart Scan results retain their measurement date,
+clear all selections and remain stale until an explicit fresh scan. Hashes are
+not recomputed at launch. Mutation notifications invalidate the saved index.
+
+Explorer shows saved rows immediately and checks historical macOS FSEvents before
+reusing recursive measurements. One scoped event stream runs only while Explorer
+is visible, coalesces changes and refreshes affected first-level subtrees on its
+existing serial utility queue. Monitoring starts before a new walk; events during
+that walk trigger a follow-up pass, retaining a conservative event checkpoint.
+Root inode, device UUID and event IDs are checked. Dropped/reset history, mount
+changes, incomplete results, external volumes, temporary/system variable folders,
+or snapshots older than 24 hours force a full background walk. FSEvents are
+advisory; explicit Refresh always performs a complete measurement. Cross-child
+hard links also force full walks whenever content changes, preserving one parent
+inode set. Explorer retains dated rows during refresh/cancellation, bounds memory
+snapshots to 32 folders/50,000 entries and ignores its own cache-write events.
+See [Apple's FSEvents guidance](https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/FSEvents_ProgGuide/UsingtheFSEventsFramework/UsingtheFSEventsFramework.html).
+No full analysis or app/resource inventory runs automatically at window creation.
+
+Metadata is fully streamed; retained details are limited separately. Totals
+use inode deduplication and st_blocks; sparse logical sizes never become capacity
+recovery estimates. APFS sharing prevents a guaranteed recovery figure. Payload
+reads only occur for duplicate comparison and explicitly selected Quick Look.
+Cloud/provider, backup and Photos protections are path- and metadata-based.
+Signed scopes and closed processes are checked before cache mutation, including
+fresh subtree metadata to reject protected descendants. Exact duplicate copies
+and their preserved original are freshly hashed before Trash operations.
+
+New operations have per-UUID atomic JSON records in the local Operations folder.
+The journal shares cleanup-lock exclusion with scheduled tasks. Restoring re-reads
+persisted records, validates Trash metadata and atomically refuses overwrites.
+Native resource deletion and irreversible scheduled cache cleanup are recorded
+without claiming free-space deltas as file-attributable capacity recovery.
+
+OperationCLI handles short-lived policy/journal calls from the existing zsh
+engine before GUI startup. There is no second daemon. StorageMonitor runs a
+filesystem capacity query once per minute in the GUI process, stops its timer
+when disabled and emits notifications only after explicit opt-in. The assistant
+keeps verified recommendations independent of its optional local LLM.
+LocalAIPackage pins engine/model versions, sizes and SHA-256. LocalAIService
+uses ephemeral URLSession downloads, private staging and atomic activation;
+checks and downloads occur only in the assistant's serial utility queue.
+LocalAssistantModel never downloads on initialization or availability checks.
+Queries extract the verified engine into a private temporary directory, run
+llama-completion with 2 CPU threads, no GPU, 4096 context and 384 output tokens,
+and stop on cancellation or a 90-second deadline. No server or daemon is started.
+LocalAssistantPrompt includes bounded measured categories and verified rule
+summaries, without file contents or full paths. AI has no tools or deletion API.
+Optional AI requires macOS 13.3; existing features remain macOS 13-compatible.
+See [the AI guide](docs/LOCAL_AI.md) for versions and privacy.
+
+Smart Scan keeps its summary outside the lazy result list and uses a permanent
+native scroll observer to publish only compact/expanded threshold crossings. Category
+cards appear at the top and hide while scrolling; the three summary cards stay fixed.
+Result rows
+remain lazy and paged. The assistant keeps the latest question and answer paired,
+with a fixed composer and a separate scrollable context column. Verified findings
+are grouped by rule only when the findings publisher changes, preserving measured
+recovery ranges and avoiding repeated grouping during input edits.
+
+The rule manifest is bundled and Ed25519-signed; builds and runtime verify it.
+Changes must be signed with scripts/sign-rules.sh and tested before shipping.
+Public previews seed metadata and a temporary journal; they never run host
+inventory or real cleanup commands. See [the guide](docs/STORAGE_ANALYSIS.md)
+for scopes, thresholds, retained-detail limits and recovery constraints.
+
+Smart Scan's compact header animates only its summary container with a 380 ms
+collapse curve; Reduce Motion disables it. A scoped local scroll/key observer
+requires upward input to expand the header, preventing viewport clamping on short
+lists from triggering a collapse/expand loop. Both native observation tokens are
+removed on teardown. Settings and safety exposes monitor choices and protection
+status first; signatures and each rule's audit details remain in disclosure groups.
+Assistant accents use the shared brand palette; success/warning colors retain
+their semantic meaning.

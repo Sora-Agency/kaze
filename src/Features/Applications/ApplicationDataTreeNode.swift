@@ -38,7 +38,7 @@ struct ApplicationDataTreeNode: View {
                 .labelsHidden()
                 .toggleStyle(SoraCheckboxStyle(showsLabel: false))
                 .disabled(
-                    model.selectedApplicationIDs.contains(application.id)
+                    !item.canRemove || model.selectedApplicationIDs.contains(application.id)
                     || model.hasSelectedDataAncestor(of: item)
                     || model.isRemovingApplicationData
                 )
@@ -50,6 +50,8 @@ struct ApplicationDataTreeNode: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(item.url.lastPathComponent)
                         .font(.callout.weight(.medium))
+                    Text(item.evidence.string).font(SoraTypography.body(10)).foregroundStyle(item.canRemove ? SoraPalette.secondary : Color.orange)
+                    if !item.sharedWith.isEmpty { Text(L10n.text("Compartido con \(item.sharedWith.map { URL(fileURLWithPath: $0).lastPathComponent }.joined(separator: ", "))")).font(SoraTypography.body(10)).foregroundStyle(SoraPalette.secondary) }
                     Text(item.displayPath)
                         .font(SoraTypography.body(12))
                         .foregroundStyle(SoraPalette.secondary)

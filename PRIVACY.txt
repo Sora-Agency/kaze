@@ -1,10 +1,18 @@
 KAZE · PRIVACIDAD
-Sora Agency · Versión 1.1 · 12 de octubre de 2026
+Sora Agency · Versión 1.2 · 12 de octubre de 2026
 
 ANÁLISIS LOCAL
 Kaze utiliza nombres, rutas, fechas, tipo de elemento y espacio asignado en disco para mostrar el contenido de las carpetas que eliges. Calcula tamaños mediante metadatos; el explorador no abre el contenido de los documentos ni solicita descargar archivos de iCloud para medirlos. Los resultados del explorador se mantienen en memoria durante la sesión.
 
 La detección de aplicaciones también consulta sus identificadores y metadatos de instalación para localizar datos asociados. Las vistas de recursos consultan las herramientas locales de Docker y Xcode. Las funciones de limpieza actúan sobre los archivos y recursos descritos en sus controles y confirmaciones.
+
+DUPLICADOS, ASISTENTE Y MONITOR
+Smart Scan comparte metadatos localmente entre las vistas. La detección de duplicados exactos lee contenidos locales elegibles por bloques para calcular SHA-256. La comparación explícita de fotos lee imágenes elegibles y crea miniaturas para obtener descriptores de Vision de Apple íntegramente en el Mac. Los proveedores de nube, respaldos y bibliotecas Photos se excluyen de los candidatos; las similitudes visuales solo proponen revisión. Quick Look puede leer el elemento que abres explícitamente. Los hashes, miniaturas y descriptores permanecen en memoria durante la sesión y no se envían al exterior.
+
+La IA del asistente es opcional. Solo al pulsar «Descargar IA local» se descargan un motor llama.cpp y un modelo Qwen desde GitHub, Hugging Face y sus servidores de distribución; reciben la dirección IP y metadatos habituales de conexión. La app verifica tamaños y SHA-256 fijados antes de utilizarlos. No instala ni descarga la IA al abrirse. Las preguntas y un resumen acotado del análisis se procesan íntegramente en el Mac, sin transmisión de rutas, preguntas ni resultados. El motor se ejecuta solo durante la consulta, sin servidor permanente. Los archivos de IA se conservan en ~/Library/Application Support/Kaze/AI hasta que los eliminas manualmente, incluso al desinstalar Kaze. Los archivos temporales de consulta se eliminan al terminar; las respuestas se mantienen en memoria durante la sesión. La IA puede equivocarse y no ejecuta limpiezas: las reglas y controles de borrado siguen siendo verificaciones independientes. El monitor de la barra de menús usa el mismo proceso para consultar capacidad una vez por minuto. Las alertas opcionales requieren permiso de macOS; sus preferencias se guardan localmente. Desactivar el monitor detiene su temporizador.
+
+HISTORIAL DE OPERACIONES
+Las nuevas operaciones registran fechas, rutas o identificadores de recursos, asignación afectada, resultado, versión de reglas y, cuando corresponde, destino de Papelera y metadatos de cambios en ~/Library/Application Support/Kaze/Operations. Estos registros locales permiten restaurar sin sobrescribir y pueden contener rutas sensibles. Mover a Papelera no libera espacio; las acciones nativas irreversibles no se pueden deshacer. La variación observada de espacio libre puede incluir otras operaciones de macOS. Historial, registros y respaldos se conservan hasta que los eliminas manualmente, incluso al desinstalar Kaze.
 
 SIN TELEMETRÍA DE SORA
 Kaze no incorpora analítica, publicidad ni envío automático de archivos, listados de carpetas, rutas o registros a Sora Agency. No requiere una cuenta de Sora para funcionar. Las fuentes se incluyen en la app y no se descargan al abrirla.
@@ -20,6 +28,9 @@ El nombre histórico de esta carpeta se conserva para mantener compatibilidad co
 
 El instalador Instalar.command conserva una copia de la app y de su programación anterior en:
 ~/Library/Application Support/Kaze/Backups
+
+CACHÉ DE ANÁLISIS
+Kaze conserva localmente los metadatos del último Smart Scan y de las carpetas visitadas en ~/Library/Caches/Kaze/Analysis-v1: rutas, tamaños, fechas, identificadores de archivos y resultados de duplicados. No guarda contenidos de archivos en esta caché ni la envía. Está limitada a 128 MiB y 32 carpetas; macOS o el usuario pueden eliminarla y Kaze volverá a medir. Los resultados restaurados muestran su fecha y no autorizan borrar sin un análisis nuevo. El Explorador comprueba eventos de archivos de macOS y actualiza cambios en segundo plano mientras su sección está visible.
 
 CONTROL DEL USUARIO
 Puedes detener un análisis, cambiar de carpeta y conceder o revocar Acceso total al disco desde Ajustes del Sistema. Puedes desactivar la tarea desde Tareas programadas o retirarla con el desinstalador. El desinstalador conserva los registros y los respaldos; puedes eliminarlos manualmente si deseas borrarlos.

@@ -98,22 +98,22 @@ in-app language selector.
 ## Create a draft release
 
 1. Update `CFBundleShortVersionString` and increment `CFBundleVersion` in
-   `src/Info.plist`. The prepared version is **1.1.0**, build **16**.
+   `src/Info.plist`. The prepared version is **1.2.6**, build **23**.
 2. Update [RELEASE_NOTES.md](RELEASE_NOTES.md). Its first line must match the
-   version, for example `# Kaze 1.1.0`. These notes initialize the draft.
+   version, for example `# Kaze 1.2.6`. These notes initialize the draft.
 3. Merge the changes into `main` and wait for checks to pass.
 4. Create and push an annotated tag on that commit. For the current version:
 
    ```sh
    git switch main
    git pull --ff-only
-   git tag -a v1.1.0 -m "Kaze 1.1.0"
-   git push origin v1.1.0
+   git tag -a v1.2.6 -m "Kaze 1.2.6"
+   git push origin v1.2.6
    ```
 
 5. Follow **macOS** in **Actions**. The tag runs tests, builds and DMG
    verification for both architectures again.
-6. Open **Releases**, review the **Kaze 1.1.0** draft and choose **Publish release**
+6. Open **Releases**, review the **Kaze 1.2.6** draft and choose **Publish release**
    when ready. You can edit the notes before publishing.
 
 Tags must use `vMAJOR.MINOR.PATCH` and match the app version. Pull requests,

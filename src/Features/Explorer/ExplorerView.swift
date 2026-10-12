@@ -64,7 +64,8 @@ struct ExplorerView: View {
         .background(SoraPalette.main)
         .soraAnimate(editingPath)
         .soraAnimate(explorer.isScanning)
-        .onAppear { if !explorer.hasLoaded { explorer.scan() } }
+        .onAppear { explorer.loadIfNeeded() }
+        .onDisappear { explorer.suspendMonitoring() }
     }
 
     private var header: some View {
@@ -79,12 +80,21 @@ struct ExplorerView: View {
                 Text(summary).font(SoraTypography.body(26, weight: .semibold)).monospacedDigit()
                 Text(explorer.isScanning ? L10n.text("Calculando el contenido") : L10n.text("Contenido de la carpeta"))
                     .font(SoraTypography.body(12)).foregroundStyle(SoraPalette.secondary)
+                if let date = explorer.measuredAt {
+                    Text(explorer.showingCached ? L10n.text("Guardado: \(L10n.date(date, includeTime: true))") : L10n.text("Medido: \(L10n.date(date, includeTime: true))"))
+                        .font(SoraTypography.body(11)).foregroundStyle(SoraPalette.muted)
+                }
             }
         }.padding(28)
     }
 
     private var navigation: some View {
         HStack(spacing: 10) {
+            Menu {
+                ForEach(ExplorerLocation.allCases) { location in
+                    Button(L10n.string(location.rawValue)) { explorer.open(location.url(home: FileManager.default.homeDirectoryForCurrentUser)) }
+                }
+            } label: { LucideIcon("folder") }.help(L10n.text("Ubicaciones"))
             Button(action: explorer.back) { LucideIcon("chevron-left") }.buttonStyle(SoraButtonStyle(kind: .ghost, iconOnly: true))
                 .disabled(explorer.backHistory.isEmpty).help(L10n.text("Volver")).accessibilityLabel(L10n.text("Volver"))
             Button(action: explorer.forward) { LucideIcon("chevron-right") }.buttonStyle(SoraButtonStyle(kind: .ghost, iconOnly: true))

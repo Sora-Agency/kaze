@@ -39,10 +39,20 @@ final class CleanerModel: ObservableObject {
 
     let fileManager = FileManager.default
     nonisolated let logURL: URL
+    nonisolated let discoveryEnabled: Bool
     private var logTimer: Timer?
 
-    init(scanOnLaunch: Bool = true, initialStorage: StorageSnapshot? = nil, readsLogs: Bool = true, logURL: URL? = nil) {
+    var sharedIndex: StorageIndex?
+    var hasLoadedApps = false
+    var hasLoadedResources = false
+
+    init(scanOnLaunch: Bool = false, initialStorage: StorageSnapshot? = nil, readsLogs: Bool = true, logURL: URL? = nil) {
         self.logURL = logURL ?? CleanerOperations.logURL
+        #if KAZE_PREVIEW
+        discoveryEnabled = false
+        #else
+        discoveryEnabled = true
+        #endif
         if let initialStorage { storage = initialStorage }
         else { refreshStorage() }
         if readsLogs { refreshLogs() }
@@ -51,7 +61,7 @@ final class CleanerModel: ObservableObject {
             refreshResources()
         }
         if readsLogs {
-            logTimer = Timer.scheduledTimer(withTimeInterval: 0.75, repeats: true) { [weak self] _ in
+            logTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] _ in
                 Task { @MainActor in self?.refreshLogs() }
             }
         }
@@ -74,8 +84,12 @@ final class CleanerModel: ObservableObject {
     }
 
     func refreshLogs() {
-        guard let data = try? Data(contentsOf: logURL),
-              let text = String(data: data, encoding: .utf8) else { return }
+        guard let handle = try? FileHandle(forReadingFrom: logURL) else { return }
+        defer { try? handle.close() }
+        guard let length = try? handle.seekToEnd() else { return }
+        try? handle.seek(toOffset: length > 65_536 ? length - 65_536 : 0)
+        guard let data = try? handle.readToEnd() else { return }
+        let text = String(decoding: data, as: UTF8.self)
 
         let lines = text.split(separator: "\n", omittingEmptySubsequences: false)
         logText = lines.suffix(350).joined(separator: "\n")

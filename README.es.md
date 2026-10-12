@@ -18,6 +18,19 @@ Un producto de **Sora Agency** · macOS 13+ · SwiftUI · Licencia MIT
 
 ## Qué puedes hacer
 
+- **Smart Scan:** un análisis explícito agrupa cachés, elementos para revisar,
+  apps, duplicados y desarrollo; distingue tamaños lógicos, asignados y recuperables.
+- **Space Map:** treemap interactivo con zoom por carpetas, Quick Look y Finder.
+- **Duplicados inteligentes:** SHA-256 y comparación local opcional con Vision;
+  fotos similares, bibliotecas Photos, respaldos y sincronizados quedan protegidos.
+- **Historial y deshacer:** operaciones registradas y restauración segura desde Papelera.
+- **System Data y Developer Mode:** explicaciones, inventarios de proyectos y
+  herramientas, dependencias compartidas y coste de reconstrucción.
+- **Monitor, reglas firmadas y asistente local:** medición ligera en la barra de
+  menús, alertas opcionales, recomendaciones verificadas e [IA local opcional](docs/LOCAL_AI.es.md), descargable con un botón.
+
+[Guía de análisis y límites](docs/STORAGE_ANALYSIS.es.md).
+
 - **Explorar archivos y carpetas:** ver su espacio total sin entrar, incluidos
   elementos ocultos, paquetes de aplicaciones y discos externos accesibles.
 - **Encontrar lo más pesado:** ordenar por tamaño, nombre, tipo o fecha y

@@ -14,6 +14,7 @@ clone it and create a branch for a focused change. Then run:
 scripts/test.sh
 scripts/build.sh
 python3 tests/DistributionTests.py
+python3 tests/NativeStartupTests.py
 open package/Kaze.app
 ```
 
@@ -39,6 +40,10 @@ files under `src` handle cleanup, localization and legacy scheduling compatibili
 Python is a development and CI dependency; the installed app does not require it.
 The DMG includes the app and runtime resources; development scripts are included
 in the source ZIP.
+
+NativeStartupTests launches the built App/Scene with existing preferences and
+both monitor states/themes, then checks that idle CPU and memory settle. Preview
+renders alone do not exercise MenuBarExtra and AppStorage scene integration.
 
 ## Code organization
 
@@ -107,3 +112,11 @@ GitHub Actions runs Apple Silicon and Intel builds and attaches their packages.
 See the [publishing guide](docs/PUBLISHING.md) to prepare a version. Release
 tests use temporary files and a simulated GitHub CLI; they never create or
 publish real releases.
+
+## Storage analysis rules
+
+Read [the storage guide](docs/STORAGE_ANALYSIS.md) before changing scan or cleanup
+scopes. Regenerable data still needs explicit selection and closed processes.
+Keep payload reads cancellable, separate detail limits from measurement coverage,
+and preserve APFS uncertainty. Rule changes need review, an Ed25519 signature
+(`scripts/sign-rules.sh`) and tests using temporary data only. Never commit keys.

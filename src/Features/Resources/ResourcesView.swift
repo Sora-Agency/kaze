@@ -224,6 +224,7 @@ struct ResourcesView: View {
             }
             .padding(16)
         }
+        .onAppear { if !model.hasLoadedResources { model.refreshResources() } }
         .alert(L10n.text("¿Eliminar permanentemente estos recursos?"), isPresented: $model.showingResourceRemovalConfirmation) {
             Button(L10n.text("Cancelar"), role: .cancel) {}
             Button(L10n.text("Eliminar definitivamente"), role: .destructive) { model.removeSelectedResources() }

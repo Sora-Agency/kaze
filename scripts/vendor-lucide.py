@@ -7,7 +7,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 
 COMMIT = "70562c1ee1c4fdcf736fe97bc893fb8511927934"
-ICONS = "activity arrow-down-to-line arrow-up arrow-up-right box calendar-clock calendar-plus check chevron-down chevron-left chevron-right circle-alert circle-question-mark download file file-text folder folder-minus folder-plus hard-drive hammer house info layout-grid link monitor moon pencil play plus refresh-cw search shield-check shield-alert smartphone sparkles sun trash x".split()
+ICONS = "activity arrow-down-to-line arrow-up arrow-up-right box brain-circuit calendar-clock calendar-plus check chevron-down chevron-left chevron-right circle-alert circle-question-mark download file file-text folder folder-minus folder-plus hard-drive hammer house info layout-grid link monitor moon pencil play plus refresh-cw search shield-check shield-alert smartphone sparkles sun trash x".split()
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "src/Icons/Lucide"
 

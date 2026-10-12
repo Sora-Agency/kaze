@@ -172,3 +172,13 @@ no borran archivos ni cambian el tamaño total mostrado de la carpeta.
 El botón de sol/luna alterna entre modo claro y oscuro con un clic.
 La ubicación activa sigue marcada al navegar por sus subcarpetas.
 Kaze utiliza el logo original de Sora en la interfaz y en el icono de la app.
+
+ANÁLISIS DE ALMACENAMIENTO
+Smart Scan comparte un índice con Space Map, Duplicados, System Data y el asistente
+local. Elegir carpeta acota el análisis. No se elimina nada al analizar.
+SHA-256 comprueba copias exactas; Vision explícito solo propone fotos para revisar.
+Historial restaura elementos intactos de Papelera sin sobrescribir; las operaciones
+permanentes de cachés/Docker/simuladores no admiten deshacer. La recuperación es un
+rango potencial porque APFS puede retener bloques compartidos. Las alertas son
+opcionales. Las reglas se incluyen firmadas con Ed25519. Consulta la guía incluida
+con el código fuente.

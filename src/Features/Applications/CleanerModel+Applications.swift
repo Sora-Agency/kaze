@@ -3,13 +3,15 @@ import AppKit
 
 extension CleanerModel {
     func scanApplications() {
-        guard !isScanningApps else { return }
+        guard discoveryEnabled, !isScanningApps else { return }
         isScanningApps = true
         let home = fileManager.homeDirectoryForCurrentUser
+        let index = sharedIndex
+        hasLoadedApps = true
 
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard let self else { return }
-            let result = CleanerOperations.discoverApplications(home: home)
+            let result = CleanerOperations.discoverApplications(home: home, index: index)
             DispatchQueue.main.async {
                 self.applications = result.sorted { $0.totalBytes > $1.totalBytes }
                 self.selectedApplicationIDs = self.selectedApplicationIDs.intersection(Set(result.map(\.id)))
@@ -47,7 +49,7 @@ extension CleanerModel {
     }
 
     func toggleApplicationData(_ item: ApplicationDataItem, for application: InstalledApplication, selected: Bool) {
-        guard !selectedApplicationIDs.contains(application.id) else { return }
+        guard item.canRemove, !selectedApplicationIDs.contains(application.id) else { return }
         if selected {
             guard !hasSelectedDataAncestor(of: item) else { return }
             selectedApplicationDataIDs = Set(
@@ -107,7 +109,7 @@ extension CleanerModel {
     }
 
     var selectedTotalBytes: Int64 {
-        selectedApplications.reduce(0) { $0 + $1.totalBytes }
+        selectedApplications.reduce(0) { $0 + $1.appBytes + $1.relatedData.filter(\.canRemove).reduce(0) { $0 + $1.bytes } }
     }
 
     var selectedApplicationData: [(application: InstalledApplication, item: ApplicationDataItem)] {
@@ -116,7 +118,7 @@ extension CleanerModel {
         for item in allItems { itemsByID[item.id] = item }
         let applicationsByID = Dictionary(uniqueKeysWithValues: applications.map { ($0.id, $0) })
         return selectedApplicationDataIDs.compactMap { id in
-            guard let item = itemsByID[id],
+            guard let item = itemsByID[id], item.canRemove,
                   let application = applicationsByID[item.applicationID] else { return nil }
             return (application, item)
         }
@@ -143,23 +145,25 @@ extension CleanerModel {
 
             for application in targets {
                 if let bundleIdentifier = application.bundleIdentifier {
-                    NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier)
-                        .forEach { _ = $0.terminate() }
-                    Thread.sleep(forTimeInterval: 0.5)
+                    guard CleanerOperations.closeApplication(bundleIdentifier, bundleURL: application.url) else {
+                        OperationJournal.shared.external(title: "Aplicación en uso", target: application.url.path, bytes: 0, status: 1,
+                            detail: "La aplicación no se cerró; no se modificaron sus datos.")
+                        continue
+                    }
                 }
 
                 self.appendLogFromBackground(L10n.text("Desinstalación: \(application.name)"))
-                CleanerOperations.recycle(application.url, label: L10n.text("aplicación \(application.name)"))
+                guard CleanerOperations.recycle(application.url, label: L10n.text("aplicación \(application.name)"), bytes: application.appBytes) else { continue }
 
                 for relatedURL in application.relatedURLs {
-                    CleanerOperations.recycle(relatedURL, label: L10n.text("dato relacionado de \(application.name)"))
+                    CleanerOperations.recycle(relatedURL, label: L10n.text("dato relacionado de \(application.name)"), bytes: application.relatedData.first { $0.url == relatedURL }?.bytes)
                 }
             }
 
             DispatchQueue.main.async {
                 self.selectedApplicationIDs.removeAll()
                 self.isScanningApps = false
-                self.progressText = .message("Aplicaciones movidas a la Papelera")
+                self.progressText = .message("Operación terminada; revisa Historial")
                 self.refreshStorage()
                 self.refreshLogs()
                 self.scanApplications()
@@ -186,20 +190,22 @@ extension CleanerModel {
             for entries in grouped.values {
                 guard let application = entries.first?.application else { continue }
                 if let bundleIdentifier = application.bundleIdentifier {
-                    NSRunningApplication.runningApplications(withBundleIdentifier: bundleIdentifier)
-                        .forEach { _ = $0.terminate() }
-                    Thread.sleep(forTimeInterval: 0.5)
+                    guard CleanerOperations.closeApplication(bundleIdentifier, bundleURL: application.url) else {
+                        OperationJournal.shared.external(title: "Aplicación en uso", target: application.url.path, bytes: 0, status: 1,
+                            detail: "La aplicación no se cerró; no se modificaron sus datos.")
+                        continue
+                    }
                 }
 
                 for entry in entries {
-                    CleanerOperations.recycle(entry.item.url, label: L10n.text("dato de \(application.name)"))
+                    CleanerOperations.recycle(entry.item.url, label: L10n.text("dato de \(application.name)"), bytes: entry.item.bytes)
                 }
             }
 
             DispatchQueue.main.async {
                 self.selectedApplicationDataIDs.removeAll()
                 self.isRemovingApplicationData = false
-                self.progressText = .message("Datos seleccionados movidos a la Papelera")
+                self.progressText = .message("Operación terminada; revisa Historial")
                 self.refreshStorage()
                 self.refreshLogs()
                 self.scanApplications()

@@ -31,3 +31,13 @@ Sparkle 2.10.0
 Native macOS software update framework. Included unmodified, with its helper tools.
 Source: https://github.com/sparkle-project/Sparkle
 License: Sparkle/LICENSE (MIT and included third-party notices).
+
+Optional local AI (not included in the app or installer)
+Qwen3-0.6B Q8_0 GGUF, copyright Qwen / Alibaba Cloud, Apache License 2.0.
+Source: https://huggingface.co/Qwen/Qwen3-0.6B-GGUF
+Pinned revision: 23749fefcc72300e3a2ad315e1317431b06b590a
+License: AI/Qwen-LICENSE.txt.
+llama.cpp b10566, MIT License; optional official macOS arm64/x64 archive.
+Source: https://github.com/ggml-org/llama.cpp/releases/tag/b10566
+License: AI/llama-LICENSE.txt; the downloaded archive includes its own notices.
+These components are downloaded only when the user chooses Download local AI.

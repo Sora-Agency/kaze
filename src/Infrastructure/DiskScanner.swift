@@ -15,6 +15,11 @@ final class ScanCancellation: @unchecked Sendable {
 }
 
 enum DiskScanner {
+    static func fingerprint(_ s: stat) -> FileFingerprint {
+        FileFingerprint(device: Int64(s.st_dev), inode: UInt64(s.st_ino), size: Int64(s.st_size),
+                        modified: Int64(s.st_mtimespec.tv_sec), nanoseconds: Int64(s.st_mtimespec.tv_nsec),
+                        changed: Int64(s.st_ctimespec.tv_sec), changedNanoseconds: Int64(s.st_ctimespec.tv_nsec))
+    }
     static func metadata(_ url: URL) -> stat? {
         var value = stat()
         return url.withUnsafeFileSystemRepresentation { path in

@@ -14,6 +14,7 @@ Haz un fork, clónalo y crea una rama para un cambio concreto. Después ejecuta:
 scripts/test.sh
 scripts/build.sh
 python3 tests/DistributionTests.py
+python3 tests/NativeStartupTests.py
 open package/Kaze.app
 ```
 
@@ -40,6 +41,10 @@ programaciones antiguas. Python se usa en desarrollo y CI; no es una dependencia
 para abrir la app instalada. El DMG contiene la app con su motor de limpieza,
 fuentes, icono y avisos legales; los scripts de desarrollo quedan en el ZIP
 de fuentes.
+
+NativeStartupTests abre la app compilada con las preferencias existentes y
+ambos estados del monitor/temas, y comprueba que CPU y memoria se estabilizan.
+Las capturas no cubren la integración de MenuBarExtra y AppStorage entre escenas.
 
 ## Trabajar en el código
 
@@ -112,3 +117,12 @@ de cada compilación. Los runners usados corresponden a los
 Para preparar una versión, sigue [la guía de publicación](docs/PUBLISHING.es.md).
 Las pruebas de release usan archivos temporales y una CLI de GitHub simulada;
 no crean ni publican releases reales.
+
+## Reglas de análisis de almacenamiento
+
+Lee [la guía de análisis](docs/STORAGE_ANALYSIS.es.md) antes de cambiar ámbitos.
+Los datos regenerables requieren selección explícita y procesos cerrados.
+Conserva cancelación en las lecturas, separa los límites de detalles de la
+cobertura y mantén la incertidumbre de APFS. Las reglas requieren revisión,
+firma Ed25519 (`scripts/sign-rules.sh`) y pruebas con datos temporales.
+Nunca incluyas claves privadas en el repositorio.
