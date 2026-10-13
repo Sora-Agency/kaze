@@ -131,7 +131,6 @@ final class SmartScanModel: ObservableObject {
     func markChanged() {
         restoreAllowed = false; isRestoring = false
         if isScanning || isComparing { token.cancel(); request = UUID(); isScanning = false; isComparing = false }
-        if persists { let cache = cache; queue.async { cache.invalidateAnalysis() } }
         guard !index.files.isEmpty else { return }
         isStale = true; selected = []; duplicateSelection = []
     }
@@ -150,6 +149,7 @@ final class SmartScanModel: ObservableObject {
         let roots = roots ?? [home, URL(fileURLWithPath: "/Applications"), URL(fileURLWithPath: "/Library"), URL(fileURLWithPath: "/private/var")]
         let home = home
         let catalog = catalog
+        let cache = cache, persistResults = persists
         let includeSnapshots = roots.contains { $0.path == "/private/var" } && home == FileManager.default.homeDirectoryForCurrentUser
         isScanning = true; visited = 0; error = nil
         queue.async { [weak self] in
@@ -170,13 +170,17 @@ final class SmartScanModel: ObservableObject {
             #else
             let snapshots = includeSnapshots ? CleanerOperations.runCommand("/usr/bin/tmutil", arguments: ["listlocalsnapshots", "/"], timeout: 5) : (output: "", status: Int32(1))
             #endif
+            let snapshotNames = snapshots.status == 0 ? snapshots.output.split(separator: "\n").map(String.init).filter { $0.hasPrefix("com.apple.TimeMachine.") } : []
+            let snapshotStatus = !includeSnapshots ? "Snapshots no consultados en el análisis de una carpeta" : snapshots.status == 0 ? "Inventario de snapshots; tamaño exclusivo no disponible" : "No se pudo consultar Time Machine"
+            guard !token.isCancelled else { return }
+            let saved = !persistResults || cache.saveAnalysis(CachedStorageAnalysis(schema: 1, index: result,
+                duplicates: duplicateResult, snapshots: snapshotNames, snapshotStatus: snapshotStatus))
             DispatchQueue.main.async {
                 guard let self, self.request == request else { return }
                 self.apply(result, prepared: findings, totals: totals, summary: summary); self.duplicates = duplicateResult; self.visited = result.scannedCount; self.isScanning = false
                 self.potential = potential
-                self.snapshots = snapshots.status == 0 ? snapshots.output.split(separator: "\n").map(String.init).filter { $0.hasPrefix("com.apple.TimeMachine.") } : []
-                self.snapshotStatus = !includeSnapshots ? "Snapshots no consultados en el análisis de una carpeta" : snapshots.status == 0 ? "Inventario de snapshots; tamaño exclusivo no disponible" : "No se pudo consultar Time Machine"
-                self.persist()
+                self.snapshots = snapshotNames; self.snapshotStatus = snapshotStatus
+                if !saved { self.error = L10n.text("No se pudo guardar el análisis. Los resultados siguen disponibles en esta sesión.") }
             }
         }
     }
@@ -265,8 +269,7 @@ final class SmartScanModel: ObservableObject {
             DispatchQueue.main.async {
                 guard let self else { return }; self.isRemoving = false; self.selected = []; self.duplicateSelection = []
                 self.error = failures.isEmpty ? L10n.text("Elementos movidos a la Papelera. Actualiza el análisis.") : failures.joined(separator: "\n")
-                // Invalidated sizes are never presented as fresh analysis after a mutation.
-                self.findings = []; self.duplicates = DuplicateReport(); self.index = .empty; self.potential = 0; self.systemTotals = [:]; self.systemPotential = [:]; self.onIndex?(.empty)
+                self.onIndex?(.empty)
                 self.markChanged()
             }
         }

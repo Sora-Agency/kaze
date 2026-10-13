@@ -80,6 +80,10 @@ struct ExplorerView: View {
                 Text(summary).font(SoraTypography.body(26, weight: .semibold)).monospacedDigit()
                 Text(explorer.isScanning ? L10n.text("Calculando el contenido") : L10n.text("Contenido de la carpeta"))
                     .font(SoraTypography.body(12)).foregroundStyle(SoraPalette.secondary)
+                if explorer.needsRefresh {
+                    Text(L10n.text("Resultados guardados; hay cambios pendientes"))
+                        .font(SoraTypography.body(11)).foregroundStyle(Color.orange)
+                }
                 if let date = explorer.measuredAt {
                     Text(explorer.showingCached ? L10n.text("Guardado: \(L10n.date(date, includeTime: true))") : L10n.text("Medido: \(L10n.date(date, includeTime: true))"))
                         .font(SoraTypography.body(11)).foregroundStyle(SoraPalette.muted)
@@ -196,7 +200,8 @@ struct ExplorerView: View {
                     Text(entry.name).font(SoraTypography.body(13, weight: .medium)).lineLimit(1).truncationMode(.middle)
                 }
                 if entry.measurement?.isPartial == true {
-                    Text(L10n.text("Tamaño parcial · acceso limitado")).font(SoraTypography.body(10)).foregroundStyle(.orange)
+                    Text(entry.measurement?.cancelled == true ? L10n.text("Tamaño pendiente de actualizar") : L10n.text("Tamaño parcial · acceso limitado"))
+                        .font(SoraTypography.body(10)).foregroundStyle(.orange)
                 } else if entry.isSymbolicLink {
                     Text(L10n.text("Destino sin recorrer")).font(SoraTypography.body(10)).foregroundStyle(SoraPalette.secondary)
                 }

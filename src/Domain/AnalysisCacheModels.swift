@@ -19,9 +19,9 @@ struct CachedExplorerFolder: Codable {
     let rootFingerprint: FileFingerprint
     var entries: [CachedExplorerEntry]
     let totalBytes: Int64
-    /// Cross-child hard links require a complete walk to compute the parent total.
     let independent: Bool
     var complete: Bool { entries.allSatisfy { $0.measurement?.isPartial == false && $0.fingerprint != nil } }
+    var hasPendingMeasurements: Bool { entries.contains { $0.directory && ($0.measurement == nil || $0.measurement?.cancelled == true) } }
 }
 
 struct CachedStorageAnalysis: Codable {

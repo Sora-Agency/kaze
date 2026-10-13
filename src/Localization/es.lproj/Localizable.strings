@@ -304,17 +304,14 @@
 "¿Mover los datos seleccionados a la Papelera?" = "¿Mover los datos seleccionados a la Papelera?";
 "¿Reiniciar Docker Desktop?" = "¿Reiniciar Docker Desktop?";
 
-/* Software updates */
 "Buscar actualizaciones…" = "Buscar actualizaciones…";
 "Buscar actualizaciones automáticamente" = "Buscar actualizaciones automáticamente";
 "No se pudo iniciar el actualizador" = "No se pudo iniciar el actualizador";
 
-/* Protected folder access */
 "Acceso a carpetas protegidas verificado" = "Acceso a carpetas protegidas verificado";
 "Acceso a carpetas protegidas pendiente" = "Acceso a carpetas protegidas pendiente";
 "Acceso a carpetas protegidas sin verificar" = "Acceso a carpetas protegidas sin verificar";
 
-/* Storage intelligence and reversible operations. */
 "%@ elementos · selección explícita" = "%@ elementos · selección explícita";
 "ANALIZAR" = "ANALIZAR";
 "Abrir en Explorador" = "Abrir en Explorador";
@@ -681,7 +678,6 @@
 "Detalles de las reglas de limpieza" = "Detalles de las reglas de limpieza";
 "Información avanzada sobre alcance y recuperación." = "Información avanzada sobre alcance y recuperación.";
 
-/* Recovery and startup apps */
 "Recuperación" = "Recuperación";
 "Apps al inicio" = "Apps al inicio";
 "Abre el origen primero." = "Abre el origen primero.";
@@ -809,6 +805,10 @@
 "Revisión manual; no incluido en recuperación potencial" = "Revisión manual; no incluido en recuperación potencial";
 "Tamaño lógico: %@" = "Tamaño lógico: %@";
 "Espacio para revisar muestra lo que ocupan apps, proyectos y archivos; requiere decidir qué conservar. No se suma a la recuperación potencial." = "Espacio para revisar muestra lo que ocupan apps, proyectos y archivos; requiere decidir qué conservar. No se suma a la recuperación potencial.";
+"¿Desinstalar la IA local?" = "¿Desinstalar la IA local?";
+"Desinstalar IA" = "Desinstalar IA";
+"Desinstalando la IA local…" = "Desinstalando la IA local…";
+"Se eliminarán el modelo y el motor descargados por Kaze. Tus análisis, historial y ajustes se conservarán. Puedes volver a descargar la IA cuando quieras." = "Se eliminarán el modelo y el motor descargados por Kaze. Tus análisis, historial y ajustes se conservarán. Puedes volver a descargar la IA cuando quieras.";
 "Cachés de VS Code" = "Cachés de VS Code";
 "Cachés de Slack" = "Cachés de Slack";
 "Caché Yarn Classic" = "Caché Yarn Classic";
@@ -820,7 +820,7 @@
 "Navegadores, Discord, Slack y Homebrew" = "Navegadores, Discord, Slack y Homebrew";
 "VS Code, Yarn, pip, CocoaPods, Gradle, npm, pnpm y Xcode" = "VS Code, Yarn, pip, CocoaPods, Gradle, npm, pnpm y Xcode";
 "Requiere revisión manual" = "Requiere revisión manual";
-"¿Desinstalar la IA local?" = "¿Desinstalar la IA local?";
-"Desinstalar IA" = "Desinstalar IA";
-"Desinstalando la IA local…" = "Desinstalando la IA local…";
-"Se eliminarán el modelo y el motor descargados por Kaze. Tus análisis, historial y ajustes se conservarán. Puedes volver a descargar la IA cuando quieras." = "Se eliminarán el modelo y el motor descargados por Kaze. Tus análisis, historial y ajustes se conservarán. Puedes volver a descargar la IA cuando quieras.";
+"Hay cambios recientes. Actualiza cuando quieras volver a medir." = "Hay cambios recientes. Actualiza cuando quieras volver a medir.";
+"Resultados guardados; hay cambios pendientes" = "Resultados guardados; hay cambios pendientes";
+"No se pudo guardar el análisis. Los resultados siguen disponibles en esta sesión." = "No se pudo guardar el análisis. Los resultados siguen disponibles en esta sesión.";
+"Tamaño pendiente de actualizar" = "Tamaño pendiente de actualizar";

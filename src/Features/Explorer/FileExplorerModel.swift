@@ -8,6 +8,8 @@ final class FileExplorerModel: ObservableObject {
     @Published private(set) var entries: [FileEntry] = []
     @Published private(set) var totalBytes: Int64 = 0
     @Published private(set) var isScanning = false
+    @Published private(set) var isCheckingChanges = false
+    @Published private(set) var needsRefresh = false
     @Published private(set) var error: String?
     @Published private var statusText = LocalizedText.message("Elige una carpeta para analizar su contenido.")
     @Published private(set) var hasLoaded = false
@@ -73,7 +75,7 @@ final class FileExplorerModel: ObservableObject {
         loadFolder()
     }
     private func loadSharedIndex() -> Bool {
-        guard let index = sharedIndex, Date().timeIntervalSince(index.date) < 120,
+        guard let index = sharedIndex,
               let node = index.byPath[canonicalFilePath(folder)], index.files[node].directory,
               !index.files[node].partial, !index.files[node].detailsLimited else { return false }
         isScanning = false; error = nil; hasLoaded = true; cancelled = false
@@ -102,7 +104,6 @@ final class FileExplorerModel: ObservableObject {
         panel.directoryURL = folder
         if panel.runModal() == .OK, let url = panel.url { open(url) }
     }
-    /// Reuse the last folder and the shared index from the very first entry.
     func loadIfNeeded() {
         active = true
         guard !seeded else { return }
@@ -111,12 +112,12 @@ final class FileExplorerModel: ObservableObject {
     func suspendMonitoring() {
         active = false
         monitor?.stop(); monitor = nil
-        if isScanning { stop() }
+        if isScanning || isCheckingChanges { stop() }
     }
     private func resetRequest() -> UUID {
         cancellation.cancel(); cancellation = ScanCancellation(); generation = UUID()
         monitor?.stop(); monitor = nil; pending = FolderChanges(); awaitingHistory = false
-        error = nil; cancelled = false; hasLoaded = true
+        error = nil; cancelled = false; hasLoaded = true; isCheckingChanges = false; needsRefresh = false
         return generation
     }
     private func display(_ value: CachedExplorerFolder, rows: [FileEntry], cached: Bool) {
@@ -135,13 +136,13 @@ final class FileExplorerModel: ObservableObject {
         if let snapshot, let rows = cachedRows[target.path] { display(snapshot, rows: rows, cached: true) }
         else if !loadSharedIndex() { entries = []; totalBytes = 0; measuredAt = nil; showingCached = false }
         if seeded { if snapshot == nil && !loadSharedIndex() { scan() }; return }
-        isScanning = true
+        isScanning = entries.isEmpty; isCheckingChanges = !entries.isEmpty
         statusText = .message("Comprobando cambios…")
         let memory = snapshot
         let shared = sharedIndex, classifier = classifier
         queue.async { [weak self] in
             var value = memory ?? cache.loadFolder(target)
-            if value == nil, let index = shared, Date().timeIntervalSince(index.date) < 120,
+            if value == nil, let index = shared,
                let node = index.byPath[target.path], index.files[node].directory,
                !index.files[node].partial, !index.files[node].detailsLimited {
                 let file = index.files[node]
@@ -157,7 +158,7 @@ final class FileExplorerModel: ObservableObject {
             let current = DiskScanner.metadata(target)
             let checkpoint = FolderChangeMonitor.eventID()
             let valid = value.map { saved in
-                saved.complete && saved.eventID > 0 && saved.eventID <= checkpoint
+                saved.eventID > 0 && saved.eventID <= checkpoint
                     && Date().timeIntervalSince(saved.date) < 86_400
                     && !["/Volumes", "/private/var", "/private/tmp"].contains(where: { pathIsWithin(target.path, root: $0) })
                     && current.map { Int64($0.st_dev) == saved.rootFingerprint.device && UInt64($0.st_ino) == saved.rootFingerprint.inode
@@ -168,7 +169,10 @@ final class FileExplorerModel: ObservableObject {
                 guard let self, self.generation == request, !token.isCancelled else { return }
                 if let value { self.display(value, rows: rows, cached: true) }
                 self.startMonitor(since: valid ? value!.eventID : checkpoint, request: request)
-                if valid && self.monitor != nil { self.awaitingHistory = true }
+                if valid && self.monitor != nil {
+                    self.isScanning = false; self.isCheckingChanges = true; self.awaitingHistory = true
+                }
+                else if let value, ExplorerRefreshPolicy.deferAutomaticRefresh(value) { self.deferRefresh() }
                 else { self.refresh(changes: FolderChanges(full: true), checkpoint: checkpoint) }
             }
         }
@@ -180,8 +184,14 @@ final class FileExplorerModel: ObservableObject {
             self.pending.merge(changes)
             if self.awaitingHistory && changes.historyDone {
                 self.awaitingHistory = false
+                self.isCheckingChanges = false
                 let updates = self.pending; self.pending = FolderChanges()
-                self.refresh(changes: updates, checkpoint: max(since, updates.eventID))
+                if !updates.full && updates.paths.isEmpty, let snapshot = self.snapshot, !snapshot.hasPendingMeasurements {
+                    self.isScanning = false; self.statusText = .count("scan.partial", self.incompleteCount)
+                    if snapshot.complete { self.statusText = .count("scan.complete", snapshot.entries.count) }
+                } else if let snapshot = self.snapshot, ExplorerRefreshPolicy.deferAutomaticRefresh(snapshot) {
+                    self.deferRefresh()
+                } else { self.refresh(changes: updates, checkpoint: max(since, updates.eventID)) }
             } else if !self.isScanning {
                 self.scheduleRefresh(request: request)
             }
@@ -189,7 +199,7 @@ final class FileExplorerModel: ObservableObject {
     }
     private func scheduleRefresh(request: UUID) {
         guard pending.full || !pending.paths.isEmpty else { return }
-        // Coalesce bursts without polling. Only one utility scan runs at a time.
+        if let snapshot, ExplorerRefreshPolicy.deferAutomaticRefresh(snapshot) { deferRefresh(); return }
         isScanning = true; statusText = .message("Actualizando cambios…")
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
             guard let self, self.generation == request, !self.cancelled else { return }
@@ -197,13 +207,19 @@ final class FileExplorerModel: ObservableObject {
             self.refresh(changes: changes, checkpoint: max(self.snapshot?.eventID ?? 0, changes.eventID))
         }
     }
+    private func deferRefresh() {
+        pending = FolderChanges(); isScanning = false; isCheckingChanges = false
+        showingCached = true; needsRefresh = true
+        statusText = .message("Hay cambios recientes. Actualiza cuando quieras volver a medir.")
+    }
     private func refresh(changes: FolderChanges, checkpoint: UInt64) {
         let request = generation, target = folder, previous = snapshot, token = cancellation
         let classifier = classifier, cache = cache, persist = !seeded
-        isScanning = true; statusText = .message(entries.isEmpty ? "Leyendo contenido…" : "Actualizando cambios…")
+        isScanning = true; isCheckingChanges = false; statusText = .message(entries.isEmpty ? "Leyendo contenido…" : "Actualizando cambios…")
         queue.async { [weak self] in
             do {
                 var lastProgress: UInt64 = 0
+                var lastCheckpoint = Date.distantPast
                 let value = try ExplorerSnapshotBuilder.refresh(folder: target, previous: previous, changes: changes,
                     force: changes.full, checkpoint: checkpoint, cancellation: token, classifier: classifier,
                     listed: { rows, bytes in
@@ -217,6 +233,14 @@ final class FileExplorerModel: ObservableObject {
                         DispatchQueue.main.async {
                             guard let self, self.generation == request, !token.isCancelled else { return }
                             self.statusText = .message("Analizando \(name)…")
+                        }
+                    }, checkpointed: { value in
+                        guard Date().timeIntervalSince(lastCheckpoint) >= 1 else { return }; lastCheckpoint = Date()
+                        if persist { cache.saveFolder(value) }
+                        let rows = value.entries.map { $0.entry(classifier: classifier) }
+                        DispatchQueue.main.async {
+                            guard let self, self.generation == request, !token.isCancelled else { return }
+                            self.display(value, rows: rows, cached: false)
                         }
                     })
                 guard !token.isCancelled else { return }
@@ -239,7 +263,7 @@ final class FileExplorerModel: ObservableObject {
     }
     func stop() {
         cancellation.cancel(); generation = UUID(); monitor?.stop(); monitor = nil
-        awaitingHistory = false; pending = FolderChanges(); isScanning = false; cancelled = true
+        awaitingHistory = false; pending = FolderChanges(); isScanning = false; isCheckingChanges = false; cancelled = true
         statusText = .message("Análisis detenido. Actualiza para completar los tamaños pendientes.")
     }
     func scan() {
@@ -249,7 +273,10 @@ final class FileExplorerModel: ObservableObject {
         refresh(changes: FolderChanges(full: true), checkpoint: checkpoint)
     }
     func invalidate() {
-        snapshots = [:]; cachedRows = [:]; snapshot = nil; showingCached = measuredAt != nil
-        if active && !seeded { scan() }
+        showingCached = measuredAt != nil; needsRefresh = true
+        if active && !seeded {
+            if let snapshot, ExplorerRefreshPolicy.deferAutomaticRefresh(snapshot) { deferRefresh() }
+            else { scan() }
+        }
     }
 }
