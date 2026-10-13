@@ -66,6 +66,7 @@ struct ExplorerView: View {
         .soraAnimate(explorer.isScanning)
         .onAppear { explorer.loadIfNeeded() }
         .onDisappear { explorer.suspendMonitoring() }
+        .reviewedTrashActions(home: explorer.home) { _ in explorer.invalidate() }
     }
 
     private var header: some View {
@@ -232,6 +233,7 @@ struct ExplorerView: View {
             if entry.isDirectory { Button(L10n.text("Abrir carpeta")) { explorer.open(entry.url) } }
             Button(L10n.text("Mostrar en Finder")) { NSWorkspace.shared.activateFileViewerSelecting([entry.url]) }
             Button(L10n.text("Copiar ruta")) { NSPasteboard.general.clearContents(); NSPasteboard.general.setString(entry.url.path, forType: .string) }
+            TrashMenuAction(target: TrashTarget(url: entry.url, directory: entry.isDirectory), disabled: explorer.isScanning || entry.isSymbolicLink)
         }
         .help(entry.url.path + "\n" + L10n.string(entry.deletion.safety.rawValue) + ": " + entry.deletion.explanation + (entry.isDirectory ? L10n.text("\nDoble clic para abrir") : ""))
         .accessibilityElement(children: .combine)

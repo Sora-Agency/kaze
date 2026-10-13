@@ -28,6 +28,7 @@ Un producto de **Sora Agency** · macOS 13+ · SwiftUI · Licencia MIT
   herramientas, dependencias compartidas y coste de reconstrucción.
 - **Monitor, reglas firmadas y asistente local:** medición ligera en la barra de
   menús, alertas opcionales, recomendaciones verificadas e [IA local opcional](docs/LOCAL_AI.es.md), descargable con un botón.
+- **Acciones confirmadas y chats guardados:** mueve resultados elegibles a la Papelera después de revisarlos, conserva conversaciones locales y consulta su actividad. Los chats reabiertos requieren comprobaciones nuevas y confirmación antes de borrar.
 
 [Guía de análisis y límites](docs/STORAGE_ANALYSIS.es.md).
 

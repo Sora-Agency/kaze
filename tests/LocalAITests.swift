@@ -139,7 +139,7 @@ struct LocalAITests {
         }
         try readyService.install(cancellation: ScanCancellation(), progress: { _ in })
         let ready = LocalAssistantModel(service: readyService)
-        ready.checkAvailability(); wait { ready.phase == .ready }
+        ready.checkAvailability(); wait { ready.phase == .ready && !ready.chats.isLoading }
         let analysis = SmartScanModel(home: root, resources: nil, journal: OperationJournal(home: root))
         ready.ask("System Data", analysis: analysis)
         check(ready.submittedQuestion == "System Data", "Assistant keeps the submitted question with its response")
@@ -159,9 +159,10 @@ struct LocalAITests {
               "Uninstall removes all Kaze AI versions and resets the installation state")
         check(fm.fileExists(atPath: history.path) && fm.fileExists(atPath: settings.path) && fm.fileExists(atPath: externalModel.path),
               "Uninstall preserves history, settings and nested symlink targets")
-        ready.install(); wait { ready.phase == .ready }
-        check(ready.hasInstallation && ready.submittedQuestion.isEmpty && ready.response.isEmpty,
-              "AI can be explicitly reinstalled after uninstall without retaining its conversation")
+        ready.install(); wait { ready.phase == .ready && !ready.chats.isLoading }
+        check(ready.hasInstallation && ready.submittedQuestion.isEmpty && ready.response.isEmpty
+            && ready.chats.turns.first?.question == "System Data",
+              "AI reinstallation clears active inference state while preserving saved conversations")
         var changedModel = model; changedModel[0] ^= 1
         try changedModel.write(to: readyService.directory.appendingPathComponent("model.gguf"))
         do { _ = try readyService.validate(cancellation: ScanCancellation()); fatalError("Reinstalled model bypassed verification") }
@@ -172,7 +173,7 @@ struct LocalAITests {
         check(!fm.fileExists(atPath: readyService.directory.path), "A damaged model can still be uninstalled without downloading or hashing it")
         try slow.install(cancellation: ScanCancellation(), progress: { _ in })
         let generating = LocalAssistantModel(service: slow)
-        generating.checkAvailability(); wait { generating.phase == .ready }
+        generating.checkAvailability(); wait { generating.phase == .ready && !generating.chats.isLoading }
         let s = DiskScanner.metadata(root)!
         let node = IndexedFile(url: root, parent: nil, directory: true, symbolicLink: false, protected: false,
                                fingerprint: StorageIndexer.fingerprint(s), links: 1, ownAllocated: 0,
@@ -181,9 +182,16 @@ struct LocalAITests {
             initialIndex: StorageIndex(date: Date(), roots: [root], home: root, files: [node], children: [-1: [0]], byPath: [root.path: 0]))
         generating.ask("What occupies disk space?", analysis: measured)
         check(generating.isGenerating, "Fixture starts inference before uninstall")
+        let interruptedChat = generating.chats.archive.selectedID!
+        generating.newChat()
+        check(!generating.isGenerating && generating.chats.turns.isEmpty
+            && generating.chats.archive.chats.first { $0.id == interruptedChat }?.turns.last?.status == .cancelled,
+              "Switching to a new chat cancels inference and records the interruption in its originating chat")
+        generating.ask("What occupies disk space?", analysis: measured)
         generating.uninstall(); wait { generating.phase == .missing }
         check(!generating.isGenerating && generating.response.isEmpty && !slow.hasInstallation,
               "Uninstall cancels queued or running inference and discards its late response")
+        check(generating.activity.steps.isEmpty, "Uninstallation clears activity and cannot report a cancelled response as completed")
         let linkedHome = root.appendingPathComponent("LinkedHome")
         let storage = LocalAIStorage(home: linkedHome)
         try fm.createDirectory(at: storage.root.deletingLastPathComponent(), withIntermediateDirectories: true)

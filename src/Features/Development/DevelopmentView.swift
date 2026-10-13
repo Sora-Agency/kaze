@@ -36,6 +36,6 @@ struct DevelopmentView: View {
                 }
                 AnalysisNotice(model: analysis)
             }
-        }
+        }.reviewedTrashActions(home: analysis.home, journal: analysis.journal) { _ in analysis.markChanged() }
     }
 }

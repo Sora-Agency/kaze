@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct ApplicationDataTreeNode: View {
     @ObservedObject private var language = AppLanguageStore.shared
@@ -66,6 +67,19 @@ struct ApplicationDataTreeNode: View {
             }
             .padding(.leading, CGFloat(depth) * 22)
             .padding(.vertical, 3)
+            .contentShape(Rectangle()).contextMenu {
+                Button(L10n.text("Mostrar en Finder")) { NSWorkspace.shared.activateFileViewerSelecting([item.url]) }
+                if item.isDirectory {
+                    Button(L10n.text("Revisar contenido")) {
+                        if !model.expandedDataItemIDs.contains(item.id) { model.toggleDataItemExpansion(item) }
+                    }
+                }
+                Button(L10n.text("Mover a la Papelera"), role: .destructive) {
+                    model.selectedApplicationIDs = []; model.selectedApplicationDataIDs = []
+                    model.toggleApplicationData(item, for: application, selected: true)
+                    model.confirmApplicationDataRemoval()
+                }.disabled(!item.canRemove || model.isRemovingApplicationData || model.isScanningApps)
+            }
 
             if item.isDirectory && model.expandedDataItemIDs.contains(item.id) {
                 if let error = model.directoryLoadErrors[item.id] {

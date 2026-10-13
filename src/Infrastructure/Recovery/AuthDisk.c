@@ -1,4 +1,3 @@
-// Adapted from LibreRescateNativo (MIT); see Recovery/LibreRescate-LICENSE.txt.
 #include "AuthDisk.h"
 #include <errno.h>
 #include <fcntl.h>

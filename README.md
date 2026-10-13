@@ -28,6 +28,7 @@ A product by **Sora Agency** · macOS 13+ · SwiftUI · MIT License
   shared dependencies and rebuilding guidance.
 - **Menu bar monitor, signed rules and local assistant:** lightweight capacity
   monitoring, optional alerts, verified recommendations and [optional local AI](docs/LOCAL_AI.md), downloaded with one button.
+- **Confirmed file actions and saved chats:** move eligible results to Trash after review, keep local conversations and inspect their recorded activity. Reopened chats require new checks and confirmation before any removal.
 
 [Storage intelligence guide and limits](docs/STORAGE_ANALYSIS.md).
 

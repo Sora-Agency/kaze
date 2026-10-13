@@ -12,6 +12,7 @@ final class SmartScanModel: ObservableObject {
     @Published private(set) var visited = 0
     @Published private(set) var error: String?
     @Published private(set) var isStale = false
+    @Published private(set) var revision = UUID()
     @Published private(set) var showingCached = false
     @Published private(set) var isRestoring = false
     @Published private(set) var hashesExhaustive = false
@@ -97,7 +98,7 @@ final class SmartScanModel: ObservableObject {
 
     private func apply(_ result: StorageIndex, prepared: [StorageFinding]? = nil, totals: [SystemDataKind: AnalysisBytes]? = nil,
                        summary: CleanupOpportunitySummary? = nil) {
-        isStale = false; showingCached = false; hashesExhaustive = false; lastUsed = [:]; usageQueried = []; index = result; findings = prepared ?? catalog?.findings(index: result, home: home) ?? []
+        revision = UUID(); isStale = false; showingCached = false; hashesExhaustive = false; lastUsed = [:]; usageQueried = []; index = result; findings = prepared ?? catalog?.findings(index: result, home: home) ?? []
         systemTotals = totals ?? Self.systemTotals(result, home: home)
         systemPotential = [:]
         for finding in findings where finding.potential > 0 {
@@ -129,6 +130,7 @@ final class SmartScanModel: ObservableObject {
     #endif
 
     func markChanged() {
+        revision = UUID()
         restoreAllowed = false; isRestoring = false
         if isScanning || isComparing { token.cancel(); request = UUID(); isScanning = false; isComparing = false }
         guard !index.files.isEmpty else { return }
@@ -143,6 +145,7 @@ final class SmartScanModel: ObservableObject {
 
     func scan(roots: [URL]? = nil, includeDuplicates: Bool = true) {
         guard !busy else { return }
+        revision = UUID()
         restoreAllowed = false; isRestoring = false
         token.cancel(); let token = ScanCancellation(); self.token = token
         let request = UUID(); self.request = request

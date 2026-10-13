@@ -76,7 +76,9 @@ cobertura incompleta. Para carpetas mayores, acota el análisis o abre el
 Explorador. El mapa dibuja hasta 120 tiles y un agregado; las listas cargan más
 resultados por lotes. El análisis es explícito y los inventarios de apps/recursos
 se cargan al abrir su sección. Smart Scan restaura los resultados de la última sesión sin recalcular hashes;
-se indican como guardados y requieren un análisis nuevo antes de limpiar.
+se indican como guardados y requieren un análisis nuevo para la limpieza masiva
+de Smart Scan. El asistente puede seguir usando esa base fechada y comprobar de
+nuevo cada archivo propuesto sin otro recorrido completo del disco.
 El Explorador guarda las carpetas visitadas, muestra cuándo se midieron y reutiliza
 Smart Scan desde la primera entrada. Al abrir una carpeta valida eventos de macOS
 para actualizar solo las ramas cambiadas en segundo plano. Si faltan eventos, el volumen cambió o la medición tiene más de un día, requiere
@@ -126,6 +128,24 @@ comprueba también versión/esquema, IDs únicos y ámbitos relativos seguros.
 Añade pruebas de comportamiento antes de ampliar un ámbito automáticamente
 eliminable. Ejecuta `scripts/test.sh`, `scripts/build.sh` y
 `python3 tests/DistributionTests.py` antes de publicar.
+
+## Borrado manual desde los resultados
+
+El clic derecho permite mover elementos completos a la Papelera desde Smart
+Scan, el Explorador, el mapa y las vistas de análisis. Las carpetas muestran su
+ruta, un acceso para revisar el contenido y una casilla de confirmación antes
+del traslado. La comprobación del contenido se ejecuta en segundo plano y se
+puede detener. No se vacía la Papelera.
+
+Los archivos modificados, respaldos, bibliotecas de Photos, rutas sincronizadas,
+ubicaciones del sistema y contenido inaccesible siguen protegidos. Las cachés
+verificadas y dependencias conservan sus comprobaciones de procesos. Una app
+en ejecución no se mueve. El traslado de una app desde estas vistas conserva
+sus datos asociados; Aplicaciones mantiene su desinstalación con atribución.
+Los duplicados exactos conservan la comprobación de hashes y del original.
+Las operaciones quedan en Historial y permiten restauración cuando el traslado
+se puede verificar. Los resultados antiguos siguen mostrando su fecha y no
+autorizan el borrado: cada acción manual verifica nuevamente el elemento.
 
 ## Base persistente
 

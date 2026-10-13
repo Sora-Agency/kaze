@@ -6,6 +6,7 @@ final class LocalAIService: @unchecked Sendable {
     let package: LocalAIPackage
     let directory: URL
     private let storage: LocalAIStorage
+    var home: URL { storage.home }
     var hasInstallation: Bool { storage.exists }
 
     func uninstall() throws {
@@ -101,7 +102,7 @@ final class LocalAIService: @unchecked Sendable {
         return digest.finalize().map { String(format: "%02x", $0) }.joined()
     }
 
-    func answer(prompt: String, cancellation: ScanCancellation, timeout: TimeInterval = 90) throws -> String {
+    func answer(prompt: String, cancellation: ScanCancellation, timeout: TimeInterval = 90, responseSchema: String? = nil) throws -> String {
         guard try validate(cancellation: cancellation) else { throw LocalAIError.notInstalled }
         guard LocalAIPackage.supported else { throw LocalAIError.unsupported }
         let fm = FileManager.default
@@ -123,6 +124,7 @@ final class LocalAIService: @unchecked Sendable {
         process.arguments = ["-m", directory.appendingPathComponent(package.model.filename).path, "-f", input.path,
             "--no-conversation", "--no-display-prompt", "--simple-io", "--no-warmup", "--log-verbosity", "0",
             "--offline", "--color", "off", "-n", "384", "-c", "4096", "-t", "2", "-tb", "2", "-ngl", "0", "--temp", "0.2", "--seed", "42"]
+        if let responseSchema { process.arguments? += ["--json-schema", responseSchema] }
         process.environment = ["PATH": "/usr/bin:/bin", "LC_ALL": "en_US.UTF-8", "GGML_BACKEND_PATH": engine.path,
             "GGML_METAL_PATH_RESOURCES": engine.path, "OMP_NUM_THREADS": "2"]
         process.standardInput = FileHandle.nullDevice; process.standardOutput = writer; process.standardError = FileHandle.nullDevice

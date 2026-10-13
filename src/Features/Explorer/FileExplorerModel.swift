@@ -53,6 +53,7 @@ final class FileExplorerModel: ObservableObject {
     }
 
     var status: String { statusText.string }
+    var home: URL { classifier.home }
 
     var visibleEntries: [FileEntry] {
         entries.filter { (showHidden || !$0.isHidden) && filter.includes($0)

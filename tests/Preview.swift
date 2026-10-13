@@ -68,6 +68,14 @@ struct Preview {
         let assistantEmpty = CommandLine.arguments.contains("--assistant-empty")
         let assistant = LocalAssistantModel(service: LocalAIService(home: root), initialReady: assistantReady,
             initialResponse: assistantReady && !assistantEmpty ? L10n.text("El análisis encontró oportunidades de limpieza. Revisa su recuperación y cierra las aplicaciones indicadas antes de continuar. APFS puede conservar espacio; los bytes potenciales no son una promesa de recuperación.") : "", initialQuestion: assistantReady && !assistantEmpty ? L10n.text("¿Qué puedo borrar sin romper mis proyectos?") : "")
+        if CommandLine.arguments.contains("--assistant-actions") { assistant.previewFileActions(analysis: analysis) }
+        if assistantReady && !assistantEmpty {
+            assistant.previewActivity(analysis: analysis, running: CommandLine.arguments.contains("--assistant-running"))
+            assistant.activity.expanded = CommandLine.arguments.contains("--assistant-activity-expanded")
+        }
+        if CommandLine.arguments.contains("--assistant-memory") {
+            assistant.ask("hola", analysis: analysis)
+        }
         if CommandLine.arguments.contains("--scanning") { analysis.previewScanning(visited: 92_160) }
         let rootView = ContentView(model: model, explorer: explorer, scheduler: scheduler, previewAppearance: dark ? .dark : .light,
                                    initialSection: shownSection, resourceDirectory: resources, homeURL: home, languageStore: language,
@@ -115,6 +123,12 @@ struct Preview {
                 fatalError("No se pudo enfocar el campo de texto")
             }
             RunLoop.main.run(until: Date().addingTimeInterval(0.3))
+        }
+        if CommandLine.arguments.contains("--assistant-disclosure-toggle") {
+            for _ in 0..<3 {
+                withAnimation(SoraMotion.content) { assistant.activity.expanded.toggle() }
+                RunLoop.main.run(until: Date().addingTimeInterval(CommandLine.arguments.contains("--assistant-disclosure-mid") ? 0.1 : 0.32))
+            }
         }
         hosting.layoutSubtreeIfNeeded()
         let rep = hosting.bitmapImageRepForCachingDisplay(in: hosting.bounds)!

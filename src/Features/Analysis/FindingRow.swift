@@ -37,6 +37,10 @@ struct FindingRow: View {
             }
             Button { NSWorkspace.shared.activateFileViewerSelecting([file.url]) } label: { LucideIcon("arrow-up-right") }
                 .help(L10n.text("Mostrar en Finder"))
-        }.padding(.horizontal, 28).padding(.vertical, 14)
+        }.padding(.horizontal, 28).padding(.vertical, 14).contentShape(Rectangle())
+            .contextMenu {
+                Button(L10n.text("Mostrar en Finder")) { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
+                TrashMenuAction(target: TrashTarget(file), disabled: model.busy)
+            }
     }
 }

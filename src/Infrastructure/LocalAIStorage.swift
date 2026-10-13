@@ -2,10 +2,11 @@ import Foundation
 import Darwin
 
 struct LocalAIStorage {
+    let home: URL
     let root: URL
     init(home: URL) {
-        root = URL(fileURLWithPath: canonicalFilePath(home), isDirectory: true)
-            .appendingPathComponent("Library/Application Support/Kaze/AI", isDirectory: true)
+        self.home = URL(fileURLWithPath: canonicalFilePath(home), isDirectory: true)
+        root = self.home.appendingPathComponent("Library/Application Support/Kaze/AI", isDirectory: true)
     }
     var exists: Bool { DiskScanner.metadata(root) != nil }
     func uninstall() throws {

@@ -24,6 +24,7 @@ struct SpaceMapView: View {
         }.kazeQuickLook($preview)
             .onAppear { if focus == nil { focusSingleRoot() } }
             .onChange(of: model.index.date) { _ in focus = nil; hovered = nil; focusSingleRoot() }
+            .reviewedTrashActions(home: model.home, journal: model.journal) { _ in model.markChanged() }
     }
     private var navigationBar: some View {
         HStack {
@@ -80,6 +81,7 @@ struct SpaceMapView: View {
                 Button(L10n.text("Quick Look")) { preview = file.url }
                 Button(L10n.text("Mostrar en Finder")) { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
                 if file.directory { Button(L10n.text("Abrir en Explorador")) { openExplorer(file.url) } }
+                TrashMenuAction(target: TrashTarget(file), disabled: model.busy)
             }
     }
     private func tileLabel(_ file: IndexedFile, rect: CGRect) -> some View {
@@ -106,6 +108,10 @@ struct SpaceMapView: View {
                 let file = model.index.files[child]
                 Button(file.url.lastPathComponent) { if file.directory { focus = child } else { preview = file.url } }
                     .help(file.url.path).font(SoraTypography.body(11))
+                    .contextMenu {
+                        Button(L10n.text("Mostrar en Finder")) { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
+                        TrashMenuAction(target: TrashTarget(file), disabled: model.busy)
+                    }
             } }
         }.padding(.horizontal, 28)
     }

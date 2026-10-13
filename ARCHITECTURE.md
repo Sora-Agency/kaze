@@ -32,6 +32,13 @@ inject the move and process inventory into the same removal path used by the app
 Shared analysis headers, status notices and finding rows live in Features/Analysis
 and serve Smart Scan, Duplicates, System Data and Development. Assistant download
 and context views are separate components; the screen owns conversation input.
+Features/Files shares a scoped manual Trash model, contextual action and review
+sheet across Explorer, analysis rows, Space Map and System Data. Preparation and
+fresh descendant checks run on a utility queue only after explicit user actions.
+Folders require content-review acknowledgement; movement uses the existing
+OperationJournal and mutation lease. Dated analysis results remain separate from
+fresh manual deletion authority. Exact-duplicate context actions reuse hash and
+preserved-original checks; application data actions retain verified attribution.
 ScheduleService accepts an injected LaunchCommandRunning adapter and home
 folder; tests never touch real user agents or execute cleanup. The scanner
 reads metadata without following symlinks or downloading file contents.
@@ -214,7 +221,27 @@ Queries extract the verified engine into a private temporary directory, run
 llama-completion with 2 CPU threads, no GPU, 4096 context and 384 output tokens,
 and stop on cancellation or a 90-second deadline. No server or daemon is started.
 LocalAssistantPrompt includes bounded measured categories and verified rule
-summaries, without file contents or full paths. AI has no tools or deletion API.
+summaries and at most six eligible indexed file candidates, without file contents
+or absolute paths. AssistantFileProposal selects bounded measured candidates;
+AssistantQueryIntent handles greetings locally and gates file candidates before
+inference; informational or negative requests receive no action identifiers.
+AssistantReply owns the response contract, constrains generation with a JSON schema
+and independently validates IDs. Candidate ranking, prompt preparation and response
+validation run on the assistant utility queue against an immutable scan snapshot.
+Ranking retains a bounded pool, scores each once and honors cancellation.
+AssistantFilePlanner checks at most eighteen ranked targets through the manual
+Trash preparation service and supplies at most six unchanged, eligible items to
+the engine. These checks read identity and location metadata without subtree
+traversal or payload reads; missing or modified targets are skipped.
+LocalAssistantModel publishes only grounded proposals and binds each one to its
+query identity, fingerprint and scan date. AssistantFileActionsView offers
+read-only Finder inspection and explicit review. ReviewedTrashModel revalidates
+the proposal authorization before presenting and executing a confirmation; folders
+require separate content acknowledgement. The LLM cannot execute tools, provide
+arbitrary paths, permanently delete files or grant permission through chat text.
+The existing Trash service, mutation lease and History own all approved mutations.
+Successful actions invalidate the scan and consume proposals. No extra disk walk
+occurs during inference.
 Optional AI requires macOS 13.3; existing features remain macOS 13-compatible.
 See [the AI guide](docs/LOCAL_AI.md) for versions and privacy.
 
@@ -222,7 +249,7 @@ Smart Scan keeps its summary outside the lazy result list and uses a permanent
 native scroll observer to publish only compact/expanded threshold crossings. Category
 cards appear at the top and hide while scrolling; the three summary cards stay fixed.
 Result rows
-remain lazy and paged. The assistant keeps the latest question and answer paired,
+remain lazy and paged. The assistant displays the selected conversation as dated question/answer pairs,
 with a fixed composer and a separate scrollable context column. Verified findings
 are grouped by rule only when the findings publisher changes, preserving measured
 recovery ranges and avoiding repeated grouping during input edits.
@@ -242,6 +269,39 @@ status first; signatures and each rule's audit details remain in disclosure grou
 Assistant accents use the shared brand palette; success/warning colors retain
 their semantic meaning.
 
+AssistantResponseView renders plain response text on the chat background without
+an avatar or a message card. AssistantActivityModel retains at most twelve steps
+for the current query in memory; AssistantActivityView expands a summary of actual
+context use, metadata checks, local generation, proposal criteria and confirmed
+Trash actions. Counters come from AssistantFilePlanner, and review/move events
+come from the confirmation and successful mutation callbacks. The trace contains
+no model thinking tokens, file contents, raw command output or additional disk
+walks. It has no periodic timer; utility-queue phase changes update the main actor
+with query-generation checks so cancelled or superseded work cannot claim completion.
+Disclosure content uses intrinsic vertical height, clipping and an opacity
+transition; it never slides a full-height block over preceding messages.
+Expansion respects Reduce Motion, and labels use the shared bilingual catalogs.
+
+AssistantChatModel owns a bounded versioned archive through AssistantChatStore,
+with asynchronous serial I/O, owner-only permissions and atomic replacement.
+LocalAssistantModel accepts a separate chat store dependency; its default location
+comes from the canonical user home, independently of the AI package directory.
+AssistantFilePlanner returns candidates and verification counts in one plan;
+activity views format the recorded steps through a shared presentation function.
+Query beginnings, terminal outcomes and real review/move events are persisted;
+termination drains queued saves. Up to thirty chats and forty turns per chat
+are retained under an eight MiB file ceiling. A corrupt, redirected or unknown
+archive is not silently overwritten. Restart marks pending work interrupted;
+restoring or selecting a conversation neither launches inference nor restores
+proposal IDs, fingerprints or deletion authorization. LocalAssistantQuery builds
+prompts on the utility queue with at most two recent completed exchanges from
+the selected chat. Prior answers remain untrusted historical explanations;
+confirmed actions are independently recorded successful moves. Query identity
+checks reject late replies after switching chats, and review provenance assigns
+a late successful action to its originating chat even when selection changed.
+Deleting a chat preserves the separate operation journal. Public previews use
+in-memory fixtures and never read or write host conversation files.
+
 ## Recovery and startup apps
 
 RecoveryModel and StartupItemsModel own their serial utility queues and keep
@@ -249,6 +309,9 @@ work off the main actor. Their initialization does not inventory disks, read
 login items or request authorization. The navigation shell retains both models
 while switching sections. Recovery entries, devices, volumes and outcomes live
 in Domain; parser internals and recovery-specific errors stay in Infrastructure/Recovery.
+LibreRescate attribution and its complete MIT notice are retained in
+THIRD_PARTY_NOTICES.txt and src/Recovery/LibreRescate-LICENSE.txt; handwritten source
+contains no comments. Compiler directives and executable script headers remain.
 Recovery's APFS reader is split into container,
 B-tree, index, compression and extraction adapters; the independent copy operation
 owns destination creation and reports. RecoverySource authorizes device descriptors

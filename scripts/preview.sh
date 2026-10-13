@@ -47,6 +47,13 @@ done
 "$work_dir/preview" "$preview_dir/Kaze-assistant-ready.png" --dark --assistant --assistant-ready --compact
 
 "$work_dir/preview" "$preview_dir/Kaze-assistant-welcome.png" --dark --assistant --assistant-ready --assistant-empty --compact
+"$work_dir/preview" "$preview_dir/Kaze-assistant-actions-dark.png" --dark --assistant --assistant-ready --assistant-actions
+"$work_dir/preview" "$preview_dir/Kaze-assistant-actions-light.png" --assistant --assistant-ready --assistant-actions
+"$work_dir/preview" "$preview_dir/Kaze-assistant-activity-dark.png" --dark --assistant --assistant-ready --assistant-actions --assistant-activity-expanded
+"$work_dir/preview" "$preview_dir/Kaze-assistant-loading-dark.png" --dark --assistant --assistant-ready --assistant-running --assistant-activity-expanded
+
+"$work_dir/preview" "$preview_dir/Kaze-assistant-disclosure-motion.png" --dark --assistant --assistant-ready --assistant-actions --assistant-disclosure-toggle --assistant-disclosure-mid
+"$work_dir/preview" "$preview_dir/Kaze-assistant-conversation.png" --dark --assistant --assistant-ready --assistant-actions --assistant-memory
 
 for section in recovery startup; do
   "$work_dir/preview" "$preview_dir/Kaze-$section-dark.png" --dark "--$section" --compact

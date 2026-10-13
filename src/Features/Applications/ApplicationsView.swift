@@ -70,6 +70,13 @@ struct ApplicationsView: View {
             }
         }
         .padding(.vertical, 5)
+        .contentShape(Rectangle()).contextMenu {
+            Button(L10n.text("Mostrar en Finder")) { NSWorkspace.shared.activateFileViewerSelecting([application.url]) }
+            Button(L10n.text("Desinstalar"), role: .destructive) {
+                model.selectedApplicationIDs = [application.id]; model.selectedApplicationDataIDs = []
+                model.confirmRemoval()
+            }.disabled(model.isRemovingApplicationData || model.isScanningApps)
+        }
     }
 
     var body: some View {
@@ -163,7 +170,7 @@ struct ApplicationsView: View {
             Button(L10n.text("Cancelar"), role: .cancel) {}
             Button(L10n.text("Mover datos"), role: .destructive) { model.removeSelectedApplicationData() }
         } message: {
-            Text(L10n.text("Las aplicaciones permanecerán instaladas, pero pueden cerrarse y perder sesiones, configuraciones, descargas locales o bases de datos. Los datos irán a la Papelera y esta no se vaciará automáticamente."))
+            Text(L10n.text("Revisa que el contenido no incluya archivos importantes. Se moverá la carpeta completa, con todos sus archivos y subcarpetas.") + "\n\n" + L10n.text("Las aplicaciones permanecerán instaladas, pero pueden cerrarse y perder sesiones, configuraciones, descargas locales o bases de datos. Los datos irán a la Papelera y esta no se vaciará automáticamente."))
         }
     }
 }

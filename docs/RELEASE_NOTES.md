@@ -1,3 +1,35 @@
+# Kaze 1.5.0
+
+Move files to Trash directly from analysis results and keep local assistant conversations between sessions, with separate confirmation for every file action.
+
+- Right-click items in Smart Scan, Explorer, Space Map and storage views to move the complete item to Trash. Folders show their full path, a content-review shortcut and a required confirmation checkbox. Protected system locations, backups, Photos libraries and synchronized files remain excluded; exact duplicates retain their hash and original-copy checks.
+- The local assistant can propose up to three measured items for review. Current identity, location, signed rules and running apps are checked before preparing an action. Each item requires its own confirmation, and successful moves remain reversible through History when their destination is verified.
+- New chat and Chats save questions, answers, dated activity and confirmed actions privately on your Mac. Each chat has its own recent context; reopening a conversation never restores deletion authority or starts inference automatically. Keep up to 30 chats and 40 exchanges per chat, with an 8 MiB storage limit and visible save errors. Removing AI preserves conversations and operation history.
+- Responses appear directly on the chat background, with expandable activity and criteria beneath each message. The disclosure respects Reduce Motion and no longer overlaps preceding text. Recorded activity reports actual checks and confirmed moves.
+- Fixed structured responses in the native AI engine and handled greetings locally. Saved analyses remain usable for conversation and individually verified proposals without repeating the full disk scan; bulk cleanup still requires fresh results. Changed analyses and chat switches revoke old proposals and cancel pending responses.
+- Kept storage, inference, presentation and file operations separate, with bounded context and background I/O. Updated English and Spanish documentation and privacy information while preserving third-party attribution.
+
+Requires macOS 13 or later; optional local AI requires macOS 13.3 or later. Choose the Apple Silicon or Intel installer.
+APFS may retain shared blocks and snapshots. Moving an item to Trash does not release space until Trash is emptied; recovery estimates are upper bounds.
+Update packages and feeds are signed with Sparkle. The app is ad hoc signed and is not notarized by Apple.
+
+## Español
+
+Mueve archivos a la Papelera directamente desde los resultados y conserva las conversaciones del asistente entre sesiones, con confirmación separada para cada acción.
+
+- Usa clic derecho en Smart Scan, el Explorador, Space Map y las vistas de almacenamiento para mover el elemento completo a la Papelera. Las carpetas muestran su ruta, un acceso para revisar el contenido y una casilla obligatoria de confirmación. Se conservan las protecciones de sistema, respaldos, bibliotecas de Photos y archivos sincronizados; los duplicados exactos mantienen sus comprobaciones de hashes y del original.
+- El asistente local puede proponer hasta tres elementos medidos para revisar. Se comprueban identidad, ubicación, reglas firmadas y apps abiertas antes de preparar una acción. Cada elemento requiere su propia confirmación; los traslados verificados permiten restauración desde Historial.
+- Nuevo chat y Chats guardan preguntas, respuestas, actividad fechada y acciones confirmadas de forma privada en tu Mac. Cada conversación conserva su contexto reciente; reabrirla nunca recupera permisos de borrado ni inicia inferencia automáticamente. Se conservan hasta 30 chats y 40 consultas por chat, con un límite de 8 MiB y errores de guardado visibles. Desinstalar la IA conserva las conversaciones y el historial de operaciones.
+- Las respuestas aparecen sobre el fondo del chat, con actividad y criterios desplegables debajo de cada mensaje. El desplegable respeta Reducir movimiento y ya no se superpone al texto anterior. El registro muestra comprobaciones reales y traslados confirmados.
+- Se corrigieron las respuestas estructuradas del motor nativo y los saludos se resuelven localmente. Los análisis guardados permiten conversar y preparar propuestas verificadas sin repetir el análisis completo del disco; la limpieza masiva sigue exigiendo resultados actuales. Los cambios de análisis y de chat invalidan propuestas antiguas y cancelan respuestas pendientes.
+- Se mantienen separados almacenamiento, inferencia, presentación y operaciones de archivos, con contexto acotado y trabajo en segundo plano. Documentación e información de privacidad actualizadas en inglés y español, conservando atribuciones de terceros.
+
+Requiere macOS 13 o posterior; la IA local opcional requiere macOS 13.3 o posterior. Elige el instalador para Apple Silicon o Intel.
+APFS puede conservar bloques compartidos y snapshots. Mover a Papelera no libera espacio hasta vaciarla; las estimaciones de recuperación son límites superiores.
+Los paquetes de actualización y feeds están firmados con Sparkle. La app tiene firma ad hoc y no está notarizada por Apple.
+
+---
+
 # Kaze 1.4.0
 
 Find more eligible cleanup candidates, keep your last analysis between sessions and remove optional AI when you no longer need it.

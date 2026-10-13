@@ -73,7 +73,9 @@ details were omitted. For larger folders, analyze a narrower scope or open them
 in Explorer. Map rendering limits tiles to 120 plus an aggregate; result lists
 load additional batches on request. Analysis is explicit and app/resource
 inventory loads only when its section is opened. Smart Scan restores the previous session without recomputing hashes;
-restored results are labeled and require a fresh scan before cleaning. Explorer
+restored results are labeled and require a fresh scan for bulk Smart Scan cleanup.
+The assistant can continue using that dated baseline and freshly verify individual
+file proposals without another disk-wide scan. Explorer
 persists visited folder measurements, shows their date and reuses Smart Scan on
 its first entry. macOS filesystem events identify changed branches for background
 refresh. Missing history, changed volumes or measurements older than a day require
@@ -122,6 +124,22 @@ signatures; builds reject unsigned or tampered rules. Runtime validation also
 checks schema/version, unique IDs and safe relative scopes. Add behavior tests
 before expanding an automatically removable scope. Run `scripts/test.sh`,
 `scripts/build.sh` and `python3 tests/DistributionTests.py` before shipping.
+
+## Manual deletion from results
+
+Right-click to move complete items to the Trash from Smart Scan, Explorer,
+Space Map and analysis views. Folders show their path, a content-review action
+and an acknowledgement checkbox before movement. Fresh content checks run in
+the background and can be stopped. Kaze does not empty the Trash.
+
+Changed files, backups, Photos libraries, synchronized paths, system locations
+and inaccessible contents remain protected. Verified caches and dependencies
+retain their closed-process checks. Running apps are not moved. Moving an app
+from these views preserves its related data; Applications keeps its attributed
+uninstallation flow. Exact duplicates retain hash and preserved-original checks.
+History records each operation and offers restoration when the move can be
+verified. Dated results do not authorize deletion: every manual action freshly
+verifies its target.
 
 ## Durable baseline
 

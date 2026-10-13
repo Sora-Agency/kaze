@@ -33,6 +33,10 @@ struct SystemDataView: View {
                             Button { openExplorer(url) } label: {
                                 HStack { Text(url.path).lineLimit(1).truncationMode(.middle); Spacer(); LucideIcon("arrow-up-right", size: 12) }
                             }.font(SoraTypography.body(11)).help(L10n.text("Abrir en Explorador"))
+                                .contextMenu {
+                                    Button(L10n.text("Mostrar en Finder")) { NSWorkspace.shared.activateFileViewerSelecting([url]) }
+                                    TrashMenuAction(target: TrashTarget(model.index.files[node]), disabled: model.busy)
+                                }
                         }
                         }.padding(20).background(SoraPalette.surface, in: RoundedRectangle(cornerRadius: 12))
                     }
@@ -46,6 +50,6 @@ struct SystemDataView: View {
                 }.padding(.horizontal, 28)
             }
             AnalysisNotice(model: model)
-        }
+        }.reviewedTrashActions(home: model.home, journal: model.journal) { _ in model.markChanged() }
     }
 }

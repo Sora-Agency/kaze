@@ -15,7 +15,7 @@ struct AssistantContextView: View {
                     Text(L10n.text("Sin prometer bytes retenidos por APFS")).font(SoraTypography.body(10)).foregroundStyle(SoraPalette.muted)
                     if !model.index.files.isEmpty { Text(L10n.date(model.index.date, includeTime: true)).font(SoraTypography.body(10)).foregroundStyle(SoraPalette.secondary) }
                     if model.index.partial || model.isStale || model.catalog == nil {
-                        SoraLabel(L10n.string(model.isStale ? "Vuelve a analizar" : model.catalog == nil ? "Firma no verificada" : "Análisis parcial"), icon: "circle-alert")
+                        SoraLabel(L10n.string(model.isStale ? "Análisis guardado" : model.catalog == nil ? "Firma no verificada" : "Análisis parcial"), icon: "circle-alert")
                             .font(SoraTypography.body(10)).foregroundStyle(Color.orange)
                     }
                     Button { details = true } label: { SoraLabel(L10n.text("Detalles del análisis"), icon: "info") }
