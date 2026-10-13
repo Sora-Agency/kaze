@@ -2,7 +2,6 @@ import Foundation
 import Darwin
 
 enum OperationCLI {
-    // Short-lived calls from the existing scheduled engine, never a daemon or a second UI.
     static func runIfRequested() {
         let arguments = Array(CommandLine.arguments.dropFirst())
         guard let command = arguments.first, command.hasPrefix("--kaze-journal-") || command.hasPrefix("--kaze-authorize-") else { return }

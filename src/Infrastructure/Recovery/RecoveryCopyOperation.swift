@@ -9,7 +9,6 @@ struct RecoveryCopyOperation {
     func run(_ paths: [String], in destination: URL, cancellation: OperationCancellation,
              progress: (Int, UInt64) -> Void) throws -> RecoveryOutcome {
         try cancellation.check()
-        // A new private directory, with exclusive creation, prevents overwrites.
         let root = destination.resolvingSymlinksInPath().appendingPathComponent("Kaze-Recovery-\(UUID().uuidString)", isDirectory: true)
         guard mkdir(root.path, 0o700) == 0 else { throw CocoaError(.fileWriteNoPermission) }
         var files = 0, failures = 0, visited = 0

@@ -79,18 +79,42 @@ se cargan al abrir su sección. Smart Scan restaura los resultados de la última
 se indican como guardados y requieren un análisis nuevo antes de limpiar.
 El Explorador guarda las carpetas visitadas, muestra cuándo se midieron y reutiliza
 Smart Scan desde la primera entrada. Al abrir una carpeta valida eventos de macOS
-para actualizar solo las ramas cambiadas en segundo plano. Si faltan eventos, el
-volumen cambió, el resultado está incompleto o tiene más de un día, vuelve a medir
-toda la carpeta. Los enlaces duros compartidos conservan la deduplicación del
+para actualizar solo las ramas cambiadas en segundo plano. Si faltan eventos, el volumen cambió o la medición tiene más de un día, requiere
+actualización. Las ramas inaccesibles que no cambiaron conservan su medición
+parcial. Los árboles de 50.000 archivos medidos o más mantienen la base fechada
+y piden actualizar al detectar cambios, evitando recorridos repetidos en segundo plano. Los enlaces duros compartidos conservan la deduplicación del
 padre mediante un recorrido completo cuando hay cambios. Actualizar fuerza un
 recorrido completo y Detener conserva los resultados anteriores. La caché local
 contiene solo metadatos, ocupa hasta 128 MiB y conserva hasta 32 carpetas en
-`~/Library/Caches/Kaze/Analysis-v1`; eliminarla no elimina archivos del usuario.
+`~/Library/Application Support/Kaze/Analysis-v1`; eliminarla no elimina archivos del usuario.
 
 Historial se guarda en `~/Library/Application Support/Kaze/Operations`.
 Las rutas y mensajes de herramientas pueden ser sensibles; revísalos antes de
 compartir logs/capturas. No se envían automáticamente. [Privacidad](../PRIVACY.txt)
 describe los datos locales conservados.
+
+## Cobertura de limpieza y oportunidades
+
+El catálogo firmado v2 añade cachés HTTP, de código y GPU de VS Code y Slack,
+y descargas globales de Yarn Classic. No incluye perfiles, User, Backups,
+almacenamiento de sesiones, extensiones instaladas ni `.yarn/cache` de proyectos.
+La limpieza manual/programada también incluye pip y CocoaPods. Cada ámbito
+requiere cerrar sus procesos y volver a comprobar el árbol antes de modificarlo.
+
+Smart Scan reserva detalles para las rutas firmadas y sus ancestros dentro del
+mismo límite de 250.000 entradas. No añade otro recorrido ni amplía los límites
+de hashes. Los totales y resúmenes se preparan en la cola de utilidad.
+
+Recuperación potencial suma solo cachés aptas y copias exactas verificadas.
+Espacio para revisar muestra asignación ocupada por apps, proyectos y archivos
+que requieren decisión manual; excluye las copias redundantes ya verificadas.
+No es espacio liberable garantizado ni se suma al rango de recuperación.
+Las cards muestran bytes además del número de hallazgos; el tamaño lógico
+sigue disponible en Detalles del análisis.
+
+Fuentes de alcance: [caché de Electron](https://www.electronjs.org/docs/latest/api/session),
+[cachés de VS Code](https://github.com/microsoft/vscode/blob/main/.github/skills/auto-perf-optimize/scripts/userDataProfile.mts)
+y [caché de Yarn Classic](https://classic.yarnpkg.com/lang/en/docs/cli/cache/).
 
 ## Mantener las reglas
 
@@ -102,3 +126,15 @@ comprueba también versión/esquema, IDs únicos y ámbitos relativos seguros.
 Añade pruebas de comportamiento antes de ampliar un ámbito automáticamente
 eliminable. Ejecuta `scripts/test.sh`, `scripts/build.sh` y
 `python3 tests/DistributionTests.py` antes de publicar.
+
+## Base persistente
+
+Smart Scan se guarda de forma atómica antes de mostrar que terminó. Invalidar
+conserva el último registro fechado y bloquea el borrado con datos antiguos.
+Navegar por el Explorador no desplaza ese registro; siguen los límites de
+128 MiB y 32 carpetas. Si un Smart Scan es demasiado grande, reduce detalles
+guardados, conserva los totales completos de todas las raíces e indica límites
+en mapa y duplicados. Los errores de guardado se muestran. Los registros
+existentes se migran desde Library/Caches a Application Support en la cola de
+utilidad. El Explorador guarda avances con frecuencia limitada; una medición
+interrumpida queda pendiente, no se presenta como actualizada.

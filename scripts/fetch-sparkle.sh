@@ -1,7 +1,6 @@
 #!/bin/zsh
 set -euo pipefail
 cd "${0:A:h:h}"
-# Pin both the version and its published SHA-256; never execute an unverified download.
 version=2.10.0
 checksum=c2bf58aa8387266ac179357b1415d6f2635f044da8be41042af32425dae6da0c
 dependency_dir="$PWD/build/dependencies"
@@ -20,8 +19,6 @@ actual="$(shasum -a 256 "$work_dir/Sparkle.tar.xz")"
 [[ "${actual%% *}" == "$checksum" ]] || { print -u2 'Sparkle: SHA-256 incorrecto.'; exit 1; }
 mkdir "$work_dir/distribution"
 tar -xf "$work_dir/Sparkle.tar.xz" -C "$work_dir/distribution"
-# Keep the signed framework, release tools and license. The demo app and
-# upstream debugging symbols are not used by Kaze's build or release workflow.
 rm -rf -- "$work_dir/distribution/Sparkle Test App.app" "$work_dir/distribution/Symbols"
 touch "$work_dir/distribution/.verified-$checksum"
 rm -rf -- "$destination"

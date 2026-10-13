@@ -34,7 +34,6 @@ int kaze_authorize_readonly(const char *device, int (*cancelled)(void *), void *
     posix_spawn_file_actions_adddup2(&actions, sockets[1], STDOUT_FILENO);
     posix_spawn_file_actions_addclose(&actions, sockets[0]);
     posix_spawn_file_actions_addclose(&actions, sockets[1]);
-    // Explicit O_RDONLY; no shell, password handling or write authorization.
     char *arguments[] = {"authopen", "-stdoutpipe", "-o", "0", (char *)device, NULL};
     pid_t child;
     int spawned = posix_spawn(&child, "/usr/libexec/authopen", &actions, NULL, arguments, environ);

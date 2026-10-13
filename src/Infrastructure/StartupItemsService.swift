@@ -29,7 +29,6 @@ final class StartupItemsService {
             guard values.isDirectory == true, values.isSymbolicLink != true else { throw StartupItemsError.missingApplication }
             try manager.set(requested, enabled: true)
         } else if let current = active.first(where: { $0.path == requested.path }) {
-            // Save before mutation so interrupted/failed operations remain reversible.
             disabled.removeAll { $0.path == current.path }
             disabled.append(StartupItem(name: current.name, path: current.path, hidden: current.hidden, enabled: false))
             try persist(disabled)

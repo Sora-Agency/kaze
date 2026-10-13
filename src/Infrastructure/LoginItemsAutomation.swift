@@ -29,7 +29,6 @@ struct LoginItemsAutomation: LoginItemsManaging {
         }
         return result.data
     }
-    // Arguments are JSON data, never interpolated into executable script text.
     static let script = #"""
     function run(args) {
         const system = Application('System Events');

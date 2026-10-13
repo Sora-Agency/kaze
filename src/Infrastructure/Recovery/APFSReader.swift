@@ -35,8 +35,6 @@ struct APFSExtent {
     let physical: UInt64
 }
 
-/// Read-only APFS parser for the unencrypted volume in the attached disk.
-/// Layout constants come from Apple's Apple File System Reference (2020).
 final class APFSReader {
     let cancellation: OperationCancellation
     var indexedRecords = 0

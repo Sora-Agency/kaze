@@ -1,7 +1,6 @@
 import AppKit
 import SwiftUI
 
-/// Observe the native scroll viewport without publishing a state update per pixel.
 struct SmartScanScrollObserver: NSViewRepresentable {
     @Binding var compact: Bool
     func makeNSView(context: Context) -> Probe {
@@ -52,9 +51,6 @@ struct SmartScanScrollObserver: NSViewRepresentable {
         private func publishThreshold() {
             guard let clip, let document = clip.documentView else { return }
             let offset = document.isFlipped ? clip.bounds.minY - document.bounds.minY : document.bounds.maxY - clip.bounds.maxY
-            // A small hysteresis keeps elastic scrolling and layout changes from flickering.
-            // Expanding the viewport can clamp a short list to its top. Only an
-            // upward input should expand it again, avoiding an animated feedback loop.
             let towardsTop = ProcessInfo.processInfo.systemUptime < expansionIntentUntil
             let next = lastCompact ? !(offset <= 20 && towardsTop) : offset > 72
             guard next != lastCompact else { return }

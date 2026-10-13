@@ -40,7 +40,6 @@ enum DuplicateDetector {
               StorageIndexer.fingerprint(before) == file.fingerprint else { return nil }
         let forkLength = fgetxattr(descriptor, "com.apple.ResourceFork", nil, 0, 0, 0)
         guard forkLength <= 0, forkLength == 0 || errno == ENOATTR || errno == ENOTSUP else { return nil }
-        // Resource forks may hold unique content even when data forks match.
         var hasher = SHA256()
         var buffer = [UInt8](repeating: 0, count: 1_048_576)
         while !cancellation.isCancelled {
@@ -91,7 +90,6 @@ enum DuplicateDetector {
         return report
     }
 
-    // Feature prints are candidates for human review, never proof of identical content.
     static func similar(index: StorageIndex, cancellation: ScanCancellation, limit: Int = 400,
                         threshold: Float = 6, progress: (Int) -> Void = { _ in }) -> DuplicateReport {
         var report = DuplicateReport()

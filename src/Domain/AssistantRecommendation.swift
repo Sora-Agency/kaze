@@ -1,6 +1,5 @@
 import Foundation
 
-/// Display groups preserve rule identity and aggregate disjoint Smart Scan findings.
 struct AssistantRecommendation: Identifiable {
     var id: String { rule.id }
     let rule: CleanupRule

@@ -16,10 +16,6 @@ enum DiskAccessStatus: Equatable {
 }
 
 enum DiskAccessProbe {
-    /// macOS exposes no public Full Disk Access status API. Opening a protected
-    /// file is a conservative capability check, not a query of the TCC settings.
-    /// Never read or modify the privacy database, and never treat missing files
-    /// or ordinary UNIX permission errors as proof that FDA was denied.
     static func check(home: URL = FileManager.default.homeDirectoryForCurrentUser,
                       openFile: (String) -> Int32? = openReadOnly) -> DiskAccessStatus {
         let paths = [home.appendingPathComponent("Library/Application Support/com.apple.TCC/TCC.db").path,

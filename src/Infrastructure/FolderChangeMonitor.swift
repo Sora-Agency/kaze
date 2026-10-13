@@ -17,7 +17,6 @@ struct FolderChanges {
     }
 }
 
-/// One event stream for the visible Explorer folder; no polling or separate process.
 final class FolderChangeMonitor {
     private let queue = DispatchQueue(label: "kaze.folder-events", qos: .utility)
     private var stream: FSEventStreamRef?
@@ -47,7 +46,6 @@ final class FolderChangeMonitor {
         guard let stream else { return nil }
         FSEventStreamSetDispatchQueue(stream, queue)
         guard FSEventStreamStart(stream) else { FSEventStreamInvalidate(stream); FSEventStreamRelease(stream); self.stream = nil; return nil }
-        // A missing historical sentinel must never validate saved measurements.
         queue.asyncAfter(deadline: .now() + 3) { [weak box] in
             guard let box, !box.historyDone else { return }
             box.historyDone = true; box.deliver(FolderChanges(full: true, historyDone: true))

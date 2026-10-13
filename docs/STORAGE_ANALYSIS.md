@@ -76,17 +76,42 @@ inventory loads only when its section is opened. Smart Scan restores the previou
 restored results are labeled and require a fresh scan before cleaning. Explorer
 persists visited folder measurements, shows their date and reuses Smart Scan on
 its first entry. macOS filesystem events identify changed branches for background
-refresh. Missing history, changed volumes, incomplete results or measurements
-older than a day trigger a complete walk. Shared hard links use a full walk when
+refresh. Missing history, changed volumes or measurements older than a day require
+refresh. Unchanged inaccessible branches retain their partial measurements.
+Large trees (50,000 measured files or more) keep dated results and ask for an
+explicit refresh when changes are detected, avoiding repeated background walks. Shared hard links use a full walk when
 content changes so parent totals remain deduplicated. Refresh always forces a
 complete walk; stopping preserves previous visible results. The private metadata
-cache in `~/Library/Caches/Kaze/Analysis-v1` holds up to 128 MiB and 32 folders.
+cache in `~/Library/Application Support/Kaze/Analysis-v1` holds up to 128 MiB and 32 folders.
 Removing this cache does not remove user files.
 
 Operation history is local at
 `~/Library/Application Support/Kaze/Operations`. Paths and tool results can be
 sensitive; review exported logs/screenshots before sharing them. No records are
 sent automatically. [Privacy](../PRIVACY.txt) describes retained local data.
+
+## Cleanup coverage and opportunities
+
+Signed catalog v2 adds VS Code and Slack HTTP, code and GPU caches, and global
+Yarn Classic downloads. It excludes profiles, User, Backups, session storage,
+installed extensions and project `.yarn/cache` folders. Manual/scheduled cleanup
+also includes pip and CocoaPods. Each scope requires its processes to be closed
+and a fresh descendant check before mutation.
+
+Smart Scan reserves detail slots for signed paths and their ancestors within
+the same 250,000-entry limit. It adds no second walk or larger hash budget.
+Totals and summaries are prepared on the utility queue.
+
+Potential recovery only sums eligible caches and verified exact copies.
+Space to review shows occupied allocation for apps, projects and files needing
+a manual decision, excluding redundant exact copies already verified.
+It is not guaranteed recoverable capacity and is not added to the recovery range.
+Cards show bytes as well as finding counts; logical size remains available in
+Scan details.
+
+Scope references: [Electron caching](https://www.electronjs.org/docs/latest/api/session),
+[VS Code caches](https://github.com/microsoft/vscode/blob/main/.github/skills/auto-perf-optimize/scripts/userDataProfile.mts)
+and [Yarn Classic cache](https://classic.yarnpkg.com/lang/en/docs/cli/cache/).
 
 ## Maintaining rules
 
@@ -97,3 +122,14 @@ signatures; builds reject unsigned or tampered rules. Runtime validation also
 checks schema/version, unique IDs and safe relative scopes. Add behavior tests
 before expanding an automatically removable scope. Run `scripts/test.sh`,
 `scripts/build.sh` and `python3 tests/DistributionTests.py` before shipping.
+
+## Durable baseline
+
+Smart Scan is saved atomically before showing completion. Invalidation retains
+the last dated snapshot while disabling stale deletion. Explorer navigation
+cannot evict that snapshot; the 128 MiB and 32-folder budgets still apply. Large
+Smart Scan records reduce stored detail, preserving every root's full totals
+and disclosing limited map and duplicate coverage. Save failures are reported.
+Existing records migrate from Library/Caches into private Application Support
+on the utility queue. Interrupted Explorer refreshes save bounded, throttled
+checkpoints; unfinished measurements remain marked pending rather than fresh.

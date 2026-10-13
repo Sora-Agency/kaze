@@ -11,14 +11,11 @@ trap 'rm -rf -- "$work_dir"' EXIT
 archive="Kaze-Mac-$architecture.dmg"
 feed="appcast-$architecture.xml"
 cp "build/$archive" "$work_dir/"
-# Embed escaped release notes so signed feeds need no separate notes hosting.
 python3 - "$work_dir/${archive%.dmg}.html" <<'PY'
 import html, pathlib, sys
 notes = pathlib.Path('docs/RELEASE_NOTES.md').read_text()
 pathlib.Path(sys.argv[1]).write_text('<pre>' + html.escape(notes) + '</pre>')
 PY
-# CI uses stdin, never a command-line private key or a tracked key file.
-# Local generation uses the dedicated Kaze account in the login Keychain.
 signing_options=(--account com.soraagency.kaze)
 if [[ -n "${KAZE_SPARKLE_PRIVATE_KEY:-}" ]]; then signing_options=(--ed-key-file -); fi
 signing_tool() {

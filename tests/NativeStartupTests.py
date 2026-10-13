@@ -1,10 +1,3 @@
-"""Exercise the actual signed SwiftUI App/Scene, not a preview hosting view.
-
-Run after scripts/build.sh. The first case uses existing preferences; variants
-use the process argument domain without changing the user's saved choices.
-No scan or cleanup is requested. Sampling the process after launch catches the
-MenuBarExtra/AppStorage feedback loop that preview tests cannot exercise.
-"""
 import pathlib
 import subprocess
 import tempfile
@@ -42,7 +35,6 @@ with tempfile.TemporaryDirectory(prefix="kaze-native-startup-") as directory:
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
         try:
-            # Allow launch/layout, then require an idle window to settle.
             time.sleep(6)
             assert process.poll() is None, "Native app exited during launch"
             before, memory = usage(process.pid)

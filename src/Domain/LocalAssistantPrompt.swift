@@ -1,6 +1,5 @@
 import Foundation
 
-/// Bounded measured context: no file contents, full paths, commands or tools are exposed to the model.
 enum LocalAssistantPrompt {
     static func make(question: String, index: StorageIndex, findings: [StorageFinding],
                      totals: [SystemDataKind: AnalysisBytes], systemPotential: [SystemDataKind: Int64],

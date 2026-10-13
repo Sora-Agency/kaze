@@ -1,7 +1,6 @@
 import Foundation
 import CoreServices
 
-// Last-used metadata is optional; do not turn directory access times into usage claims.
 enum SpotlightUsage {
     static func dates(for files: [(Int, URL)], cancellation: ScanCancellation, progress: (Int) -> Void) -> (dates: [Int: Date], queried: Set<Int>) {
         var dates: [Int: Date] = [:], queried = Set<Int>()

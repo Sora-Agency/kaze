@@ -7,7 +7,6 @@ trap 'rm -rf -- "$work_dir"' EXIT
 app="$work_dir/Kaze.app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Frameworks"
 cp src/Info.plist "$app/Contents/Info.plist"
-# Isolate preferences from the installed app and prevent any network check.
 /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier com.soraagency.kaze.updater-test.$RANDOM.$RANDOM" "$app/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c 'Set :SUEnableAutomaticChecks false' "$app/Contents/Info.plist"
 ditto "$sparkle_dir/Sparkle.framework" "$app/Contents/Frameworks/Sparkle.framework"

@@ -66,8 +66,6 @@ ditto -c -k --norsrc --noextattr --noqtn --keepParent "$source_bundle" "$work_di
 rm -rf -- "$package_dir"
 mv "$staged_package" "$package_dir"
 mv "$work_dir/$binary_archive" "$work_dir/$disk_image" "$work_dir/Kaze-Source.zip" "$build_dir/"
-# A previously signed feed refers to the previous archive bytes. Regenerate it
-# after this build, rather than leaving an apparently usable stale update feed.
 if [[ -f "$build_dir/appcast-$architecture.xml" ]]; then
   rm -- "$build_dir/appcast-$architecture.xml"
 fi

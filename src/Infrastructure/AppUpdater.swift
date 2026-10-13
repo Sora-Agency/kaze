@@ -3,7 +3,6 @@ import AppKit
 import Combine
 import Sparkle
 
-/// One updater per application, shared by every window and the app menu.
 @MainActor
 final class AppUpdater: ObservableObject {
     static let shared = AppUpdater()
@@ -29,7 +28,6 @@ final class AppUpdater: ObservableObject {
         do {
             try controller.updater.start()
             started = true
-            // Respect the user's setting and check on launch, before Sparkle's next runloop cycle.
             if controller.updater.automaticallyChecksForUpdates {
                 controller.updater.checkForUpdatesInBackground()
             }

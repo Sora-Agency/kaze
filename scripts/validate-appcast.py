@@ -1,4 +1,3 @@
-"""Check release metadata before accepting a signed Sparkle feed as an asset."""
 import argparse
 import base64
 import pathlib
@@ -36,7 +35,6 @@ def validate_appcast(feed, archive, info, architecture, tag):
     signature = enclosure.get(SPARKLE + "edSignature", "")
     if len(base64.b64decode(signature, validate=True)) != 64:
         raise ValueError("Firma EdDSA de actualización inválida.")
-    # Cryptographic verification happens with Sparkle's sign_update before upload.
     if info.get("SURequireSignedFeed"):
         signed = re.search(rb"<!-- sparkle-signatures:\s*edSignature: ([A-Za-z0-9+/=]+)\s+length: ([0-9]+)\s*-->\s*$", feed.read_bytes())
         if signed is None or len(base64.b64decode(signed[1], validate=True)) != 64:

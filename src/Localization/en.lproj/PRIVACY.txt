@@ -33,7 +33,7 @@ The Instalar.command installer preserves a copy of the app and its previous sche
 ~/Library/Application Support/Kaze/Backups
 
 ANALYSIS CACHE
-Kaze stores metadata from the last Smart Scan and visited folders locally in ~/Library/Caches/Kaze/Analysis-v1: paths, sizes, dates, file identifiers and duplicate results. This cache contains no file contents and is not transmitted. It is limited to 128 MiB and 32 folders; macOS or the user may remove it and Kaze will measure again. Restored results show their date and do not authorize deletion without a fresh scan. Explorer checks macOS filesystem events and updates changes in the background while its section is visible.
+Kaze stores metadata from the last Smart Scan and visited folders locally in ~/Library/Application Support/Kaze/Analysis-v1: paths, sizes, dates, file identifiers and duplicate results. This cache contains no file contents and is not transmitted. It is limited to 128 MiB and 32 folders; Invalidation preserves the last Smart Scan baseline; previous records migrate from Library/Caches. Oversized snapshots retain totals with limited detail. The user can remove this baseline and Kaze will measure again. Restored results show their date and do not authorize deletion without a fresh scan. Explorer checks macOS filesystem events and updates changes in the background while its section is visible.
 
 USER CONTROL
 You can stop a scan, change folders and grant or revoke Full Disk Access in System Settings. You can disable tasks in Scheduled Tasks or remove them with the uninstaller. The uninstaller retains logs and backups; you can delete them manually if you wish.
