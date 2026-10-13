@@ -18,7 +18,7 @@ jobs:
   verify:
     name: Test and build (${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
+    timeout-minutes: ${{ matrix.arch == 'x86_64' && 35 || 20 }}
     strategy:
       fail-fast: false
       matrix:

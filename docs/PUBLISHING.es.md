@@ -102,9 +102,9 @@ macOS; los controles de Kaze siguen el selector interno.
 ## Crear una release en borrador
 
 1. Actualiza `CFBundleShortVersionString` y aumenta `CFBundleVersion` en
-   `src/Info.plist`. La versión preparada es **1.3.0**, build **24**.
+   `src/Info.plist`. La versión preparada es **1.4.0**, build **25**.
 2. Actualiza [RELEASE_NOTES.md](RELEASE_NOTES.md). Su primera línea debe coincidir
-   con la versión: por ejemplo, `# Kaze 1.3.0`. Estas notas serán el texto inicial
+   con la versión: por ejemplo, `# Kaze 1.4.0`. Estas notas serán el texto inicial
    del borrador.
 3. Incorpora los cambios a `main` y espera a que las comprobaciones pasen.
 4. Crea un tag anotado sobre ese commit y súbelo. Para la versión actual:
@@ -112,13 +112,13 @@ macOS; los controles de Kaze siguen el selector interno.
    ```sh
    git switch main
    git pull --ff-only
-   git tag -a v1.3.0 -m "Kaze 1.3.0"
-   git push origin v1.3.0
+   git tag -a v1.4.0 -m "Kaze 1.4.0"
+   git push origin v1.4.0
    ```
 
 5. Sigue la ejecución de **macOS** en **Actions**. El tag vuelve a ejecutar
    pruebas, compilación y verificación del DMG en ambas arquitecturas.
-6. Cuando termine, abre **Releases**, revisa el borrador **Kaze 1.3.0** y pulsa
+6. Cuando termine, abre **Releases**, revisa el borrador **Kaze 1.4.0** y pulsa
    **Publish release** cuando esté listo. Puedes editar las notas antes de publicar.
 
 Los tags admitidos tienen formato `vMAJOR.MINOR.PATCH` y deben coincidir con

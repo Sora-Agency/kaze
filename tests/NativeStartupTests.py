@@ -2,7 +2,6 @@ import pathlib
 import subprocess
 import tempfile
 import time
-import shutil
 import sys
 import plistlib
 
@@ -21,7 +20,8 @@ def usage(pid):
 
 with tempfile.TemporaryDirectory(prefix="kaze-native-startup-") as directory:
     app = pathlib.Path(directory) / "Kaze.app"
-    shutil.copytree(source_app, app, symlinks=True)
+    subprocess.run(["/usr/bin/ditto", "--norsrc", "--noextattr", "--noqtn", str(source_app), str(app)], check=True)
+    subprocess.run(["/usr/bin/codesign", "--verify", "--deep", "--strict", str(app)], check=True)
     info = plistlib.loads((app / "Contents/Info.plist").read_bytes())
     print(f"Testing native app {info['CFBundleShortVersionString']} ({info['CFBundleVersion']})", flush=True)
     executable = app / "Contents/MacOS/Kaze"
@@ -30,13 +30,14 @@ with tempfile.TemporaryDirectory(prefix="kaze-native-startup-") as directory:
         arguments = [str(executable), "-SUEnableAutomaticChecks", "NO"]
         if monitor is not None: arguments += ["-kaze.monitor.enabled", monitor]
         if appearance is not None: arguments += ["-kaze.appearance", appearance]
+        diagnostics = tempfile.TemporaryFile()
         process = subprocess.Popen(
             arguments,
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL, stderr=diagnostics,
         )
         try:
             time.sleep(6)
-            assert process.poll() is None, "Native app exited during launch"
+            assert process.poll() is None, f"Native app exited during launch: status={process.returncode}"
             before, memory = usage(process.pid)
             time.sleep(4)
             after, final_memory = usage(process.pid)
@@ -47,6 +48,20 @@ with tempfile.TemporaryDirectory(prefix="kaze-native-startup-") as directory:
             assert final_memory - memory < 40 * 1024 * 1024, "Idle UI memory keeps growing"
             print(f"PASS: native startup settles, monitor={monitor}, "
                   f"appearance={appearance}, CPU={after - before:.2f}s")
+        except Exception:
+            diagnostics.seek(0, 2)
+            diagnostics.seek(max(0, diagnostics.tell() - 8192))
+            print(diagnostics.read().decode("utf-8", errors="replace"), flush=True)
+            try:
+                report = subprocess.run(
+                    ["/usr/bin/log", "show", "--last", "2m", "--style", "compact",
+                     "--predicate", 'process == "Kaze" OR process == "amfid"'],
+                    capture_output=True, text=True, timeout=10,
+                )
+                print(report.stdout[-12000:], flush=True)
+            except subprocess.TimeoutExpired:
+                print("Startup diagnostic log timed out", flush=True)
+            raise
         finally:
             process.terminate()
             try:
@@ -54,3 +69,4 @@ with tempfile.TemporaryDirectory(prefix="kaze-native-startup-") as directory:
             except subprocess.TimeoutExpired:
                 process.kill()
                 process.wait()
+            diagnostics.close()

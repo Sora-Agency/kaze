@@ -1,3 +1,35 @@
+# Kaze 1.4.0
+
+Find more eligible cleanup candidates, keep your last analysis between sessions and remove optional AI when you no longer need it.
+
+- Signed cleanup rules now cover VS Code, Slack and Yarn Classic caches. Manual and scheduled cleanup also include pip and CocoaPods. Profiles, backups, sessions, extensions and project data remain protected, with closed-app and fresh-file checks before removal.
+- Smart Scan distinguishes potential recovery from occupied space that needs a manual decision. Category cards show bytes alongside counts, and logical size remains available in scan details. Known cleanup scopes retain priority within the existing scan detail budget.
+- Smart Scan and Explorer metadata now live in private Application Support storage. Existing snapshots migrate from Library/Caches; disk changes retain the dated baseline while disabling stale cleanup. Explorer navigation cannot evict the last Smart Scan.
+- Large Explorer trees retain saved results and request an explicit refresh when changes are detected. Interrupted measurements retain checkpoints, and oversized Smart Scan records preserve root totals with limited detail. Save failures are reported.
+- Uninstall AI from the assistant to remove Kaze's downloaded model, engine and previous AI packages. Pending queries stop before removal. Scans, history, settings and other tools' models are preserved; AI can be downloaded again later.
+- Updated architecture, storage and privacy documentation; removed explanatory code comments while retaining legal attribution.
+
+Requires macOS 13 or later; optional local AI requires macOS 13.3 or later. Choose the Apple Silicon or Intel installer.
+APFS may retain shared blocks and snapshots, so potential recovery is an estimate rather than guaranteed free space.
+Update packages and feeds are signed with Sparkle. The app is ad hoc signed and is not notarized by Apple.
+
+## Español
+
+Más cobertura de limpieza, análisis conservados entre sesiones y una opción para quitar la IA local cuando no la necesites.
+
+- Las reglas firmadas incorporan cachés de VS Code, Slack y Yarn Classic. La limpieza manual y programada también incluye pip y CocoaPods. Se conservan perfiles, respaldos, sesiones, extensiones y datos de proyectos, con comprobaciones de apps cerradas y archivos antes de borrar.
+- Smart Scan separa la recuperación potencial del espacio ocupado que requiere una decisión manual. Las categorías muestran bytes además de cantidades; el tamaño lógico sigue disponible en los detalles. Las rutas de limpieza conocidas tienen prioridad dentro del límite actual de detalles.
+- Los metadatos de Smart Scan y el Explorador se guardan en Application Support privado. Los registros existentes se migran desde Library/Caches; los cambios del disco conservan la base fechada y bloquean la limpieza con datos antiguos. Navegar por el Explorador no elimina el último Smart Scan.
+- Las carpetas grandes conservan los resultados guardados y solicitan una actualización explícita cuando hay cambios. Las mediciones interrumpidas guardan avances, y los registros grandes de Smart Scan conservan los totales con detalles limitados. Se informa si falla el guardado.
+- Desinstala la IA desde el asistente para quitar el modelo, motor y paquetes anteriores descargados por Kaze. Se detienen las consultas pendientes. Los análisis, historial, ajustes y modelos de otras herramientas se conservan; puedes volver a descargar la IA.
+- Documentación de arquitectura, almacenamiento y privacidad actualizada; comentarios explicativos retirados del código, conservando atribuciones legales.
+
+Requiere macOS 13 o posterior; la IA local opcional requiere macOS 13.3 o posterior. Elige el instalador para Apple Silicon o Intel.
+APFS puede conservar bloques compartidos y snapshots: la recuperación potencial es una estimación, no espacio libre garantizado.
+Los paquetes de actualización y feeds están firmados con Sparkle. La app tiene firma ad hoc y no está notarizada por Apple.
+
+---
+
 # Kaze 1.3.0
 
 Kaze adds two tools under Manage: read-only APFS recovery and reversible startup app management.
