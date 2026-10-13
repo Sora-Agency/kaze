@@ -1,4 +1,3 @@
-// Adapted from LibreRescateNativo (MIT); see Recovery/LibreRescate-LICENSE.txt.
 import Foundation
 import Darwin
 
