@@ -41,7 +41,9 @@ struct AssistantDownloadView: View {
             SoraLabel(L10n.text("IA local opcional"), icon: "sparkles").font(SoraTypography.body(13, weight: .semibold)).foregroundStyle(SoraPalette.accent)
             Text(formatDiskBytes(assistant.downloadBytes)).font(SoraTypography.body(28, weight: .semibold)).monospacedDigit()
             Text(L10n.text("Una descarga. Sin suscripción.")).font(SoraTypography.body(11)).foregroundStyle(SoraPalette.secondary)
-            if assistant.phase == .checking {
+            if assistant.phase == .removing {
+                HStack { SoraSpinner(); Text(L10n.text("Desinstalando la IA local…")) }.font(SoraTypography.body(11))
+            } else if assistant.phase == .checking {
                 HStack { SoraSpinner(); Text(L10n.text("Comprobando la IA local…")) }.font(SoraTypography.body(11))
             } else if assistant.phase == .downloading {
                 ProgressView(value: assistant.progress).tint(SoraPalette.accent)

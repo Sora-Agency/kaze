@@ -820,3 +820,7 @@
 "Navegadores, Discord, Slack y Homebrew" = "Browsers, Discord, Slack and Homebrew";
 "VS Code, Yarn, pip, CocoaPods, Gradle, npm, pnpm y Xcode" = "VS Code, Yarn, pip, CocoaPods, Gradle, npm, pnpm and Xcode";
 "Requiere revisión manual" = "Requires manual review";
+"¿Desinstalar la IA local?" = "Uninstall local AI?";
+"Desinstalar IA" = "Uninstall AI";
+"Desinstalando la IA local…" = "Uninstalling local AI…";
+"Se eliminarán el modelo y el motor descargados por Kaze. Tus análisis, historial y ajustes se conservarán. Puedes volver a descargar la IA cuando quieras." = "The model and engine downloaded by Kaze will be removed. Your scans, history and settings will be preserved. You can download AI again at any time.";

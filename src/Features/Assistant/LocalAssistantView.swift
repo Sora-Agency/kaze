@@ -6,6 +6,7 @@ struct LocalAssistantView: View {
     @ObservedObject var assistant: LocalAssistantModel
     @ObservedObject private var language = AppLanguageStore.shared
     @ViewState private var question = ""
+    @ViewState private var confirmUninstall = false
     @FocusState private var inputFocused: Bool
     var navigate: (AppSection) -> Void
     private var canAsk: Bool { assistant.phase == .ready && !assistant.isGenerating && !model.busy }
@@ -27,6 +28,12 @@ struct LocalAssistantView: View {
                 AssistantDownloadView(assistant: assistant, navigate: navigate)
             }
         }.onAppear { assistant.checkAvailability() }
+            .alert(L10n.text("¿Desinstalar la IA local?"), isPresented: $confirmUninstall) {
+                Button(L10n.text("Cancelar"), role: .cancel) {}
+                Button(L10n.text("Desinstalar IA"), role: .destructive) { assistant.uninstall() }
+            } message: {
+                Text(L10n.text("Se eliminarán el modelo y el motor descargados por Kaze. Tus análisis, historial y ajustes se conservarán. Puedes volver a descargar la IA cuando quieras."))
+            }
     }
     private var header: some View {
         HStack(spacing: 12) {
@@ -40,6 +47,10 @@ struct LocalAssistantView: View {
             if assistant.phase == .ready {
                 SoraLabel(L10n.text("IA local lista"), icon: "shield-check")
                     .font(SoraTypography.body(11, weight: .medium)).foregroundStyle(SoraPalette.success)
+            }
+            if assistant.hasInstallation {
+                Button { confirmUninstall = true } label: { SoraLabel(L10n.text("Desinstalar IA"), icon: "trash") }
+                    .disabled(assistant.phase == .removing || assistant.phase == .downloading)
             }
             Button { navigate(.smart) } label: { SoraLabel("Smart Scan", icon: "arrow-up-right") }
         }.padding(.horizontal, 24).padding(.vertical, 18)

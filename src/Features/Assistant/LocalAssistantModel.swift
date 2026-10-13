@@ -4,13 +4,14 @@ import AppKit
 
 @MainActor
 final class LocalAssistantModel: ObservableObject {
-    enum Phase { case checking, missing, downloading, ready }
+    enum Phase { case checking, missing, downloading, ready, removing }
     @Published private(set) var phase: Phase = .checking
     @Published private(set) var progress = 0.0
     @Published private(set) var response = ""
     @Published private(set) var submittedQuestion = ""
     @Published private(set) var isGenerating = false
     @Published private(set) var error: String?
+    @Published private(set) var hasInstallation = false
     let downloadBytes: Int64
     private let service: LocalAIService
     private let queue = DispatchQueue(label: "kaze.assistant", qos: .utility)
@@ -21,7 +22,7 @@ final class LocalAssistantModel: ObservableObject {
 
     init(service: LocalAIService = LocalAIService(), initialReady: Bool = false, initialResponse: String = "", initialQuestion: String = "") {
         self.service = service; downloadBytes = service.package.downloadBytes
-        if initialReady { phase = .ready; checked = true; response = initialResponse; submittedQuestion = initialQuestion }
+        if initialReady { phase = .ready; checked = true; hasInstallation = true; response = initialResponse; submittedQuestion = initialQuestion }
         termination = NotificationCenter.default.publisher(for: NSApplication.willTerminateNotification)
             .sink { [weak self] _ in self?.cancel() }
     }
@@ -30,13 +31,15 @@ final class LocalAssistantModel: ObservableObject {
     func checkAvailability() {
         guard !checked else { return }; checked = true
         #if KAZE_PREVIEW
-        phase = .missing // Fixture previews never inspect or install real AI files.
+        phase = .missing
         #else
         let service = service, token = token, request = request
         queue.async { [weak self] in
             let result = Result { try service.validate(cancellation: token) }
+            let hasInstallation = service.hasInstallation
             DispatchQueue.main.async {
                 guard let self, self.request == request else { return }
+                self.hasInstallation = hasInstallation
                 switch result {
                 case .success(let installed): self.phase = installed ? .ready : .missing
                 case .failure(let error): self.phase = .missing; self.error = error.localizedDescription
@@ -66,8 +69,31 @@ final class LocalAssistantModel: ObservableObject {
             DispatchQueue.main.async {
                 guard let self, self.request == request else { return }
                 switch result {
-                case .success: self.phase = .ready; self.progress = 1
+                case .success: self.phase = .ready; self.progress = 1; self.hasInstallation = true
                 case .failure(let error): self.phase = .missing; self.error = error.localizedDescription
+                }
+            }
+        }
+        #endif
+    }
+
+    func uninstall() {
+        guard hasInstallation, phase != .checking, phase != .downloading, phase != .removing else { return }
+        #if KAZE_PREVIEW
+        return
+        #else
+        token.cancel(); service.stopExecution(); request = UUID()
+        let service = service, request = request, previous = phase
+        isGenerating = false; phase = .removing; error = nil
+        queue.async { [weak self] in
+            let result = Result { try service.uninstall() }
+            DispatchQueue.main.async {
+                guard let self, self.request == request else { return }
+                switch result {
+                case .success:
+                    self.phase = .missing; self.hasInstallation = false; self.progress = 0
+                    self.response = ""; self.submittedQuestion = ""
+                case .failure(let error): self.phase = previous; self.error = error.localizedDescription
                 }
             }
         }
@@ -114,6 +140,7 @@ final class LocalAssistantModel: ObservableObject {
     }
 
     func cancel() {
+        guard phase != .removing else { return }
         token.cancel(); service.stopExecution(); request = UUID()
         if phase == .downloading { phase = .missing; progress = 0 }
         isGenerating = false; error = LocalAIError.cancelled.localizedDescription

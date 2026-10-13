@@ -28,10 +28,10 @@ AI has no tools or cleanup capability. Existing cleanup confirmations and safety
 checks are unchanged, including protected backups, Photos and synchronized data.
 
 Installation: `~/Library/Application Support/Kaze/AI/<pinned-version>/`.
-After closing Kaze, manually remove the AI folder to reclaim its space; reopening
-the assistant will offer the download again. Query files use a private temporary
+Use **Uninstall AI** to remove the AI folder; reopening the assistant will offer
+the download again. Query files use a private temporary
 folder and are removed afterward. The integration does not retain chat history;
-AI files persist after uninstalling the app, until manually removed.
+AI files persist after uninstalling the app, until explicitly removed.
 
 `LocalAITests` verifies no automatic installation, hash rejection, cancellation,
 timeouts and native model phases using temporary fixtures. Its optional
@@ -39,3 +39,12 @@ timeouts and native model phases using temporary fixtures. Its optional
 a temporary home, never the user's AI directory. Those QA assets are excluded
 from Git and all release packages. DistributionTests checks that the app contains
 licenses but no GGUF, engine archive or llama executable.
+
+## Uninstall AI
+
+The assistant's **Uninstall AI** button only removes downloaded engines, models
+and previous versions within `~/Library/Application Support/Kaze/AI`. It asks
+for confirmation, stops pending queries and removes files in the background.
+Scans, history, settings and other tools' models are preserved. A damaged
+installation can also be removed and downloaded again. External directory
+symlinks are not followed.
