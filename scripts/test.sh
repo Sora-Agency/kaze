@@ -47,6 +47,7 @@ analysis_sources=(
 run_swift_test AnalysisEngineTests "${analysis_sources[@]}"
 run_swift_test CleanupCoverageTests "${analysis_sources[@]}"
 run_swift_test AnalysisRemovalTests "${analysis_sources[@]}"
+run_swift_test ReviewedTrashTests "${analysis_sources[@]}" src/Infrastructure/ReviewedTrashService.swift src/Features/Files/ReviewedTrashModel.swift
 run_swift_test AnalysisCacheTests "${analysis_sources[@]}" src/Infrastructure/ExplorerSnapshotBuilder.swift src/Features/Explorer/FileExplorerModel.swift
 run_swift_test AnalysisPersistenceTests "${analysis_sources[@]}" src/Infrastructure/ExplorerSnapshotBuilder.swift
 run_swift_test LocalAITests "${analysis_sources[@]}" src/Infrastructure/LocalAIService.swift src/Infrastructure/LocalAIStorage.swift \

@@ -54,6 +54,16 @@ struct DuplicatesView: View {
                                         Text(formatDiskBytes(file.allocated)).font(SoraTypography.body(12)).monospacedDigit()
                                         Button(L10n.text("Quick Look")) { preview = file.url }
                                         Button { NSWorkspace.shared.activateFileViewerSelecting([file.url]) } label: { LucideIcon("arrow-up-right") }.help(L10n.text("Mostrar en Finder"))
+                                    }.contentShape(Rectangle()).contextMenu {
+                                        Button(L10n.text("Quick Look")) { preview = file.url }
+                                        Button(L10n.text("Mostrar en Finder")) { NSWorkspace.shared.activateFileViewerSelecting([file.url]) }
+                                        if group.similar {
+                                            TrashMenuAction(target: TrashTarget(file), disabled: model.busy)
+                                        } else {
+                                            Button(L10n.text("Mover a la Papelera"), role: .destructive) {
+                                                model.duplicateSelection = [node]; confirmation = true
+                                            }.disabled(model.busy || !model.canSelectDuplicate(node))
+                                        }
                                     }
                                 }
                                 if group.nodes.count > (copyLimits[group.id] ?? 100) { Button(L10n.text("Mostrar más copias")) { copyLimits[group.id, default: 100] += 100 } }
@@ -73,5 +83,6 @@ struct DuplicatesView: View {
             Button(L10n.text("Cancelar"), role: .cancel) {}
             Button(L10n.text("Mover a la Papelera"), role: .destructive) { model.removeSelection(duplicatesOnly: true) }
         } message: { Text(L10n.text("Se recalcularán los hashes de cada copia y del original conservado. Las fotos similares nunca se eliminan automáticamente.")) }
+        .reviewedTrashActions(home: model.home, journal: model.journal) { _ in model.markChanged() }
     }
 }

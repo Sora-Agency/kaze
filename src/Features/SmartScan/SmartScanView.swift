@@ -72,7 +72,8 @@ struct SmartScanView: View {
         }.alert(L10n.text("¿Mover la selección a la Papelera?"), isPresented: $confirmation) {
             Button(L10n.text("Cancelar"), role: .cancel) {}
             Button(L10n.text("Mover a la Papelera"), role: .destructive) { model.removeSelection() }
-        } message: { Text(L10n.text("Se comprobarán otra vez los archivos y los procesos activos. Los elementos que hayan cambiado o estén en uso se conservarán. Podrás restaurarlos desde Historial.")) }
+        } message: { Text(L10n.text("Revisa que el contenido no incluya archivos importantes. Se moverá la carpeta completa, con todos sus archivos y subcarpetas.") + "\n\n" + L10n.text("Se comprobarán otra vez los archivos y los procesos activos. Los elementos que hayan cambiado o estén en uso se conservarán. Podrás restaurarlos desde Historial.")) }
+        .reviewedTrashActions(home: model.home, journal: model.journal) { _ in model.markChanged() }
     }
     private var collapseTransition: AnyTransition {
         reduceMotion ? .identity : .opacity.combined(with: .offset(y: -10))
