@@ -5,6 +5,8 @@ struct RuleCatalog {
     static let publicKey = "wiK0NIKqWP5QoRucK7FNYRj6Sh9cUsINdJwmewif7TM="
     let manifest: RuleManifest
     let digest: String
+    private let pathRules: [String: CleanupRule]
+    private let projectRules: [String: [CleanupRule]]
 
     init(directory: URL) throws {
         let data = try Data(contentsOf: directory.appendingPathComponent("rules-v1.json"))
@@ -14,7 +16,7 @@ struct RuleCatalog {
             throw CocoaError(.fileReadCorruptFile)
         }
         let decoded = try JSONDecoder().decode(RuleManifest.self, from: data)
-        guard decoded.schema == 1, decoded.version == 1, Set(decoded.rules.map(\.id)).count == decoded.rules.count,
+        guard decoded.schema == 1, decoded.version == 2, Set(decoded.rules.map(\.id)).count == decoded.rules.count,
               decoded.rules.allSatisfy({ rule in
                   !rule.reason.isEmpty && !rule.recovery.isEmpty && !rule.closedProcesses.isEmpty
                   && rule.paths.allSatisfy { !$0.hasPrefix("/") && !$0.split(separator: "/").contains("..") && !$0.isEmpty }
@@ -22,6 +24,12 @@ struct RuleCatalog {
               }) else { throw CocoaError(.fileReadCorruptFile) }
         manifest = decoded
         digest = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+        var paths: [String: CleanupRule] = [:], projects: [String: [CleanupRule]] = [:]
+        for rule in decoded.rules {
+            for path in rule.paths where paths[path] == nil { paths[path] = rule }
+            if let folder = rule.projectFolder { projects[folder, default: []].append(rule) }
+        }
+        pathRules = paths; projectRules = projects
     }
 
     static func bundled() throws -> RuleCatalog {
@@ -41,12 +49,22 @@ struct RuleCatalog {
         guard !node.symbolicLink, !node.protected, node.directory,
               pathIsWithin(node.url.path, root: home.path), node.url.path != home.path else { return nil }
         let relative = String(node.url.path.dropFirst(home.path.count + 1))
-        return manifest.rules.first { rule in
-            if rule.paths.contains(relative) { return true }
-            guard rule.projectFolder == node.url.lastPathComponent else { return false }
-            let parent = node.url.deletingLastPathComponent()
+        if let rule = pathRules[relative] { return rule }
+        let parent = node.url.deletingLastPathComponent()
+        return projectRules[node.url.lastPathComponent]?.first { rule in
             return (rule.manifests ?? []).contains { index.byPath[parent.appendingPathComponent($0).path] != nil }
         }
+    }
+
+    func priorityPaths(home: URL) -> Set<String> {
+        var paths = Set<String>()
+        for relative in manifest.rules.flatMap(\.paths) {
+            var url = home.appendingPathComponent(relative)
+            while url.path != home.path && pathIsWithin(url.path, root: home.path) {
+                paths.insert(url.path); url.deleteLastPathComponent()
+            }
+        }
+        return paths
     }
 
     func findings(index: StorageIndex, home: URL) -> [StorageFinding] {

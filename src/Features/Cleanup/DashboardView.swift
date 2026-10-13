@@ -54,8 +54,8 @@ struct DashboardView: View {
                 }.padding(20).background(SoraPalette.surface, in: RoundedRectangle(cornerRadius: 18))
                 Text(L10n.text("QUÉ LIMPIAR")).font(SoraTypography.body(11, weight: .semibold)).foregroundStyle(SoraPalette.secondary)
                 VStack(spacing: 12) {
-                    category(L10n.text("Cachés cotidianas"), detail: L10n.text("Cachés del usuario, Discord y Homebrew"), icon: "sparkles", selection: $model.includeGeneralCaches)
-                    category(L10n.text("Herramientas de desarrollo"), detail: L10n.text("Nx, Gradle, npm, pnpm, Xcode y simuladores no disponibles"), icon: "hammer", selection: $model.includeDevelopmentCaches)
+                    category(L10n.text("Cachés cotidianas"), detail: L10n.text("Navegadores, Discord, Slack y Homebrew"), icon: "sparkles", selection: $model.includeGeneralCaches)
+                    category(L10n.text("Herramientas de desarrollo"), detail: L10n.text("VS Code, Yarn, pip, CocoaPods, Gradle, npm, pnpm y Xcode"), icon: "hammer", selection: $model.includeDevelopmentCaches)
                     category(L10n.text("Cachés de Docker"), detail: L10n.text("Compilaciones antiguas y objetos dangling"), icon: "box", selection: $model.includeDockerCaches)
                 }
                 HStack(spacing: 8) {

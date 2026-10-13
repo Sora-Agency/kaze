@@ -8,13 +8,14 @@ enum StorageIndexer {
                         changed: Int64(s.st_ctimespec.tv_sec), changedNanoseconds: Int64(s.st_ctimespec.tv_nsec))
     }
 
-    // Stream all metadata; retain bounded detail. Aggregates include files not retained in the map.
     static func scan(roots: [URL], home: URL, cancellation: ScanCancellation,
-                     limit: Int = 250_000, progress: (Int) -> Void = { _ in }) -> StorageIndex {
+                     limit: Int = 250_000, priorityPaths: Set<String> = [], progress: (Int) -> Void = { _ in }) -> StorageIndex {
         let home = URL(fileURLWithPath: canonicalFilePath(home), isDirectory: true)
         var seenRoots = Set<String>()
         let uniqueRoots = roots.map { URL(fileURLWithPath: canonicalFilePath($0), isDirectory: true) }.filter { seenRoots.insert($0.path).inserted }
         let roots = uniqueRoots.filter { root in !uniqueRoots.contains { $0 != root && pathIsWithin(root.path, root: $0.path) } }
+        let priority = priorityPaths.filter { path in roots.contains { pathIsWithin(path, root: $0.path) } }
+        let ordinaryLimit = max(roots.count, max(1, limit) - priority.count)
         var index = StorageIndex(date: Date(), roots: roots, home: home, files: [], children: [:], byPath: [:])
         var identities = Set<DiskFileIdentity>()
         var directories = 0
@@ -85,7 +86,8 @@ enum StorageIndexer {
                 let protected = parent.blocked || AnalysisProtection.isProtected(url, home: home) || (metadata.st_flags & UInt32(SF_DATALESS)) != 0
                 let retainDirectory = directory && (directories < min(50_000, max(1, limit / 4)) || depth <= 4 || important.contains(url.lastPathComponent))
                 let retainFile = !directory && (!protected && AnalysisProtection.duplicateEligible(url, home: home) || manifests.contains(url.lastPathComponent))
-                let retain = index.files.count < max(1, limit) && (retainDirectory || retainFile)
+                let retain = index.files.count < max(1, limit) && (priority.contains(url.path)
+                    || index.files.count < ordinaryLimit && (retainDirectory || retainFile))
                 if !retain && retainFile && !protected { index.candidateOmitted += 1 }
                 let position = account(url, metadata, parent: parent.nearest, retain: retain, blocked: protected)
                 if directory {

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": 1,
+  "version": 2,
   "rules": [
     {
       "id": "xcode-derived",
@@ -490,6 +490,62 @@
       "closedProcesses": [
         "Simulator",
         "Xcode"
+      ]
+    },
+    {
+      "id": "vscode-cache",
+      "title": "Cachés de VS Code",
+      "paths": [
+        "Library/Application Support/Code/Cache",
+        "Library/Application Support/Code/Code Cache",
+        "Library/Application Support/Code/GPUCache",
+        "Library/Application Support/Code/CachedData"
+      ],
+      "projectFolder": null,
+      "manifests": null,
+      "category": "development",
+      "regenerable": true,
+      "reason": "Cachés HTTP, de código y GPU; conserva User, Backups, extensiones y almacenamiento de proyectos.",
+      "recovery": "La aplicación reconstruye o descarga su caché al abrirse; el primer inicio puede ser más lento.",
+      "closedProcesses": [
+        "Visual Studio Code",
+        "Code Helper",
+        "/Code.app/"
+      ]
+    },
+    {
+      "id": "slack-cache",
+      "title": "Cachés de Slack",
+      "paths": [
+        "Library/Application Support/Slack/Cache",
+        "Library/Application Support/Slack/Code Cache",
+        "Library/Application Support/Slack/GPUCache"
+      ],
+      "projectFolder": null,
+      "manifests": null,
+      "category": "general",
+      "regenerable": true,
+      "reason": "Cachés HTTP, de código y GPU; conserva sesiones, archivos locales y almacenamiento de Slack.",
+      "recovery": "La aplicación reconstruye o descarga su caché al abrirse; el primer inicio puede ser más lento.",
+      "closedProcesses": [
+        "Slack"
+      ]
+    },
+    {
+      "id": "yarn-cache",
+      "title": "Caché Yarn Classic",
+      "paths": [
+        "Library/Caches/Yarn"
+      ],
+      "projectFolder": null,
+      "manifests": null,
+      "category": "development",
+      "regenerable": true,
+      "reason": "Descargas globales de Yarn Classic; no incluye .yarn/cache de los proyectos.",
+      "recovery": "Yarn vuelve a descargar paquetes; necesita conexión. No limpiar si dependes de trabajo sin conexión.",
+      "closedProcesses": [
+        "yarn",
+        "node"
       ]
     }
   ]

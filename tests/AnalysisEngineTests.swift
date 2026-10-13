@@ -78,7 +78,7 @@ struct AnalysisEngineTests {
               "Equal data forks never authorize removal of unique resource-fork content")
         let resources = URL(fileURLWithPath: fm.currentDirectoryPath).appendingPathComponent("src")
         let catalog = try RuleCatalog(directory: resources.appendingPathComponent("Rules"))
-        check(catalog.manifest.version == 1 && catalog.manifest.rules.count >= 20, "Bundled versioned rules verify with the app update public key")
+        check(catalog.manifest.version == 2 && catalog.manifest.rules.count >= 30, "Bundled versioned rules verify with the app update public key")
         let cache = try file("Library/Developer/Xcode/DerivedData/project/build.o").deletingLastPathComponent().deletingLastPathComponent()
         let cacheIndex = StorageIndexer.scan(roots: [home], home: home, cancellation: ScanCancellation())
         check(cacheIndex.systemLocations[.caches]?.contains(where: { cacheIndex.files[$0].url == cache }) == true,
