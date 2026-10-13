@@ -88,9 +88,9 @@ struct SmartScanView: View {
                     .transition(collapseTransition)
             }
             HStack(spacing: 10) {
-                summary("Recuperación potencial", "0 – " + formatDiskBytes(model.potential), "Sin prometer bytes retenidos por APFS", accent: true)
+                summary("Recuperación potencial", "0 – " + formatDiskBytes(model.potential), "Cachés y copias exactas verificadas", accent: true)
                 summary("Asignado en disco", formatDiskBytes(model.index.allocated), "APFS · " + L10n.string("Estimación"))
-                summary("Tamaño lógico", formatDiskBytes(model.index.logical), "Incluye archivos dispersos")
+                summary("Espacio para revisar", formatDiskBytes(model.opportunities.reviewBytes), "Requiere revisión manual")
             }.padding(.horizontal, 24).padding(.bottom, compact ? 8 : 12)
             if !compact {
                 HStack(spacing: 8) {
@@ -115,7 +115,9 @@ struct SmartScanView: View {
                     Text(L10n.string(group.rawValue)).font(SoraTypography.body(11, weight: .semibold)).lineLimit(2)
                 }.frame(height: 28, alignment: .top)
                 Text(String(count)).font(SoraTypography.body(21, weight: .semibold)).monospacedDigit()
-            }.frame(maxWidth: .infinity, alignment: .leading).padding(12).frame(height: 84)
+                Text(categoryDetail(group))
+                    .font(SoraTypography.body(10)).foregroundStyle(SoraPalette.secondary).lineLimit(1).minimumScaleFactor(0.7)
+            }.frame(maxWidth: .infinity, alignment: .leading).padding(12).frame(height: 104)
                 .background {
                     ZStack {
                         RoundedRectangle(cornerRadius: 10).fill(SoraPalette.surface)
@@ -123,6 +125,11 @@ struct SmartScanView: View {
                     }
                 }.overlay(RoundedRectangle(cornerRadius: 10).stroke(categoryColor(group).opacity(filter == group ? 0.5 : 0.18)))
         }.buttonStyle(.plain).accessibilityLabel(L10n.string(group.rawValue) + ", " + String(count))
+    }
+    private func categoryDetail(_ group: FindingGroup) -> String {
+        if group == .duplicates { return "0 – " + formatDiskBytes(model.duplicates.exact.reduce(0) { $0 + $1.potential }) }
+        if group == .safe { return "0 – " + formatDiskBytes(model.opportunities.potentialByGroup[group, default: 0]) }
+        return formatDiskBytes(model.opportunities.allocatedByGroup[group, default: 0]) + " · " + L10n.string("En disco")
     }
     private func summary(_ title: String, _ value: String, _ detail: String, accent: Bool = false) -> some View {
         VStack(alignment: .leading, spacing: compact ? 4 : 7) {

@@ -147,13 +147,18 @@ ApplicationAttribution, OperationJournal and mutation leases. SmartScanModel
 owns a serial utility queue and cancellation generations, publishing one shared
 index for Map, Duplicates, System Data, Developer Mode and Local Assistant.
 AnalysisCache persists bounded, versioned binary plists of metadata in the private
-`~/Library/Caches/Kaze/Analysis-v1` directory: 96 MiB per Smart Scan, 8 MiB per
+`~/Library/Application Support/Kaze/Analysis-v1` directory: 96 MiB per Smart Scan, 8 MiB per
 folder, 128 MiB total and 32 folder snapshots. Derived index dictionaries are
-rebuilt on loading. Writes are atomic on utility queues; invalid, missing or
-oversized cache data falls back to scanning. File contents and deletion authority
+rebuilt on loading. AnalysisCacheMigration moves recognized legacy snapshots
+from Library/Caches, preserving legacy files when migration fails. Writes are
+atomic on utility queues. AnalysisSnapshotCompaction bounds retained details
+while preserving root totals when a Smart Scan exceeds its file budget. Folder
+eviction never removes the last Smart Scan. File contents and deletion authority
 are never persisted. Restored Smart Scan results retain their measurement date,
 clear all selections and remain stale until an explicit fresh scan. Hashes are
-not recomputed at launch. Mutation notifications invalidate the saved index.
+not recomputed at launch. Mutation notifications mark results stale and clear
+selections while preserving the dated baseline. Completed scans are saved before
+publishing success; persistence failures are surfaced to the user.
 
 Explorer shows saved rows immediately and checks historical macOS FSEvents before
 reusing recursive measurements. One scoped event stream runs only while Explorer
@@ -161,12 +166,17 @@ is visible, coalesces changes and refreshes affected first-level subtrees on its
 existing serial utility queue. Monitoring starts before a new walk; events during
 that walk trigger a follow-up pass, retaining a conservative event checkpoint.
 Root inode, device UUID and event IDs are checked. Dropped/reset history, mount
-changes, incomplete results, external volumes, temporary/system variable folders,
-or snapshots older than 24 hours force a full background walk. FSEvents are
+changes, external volumes, temporary/system variable folders or snapshots older
+than 24 hours require fresh measurements. Unchanged partial branches retain their
+measurements. ExplorerRefreshPolicy defers automatic recursive refreshes for
+snapshots covering at least 50,000 files; dated rows stay visible with an explicit
+Refresh action. Small folders refresh on the existing background queue. FSEvents are
 advisory; explicit Refresh always performs a complete measurement. Cross-child
 hard links also force full walks whenever content changes, preserving one parent
 inode set. Explorer retains dated rows during refresh/cancellation, bounds memory
 snapshots to 32 folders/50,000 entries and ignores its own cache-write events.
+ExplorerSnapshotBuilder emits checkpoints during traversal; the model throttles
+checkpoint persistence and presentation updates to once per second.
 See [Apple's FSEvents guidance](https://developer.apple.com/library/archive/documentation/Darwin/Conceptual/FSEvents_ProgGuide/UsingtheFSEventsFramework/UsingtheFSEventsFramework.html).
 No full analysis or app/resource inventory runs automatically at window creation.
 
@@ -178,6 +188,9 @@ Cloud/provider, backup and Photos protections are path- and metadata-based.
 Signed scopes and closed processes are checked before cache mutation, including
 fresh subtree metadata to reject protected descendants. Exact duplicate copies
 and their preserved original are freshly hashed before Trash operations.
+RuleCatalog reserves bounded detail slots for signed scopes and their ancestors
+during the same walk. CleanupOpportunitySummary separates occupied review bytes
+from potential recovery and excludes exact duplicate copies already accounted for.
 
 New operations have per-UUID atomic JSON records in the local Operations folder.
 The journal shares cleanup-lock exclusion with scheduled tasks. Restoring re-reads
@@ -194,6 +207,9 @@ LocalAIPackage pins engine/model versions, sizes and SHA-256. LocalAIService
 uses ephemeral URLSession downloads, private staging and atomic activation;
 checks and downloads occur only in the assistant's serial utility queue.
 LocalAssistantModel never downloads on initialization or availability checks.
+LocalAIStorage owns only Kaze's optional AI directory. Explicit uninstallation
+stops inference before removing its packages on the assistant's utility queue;
+history, settings and third-party models are outside that storage boundary.
 Queries extract the verified engine into a private temporary directory, run
 llama-completion with 2 CPU threads, no GPU, 4096 context and 384 output tokens,
 and stop on cancellation or a 90-second deadline. No server or daemon is started.

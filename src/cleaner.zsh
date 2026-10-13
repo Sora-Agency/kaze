@@ -114,6 +114,17 @@ is_allowed_clean_target() {
     "$USER_HOME/Library/Caches/Google/Chrome"|\
     "$USER_HOME/Library/Caches/com.google.Chrome"|\
     "$USER_HOME/Library/Caches/com.apple.Safari"|\
+    "$USER_HOME/Library/Caches/Yarn"|\
+    "$USER_HOME/Library/Caches/pip"|\
+    "$USER_HOME/.cache/pip"|\
+    "$USER_HOME/Library/Caches/CocoaPods"|\
+    "$USER_HOME/Library/Application Support/Code/Cache"|\
+    "$USER_HOME/Library/Application Support/Code/Code Cache"|\
+    "$USER_HOME/Library/Application Support/Code/GPUCache"|\
+    "$USER_HOME/Library/Application Support/Code/CachedData"|\
+    "$USER_HOME/Library/Application Support/Slack/Cache"|\
+    "$USER_HOME/Library/Application Support/Slack/Code Cache"|\
+    "$USER_HOME/Library/Application Support/Slack/GPUCache"|\
     "$USER_HOME/.cache"|\
     "$USER_HOME/.gradle/caches"|\
     "$USER_HOME/.gradle/daemon"|\
@@ -201,6 +212,9 @@ if (( clean_general )); then
   clean_contents "$(kaze_text 'caché de Discord')" "$USER_HOME/Library/Application Support/discord/Cache"
   clean_contents "$(kaze_text 'Code Cache de Discord')" "$USER_HOME/Library/Application Support/discord/Code Cache"
   clean_contents "$(kaze_text 'GPUCache de Discord')" "$USER_HOME/Library/Application Support/discord/GPUCache"
+  for cache_name in Cache 'Code Cache' GPUCache; do
+    clean_contents "Slack · $cache_name" "$USER_HOME/Library/Application Support/Slack/$cache_name"
+  done
 fi
 
 if (( clean_development )); then
@@ -210,6 +224,13 @@ if (( clean_development )); then
   clean_contents "$(kaze_text 'ejecuciones temporales de npx')" "$USER_HOME/.npm/_npx"
   clean_contents "$(kaze_text 'DerivedData de Xcode')" "$USER_HOME/Library/Developer/Xcode/DerivedData"
   clean_contents "$(kaze_text 'caché de CoreSimulator')" "$USER_HOME/Library/Developer/CoreSimulator/Caches"
+  clean_contents "Yarn Classic" "$USER_HOME/Library/Caches/Yarn"
+  clean_contents "pip" "$USER_HOME/Library/Caches/pip"
+  clean_contents "pip" "$USER_HOME/.cache/pip"
+  clean_contents "CocoaPods" "$USER_HOME/Library/Caches/CocoaPods"
+  for cache_name in Cache 'Code Cache' GPUCache CachedData; do
+    clean_contents "VS Code · $cache_name" "$USER_HOME/Library/Application Support/Code/$cache_name"
+  done
 fi
 
 if (( ! dry_run && clean_development )); then

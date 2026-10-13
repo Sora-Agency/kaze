@@ -12,5 +12,5 @@ guard let data = Data(base64Encoded: signature), key.isValidSignature(data, for:
     fputs("Invalid cleanup rule signature.\n", stderr); exit(1)
 }
 let manifest = try JSONSerialization.jsonObject(with: bytes) as! [String: Any]
-guard manifest["schema"] as? Int == 1, manifest["version"] as? Int == 1 else { exit(1) }
+guard manifest["schema"] as? Int == 1, manifest["version"] as? Int == 2 else { exit(1) }
 print("Cleanup rule signature verified.")

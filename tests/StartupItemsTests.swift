@@ -13,7 +13,6 @@ final class FakeLoginItems: LoginItemsManaging {
 }
 struct MockJXARunner: ToolCommandRunning {
     func run(_ executable: String, arguments: [String], cancellation: OperationCancellation) throws -> ToolCommandResult {
-        // Evaluate the production script with a mock Application. Never send an Apple event.
         let fake = #"""
         var entries = [{name: function(){return 'Quoted " App';}, path: function(){return '/Applications/Quoted " App.app';}, hidden: function(){return true;}, delete: function(){entries=[];}}];
         function MockApplication(name) {
@@ -59,7 +58,6 @@ struct MockJXARunner: ToolCommandRunning {
         precondition(scripted.count == 1 && scripted[0].hidden && scripted[0].name == "Quoted \" App")
         try automation.set(scripted[0], enabled: false)
         try automation.set(item, enabled: true)
-        // Timeout is bounded even when a command never responds.
         do { _ = try ToolCommandRunner(timeout: 0.15).run("/bin/sleep", arguments: ["10"], cancellation: OperationCancellation()); fatalError("Expected timeout") }
         catch ToolCommandError.timeout {}
         print("Startup: reversible persistence, failed mutations, missing apps, JSON/JXA and command timeout passed")

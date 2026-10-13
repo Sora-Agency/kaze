@@ -2,7 +2,6 @@
 set -euo pipefail
 cd "${0:A:h:h}"
 sparkle_dir="$(scripts/fetch-sparkle.sh)"
-# The key stays in login Keychain. Temporary exports are removed on every exit.
 work_dir="$(mktemp -d -t kaze-rules)"
 chmod 700 "$work_dir"
 trap 'rm -rf -- "$work_dir"' EXIT

@@ -28,6 +28,8 @@ struct AnalysisNotice: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if !model.index.files.isEmpty { Text(L10n.text("Análisis del \(L10n.date(model.index.date, includeTime: true))")) }
+            if !model.index.files.isEmpty { Text(L10n.text("Tamaño lógico: \(formatDiskBytes(model.index.logical))")) }
+            Text(L10n.text("Espacio para revisar muestra lo que ocupan apps, proyectos y archivos; requiere decidir qué conservar. No se suma a la recuperación potencial."))
             if model.showingCached { Text(L10n.text("Resultados de la última sesión. Vuelve a analizar para comprobar cambios antes de limpiar.")) }
             else if model.isStale { Text(L10n.text("El disco cambió desde este análisis. Vuelve a analizar antes de limpiar.")) }
             if let error = model.error { Text(error).foregroundStyle(Color.orange).textSelection(.enabled) }

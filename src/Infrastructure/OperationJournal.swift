@@ -36,7 +36,6 @@ final class OperationJournal: @unchecked Sendable {
             ((try? $0.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast)
                 > ((try? $1.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast)
         }.prefix(limit)
-        // Individual immutable IDs allow concurrent scheduled writers without a shared JSON append file.
         return latest.compactMap { url in
             guard let s = DiskScanner.metadata(url), (s.st_mode & S_IFMT) == S_IFREG, s.st_size < 1_048_576,
                   let data = try? Data(contentsOf: url), let record = try? JSONDecoder().decode(OperationRecord.self, from: data) else { return nil }
@@ -68,7 +67,6 @@ final class OperationJournal: @unchecked Sendable {
                 record.freedBytes = before.st_dev == s.st_dev ? 0 : nil
             }
             record.status = "trashed"
-            // Moving to Trash frees no bytes. A free-space delta is not attributed to this operation.
             record.detail = record.freedBytes == 0 ? "Papelera: el espacio se libera cuando se vacía y APFS deja de conservarlo." : "Papelera: capacidad no verificable o traslado entre volúmenes; puede requerir restauración manual en Finder."
             try write(record)
         } catch {
@@ -83,7 +81,6 @@ final class OperationJournal: @unchecked Sendable {
     func restore(_ supplied: OperationRecord) throws {
         lock.lock(); defer { lock.unlock() }
         let lease = try MutationLease(url: leaseURL); defer { withExtendedLifetime(lease) {} }
-        // Re-read the persisted record; callers cannot supply arbitrary move instructions.
         let data = try Data(contentsOf: directory.appendingPathComponent(supplied.id.uuidString + ".json"))
         var record = try JSONDecoder().decode(OperationRecord.self, from: data)
         guard record.restorable, let destination = record.destinationPath, let fingerprint = record.fingerprint,

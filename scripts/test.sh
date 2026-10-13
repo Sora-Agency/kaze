@@ -8,7 +8,7 @@ trap 'rm -rf -- "$test_dir"' EXIT
 swift_flags=(-swift-version 5 -I src/Infrastructure/Recovery -target "$(uname -m)-apple-macosx13.0")
 explorer_sources=(
   src/Domain/DeletionSafety.swift src/Domain/Formatting.swift src/Domain/FileModels.swift src/Domain/AnalysisModels.swift
-  src/Domain/AnalysisCacheModels.swift src/Infrastructure/AnalysisCache.swift src/Infrastructure/FolderChangeMonitor.swift
+  src/Domain/AnalysisCacheModels.swift src/Domain/AnalysisSnapshotCompaction.swift src/Domain/ExplorerRefreshPolicy.swift src/Infrastructure/AnalysisCache.swift src/Infrastructure/AnalysisCacheMigration.swift src/Infrastructure/FolderChangeMonitor.swift
   src/Infrastructure/ExplorerSnapshotBuilder.swift
   src/Infrastructure/DiskScanner.swift src/Infrastructure/DeletionClassifier.swift src/Features/Explorer/FileExplorerModel.swift
 )
@@ -37,7 +37,7 @@ done
 analysis_sources=(
   src/App/AppIdentity.swift src/Domain/*.swift
   src/Infrastructure/DiskScanner.swift src/Infrastructure/DeletionClassifier.swift src/Infrastructure/StorageIndexer.swift
-  src/Infrastructure/AnalysisCache.swift src/Infrastructure/FolderChangeMonitor.swift
+  src/Infrastructure/AnalysisCache.swift src/Infrastructure/AnalysisCacheMigration.swift src/Infrastructure/FolderChangeMonitor.swift
   src/Infrastructure/DuplicateDetector.swift src/Infrastructure/RuleCatalog.swift
   src/Infrastructure/OperationJournal.swift src/Infrastructure/MutationLease.swift
   src/Infrastructure/CleanupAuthorization.swift src/Infrastructure/ApplicationAttribution.swift
@@ -45,9 +45,11 @@ analysis_sources=(
   src/Infrastructure/ManagedResourceRemoval.swift src/Infrastructure/AnalysisRemoval.swift
 )
 run_swift_test AnalysisEngineTests "${analysis_sources[@]}"
+run_swift_test CleanupCoverageTests "${analysis_sources[@]}"
 run_swift_test AnalysisRemovalTests "${analysis_sources[@]}"
 run_swift_test AnalysisCacheTests "${analysis_sources[@]}" src/Infrastructure/ExplorerSnapshotBuilder.swift src/Features/Explorer/FileExplorerModel.swift
-run_swift_test LocalAITests "${analysis_sources[@]}" src/Infrastructure/LocalAIService.swift \
+run_swift_test AnalysisPersistenceTests "${analysis_sources[@]}" src/Infrastructure/ExplorerSnapshotBuilder.swift
+run_swift_test LocalAITests "${analysis_sources[@]}" src/Infrastructure/LocalAIService.swift src/Infrastructure/LocalAIStorage.swift \
   src/Infrastructure/SpotlightUsage.swift src/Features/SmartScan/SmartScanModel.swift src/Features/Assistant/LocalAssistantModel.swift
 run_swift_test ScheduleTests "${schedule_sources[@]}"
 run_swift_test IdentityTests src/App/AppIdentity.swift

@@ -304,17 +304,14 @@
 "¿Mover los datos seleccionados a la Papelera?" = "Move the selected data to the Trash?";
 "¿Reiniciar Docker Desktop?" = "Restart Docker Desktop?";
 
-/* Software updates */
 "Buscar actualizaciones…" = "Check for Updates…";
 "Buscar actualizaciones automáticamente" = "Automatically Check for Updates";
 "No se pudo iniciar el actualizador" = "Unable to start the updater";
 
-/* Protected folder access */
 "Acceso a carpetas protegidas verificado" = "Protected folder access verified";
 "Acceso a carpetas protegidas pendiente" = "Protected folder access needed";
 "Acceso a carpetas protegidas sin verificar" = "Protected folder access not verified";
 
-/* Storage intelligence and reversible operations. */
 "%@ elementos · selección explícita" = "%@ items · explicit selection";
 "ANALIZAR" = "ANALYZE";
 "Abrir en Explorador" = "Open in Explorer";
@@ -681,7 +678,6 @@
 "Detalles de las reglas de limpieza" = "Cleanup rule details";
 "Información avanzada sobre alcance y recuperación." = "Advanced information about scope and recovery.";
 
-/* Recovery and startup apps */
 "Recuperación" = "Recovery";
 "Apps al inicio" = "Startup apps";
 "Abre el origen primero." = "Open a source first.";
@@ -801,3 +797,30 @@
 "Abrir imagen" = "Open image";
 "Abrir origen" = "Open source";
 "Activada" = "Enabled";
+"Espacio para revisar" = "Space to review";
+"Cachés y copias exactas verificadas" = "Verified caches and exact copies";
+"En disco" = "On disk";
+"Recuperación estimada: 0 – %@" = "Estimated recovery: 0 – %@";
+"Sin estimación segura; revisa los detalles" = "No safe estimate; review the details";
+"Revisión manual; no incluido en recuperación potencial" = "Manual review; excluded from potential recovery";
+"Tamaño lógico: %@" = "Logical size: %@";
+"Espacio para revisar muestra lo que ocupan apps, proyectos y archivos; requiere decidir qué conservar. No se suma a la recuperación potencial." = "Space to review shows the space occupied by apps, projects and files; you decide what to keep. It is excluded from potential recovery.";
+"¿Desinstalar la IA local?" = "Uninstall local AI?";
+"Desinstalar IA" = "Uninstall AI";
+"Desinstalando la IA local…" = "Uninstalling local AI…";
+"Se eliminarán el modelo y el motor descargados por Kaze. Tus análisis, historial y ajustes se conservarán. Puedes volver a descargar la IA cuando quieras." = "The model and engine downloaded by Kaze will be removed. Your scans, history and settings will be preserved. You can download AI again at any time.";
+"Cachés de VS Code" = "VS Code caches";
+"Cachés de Slack" = "Slack caches";
+"Caché Yarn Classic" = "Yarn Classic cache";
+"Cachés HTTP, de código y GPU; conserva User, Backups, extensiones y almacenamiento de proyectos." = "HTTP, code and GPU caches; preserves User, Backups, extensions and project storage.";
+"Cachés HTTP, de código y GPU; conserva sesiones, archivos locales y almacenamiento de Slack." = "HTTP, code and GPU caches; preserves sessions, local files and Slack storage.";
+"La aplicación reconstruye o descarga su caché al abrirse; el primer inicio puede ser más lento." = "The app rebuilds or downloads its cache on launch; the first launch may be slower.";
+"Descargas globales de Yarn Classic; no incluye .yarn/cache de los proyectos." = "Global Yarn Classic downloads; excludes project .yarn/cache folders.";
+"Yarn vuelve a descargar paquetes; necesita conexión. No limpiar si dependes de trabajo sin conexión." = "Yarn downloads packages again; an internet connection is required. Keep the cache if you rely on offline work.";
+"Navegadores, Discord, Slack y Homebrew" = "Browsers, Discord, Slack and Homebrew";
+"VS Code, Yarn, pip, CocoaPods, Gradle, npm, pnpm y Xcode" = "VS Code, Yarn, pip, CocoaPods, Gradle, npm, pnpm and Xcode";
+"Requiere revisión manual" = "Requires manual review";
+"Hay cambios recientes. Actualiza cuando quieras volver a medir." = "Recent changes detected. Refresh when you want to measure again.";
+"Resultados guardados; hay cambios pendientes" = "Saved results; changes pending";
+"No se pudo guardar el análisis. Los resultados siguen disponibles en esta sesión." = "The scan could not be saved. Results remain available in this session.";
+"Tamaño pendiente de actualizar" = "Size awaiting refresh";

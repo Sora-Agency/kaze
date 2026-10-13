@@ -36,7 +36,6 @@ struct ApplicationAttribution {
                          "Application Support/\(identifier)"] {
             add(library.appendingPathComponent(relative), .message("Bundle ID: \(identifier)"), verified: true, shared: peers)
         }
-        // Name matching is a discovery hint, never ownership evidence or a deletion authorization.
         if !name.isEmpty && !name.contains("/") && name != "." && name != ".." {
             add(library.appendingPathComponent("Application Support/\(name)"), .message("Coincidencia de nombre; conservar y revisar"), verified: false)
         }
@@ -54,7 +53,6 @@ struct ApplicationAttribution {
                   let data = try? Data(contentsOf: url), let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
                   let program = (plist["Program"] as? String) ?? (plist["ProgramArguments"] as? [String])?.first,
                   program.hasPrefix("/"), pathIsWithin(canonicalFilePath(URL(fileURLWithPath: program)), root: canonicalFilePath(app)) else { continue }
-            // Removing a loaded agent requires unloading it; show it for review instead of moving its plist silently.
             add(url, .message("LaunchAgent con ejecutable dentro de la app; desactivar el agente antes de borrar"), verified: true)
         }
         for group in cachedGroups ?? groups(app) {

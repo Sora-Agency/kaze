@@ -2,18 +2,23 @@ import Foundation
 import CryptoKit
 import Darwin
 
-/// Optional files only. Initialization and availability checks never download or start an engine.
-// Mutable validation cache is confined to LocalAssistantModel's serial utility queue.
 final class LocalAIService: @unchecked Sendable {
     let package: LocalAIPackage
     let directory: URL
-    private var validated: [String: FileFingerprint] = [:] // Used only on the assistant's serial utility queue.
+    private let storage: LocalAIStorage
+    var hasInstallation: Bool { storage.exists }
+
+    func uninstall() throws {
+        stopExecution()
+        try storage.uninstall()
+        validated = [:]
+    }
+    private var validated: [String: FileFingerprint] = [:]
     typealias Downloader = (LocalAIAsset, URL, ScanCancellation, @escaping (Int64) -> Void) throws -> Void
     private let downloader: Downloader
     private let processLock = NSLock()
     private var activeProcess: Process?
 
-    /// Terminate promptly on cancel or app exit; never wait for the engine on the main thread.
     func stopExecution() {
         processLock.lock(); let process = activeProcess; processLock.unlock()
         if let process, process.isRunning { process.terminate() }
@@ -22,7 +27,8 @@ final class LocalAIService: @unchecked Sendable {
     init(home: URL = FileManager.default.homeDirectoryForCurrentUser, package: LocalAIPackage = .bundled,
          downloader: @escaping Downloader = LocalAIService.download) {
         self.package = package
-        directory = URL(fileURLWithPath: canonicalFilePath(home), isDirectory: true).appendingPathComponent("Library/Application Support/Kaze/AI/\(package.version)")
+        storage = LocalAIStorage(home: home)
+        directory = storage.root.appendingPathComponent(package.version)
         self.downloader = downloader
     }
 
@@ -68,7 +74,6 @@ final class LocalAIService: @unchecked Sendable {
             completed += asset.bytes
         }
         guard !cancellation.isCancelled else { throw LocalAIError.cancelled }
-        // The engine archive includes MIT/LICENSE. Keep the model license beside its optional data.
         let license = Bundle.main.resourceURL?.appendingPathComponent("AI/Qwen-LICENSE.txt")
         if let license, fm.fileExists(atPath: license.path) { try fm.copyItem(at: license, to: stage.appendingPathComponent("Qwen-LICENSE.txt")) }
         let backup = parent.appendingPathComponent(".previous-\(UUID())")
@@ -103,7 +108,6 @@ final class LocalAIService: @unchecked Sendable {
         let work = fm.temporaryDirectory.appendingPathComponent("kaze-inference-\(UUID())")
         try fm.createDirectory(at: work, withIntermediateDirectories: false, attributes: [.posixPermissions: 0o700])
         defer { try? fm.removeItem(at: work) }
-        // Recreate executable code from the pinned, verified archive for each short-lived query.
         let extraction = CleanerOperations.runCommand("/usr/bin/tar", arguments: ["-xzf", directory.appendingPathComponent(package.engine.filename).path, "-C", work.path], timeout: 15)
         guard extraction.status == 0 else { throw LocalAIError.engine }
         guard !cancellation.isCancelled else { throw LocalAIError.cancelled }
@@ -147,7 +151,6 @@ final class LocalAIService: @unchecked Sendable {
         let reader = try FileHandle(forReadingFrom: output); defer { try? reader.close() }
         let bytes = try reader.read(upToCount: 65_536) ?? Data()
         var response = String(decoding: bytes, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
-        // llama-completion's fixed CLI footer is not part of the assistant answer.
         if response.hasSuffix("[end of text]") {
             response = String(response.dropLast("[end of text]".count)).trimmingCharacters(in: .whitespacesAndNewlines)
         }

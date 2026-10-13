@@ -1,7 +1,5 @@
 import Foundation
 
-/// Performs the journaled operation and fresh checks on the analysis utility queue.
-/// Presentation state and selection remain in SmartScanModel.
 enum AnalysisRemoval {
     static func trashSelection(nodes: Set<Int>, index: StorageIndex, findings: [StorageFinding],
                                groups: [DuplicateGroup], duplicatesOnly: Bool,
@@ -36,7 +34,6 @@ enum AnalysisRemoval {
                         guard processes.status == 0 else { throw AnalysisActionError.changed }
                         let running = rule.closedProcesses.filter { processes.output.localizedCaseInsensitiveContains($0) }
                         guard running.isEmpty else { throw AnalysisActionError.inUse(running) }
-                        // Recheck descendants so newly added backups, synced data or inaccessible files stay intact.
                         let currentTree = StorageIndexer.scan(roots: [file.url], home: index.home, cancellation: ScanCancellation(), limit: 1)
                         guard !currentTree.partial, let currentRoot = currentTree.files.first, !currentRoot.containsProtected,
                               let after = DiskScanner.metadata(file.url), StorageIndexer.fingerprint(after) == file.fingerprint else { throw AnalysisActionError.changed }

@@ -16,6 +16,7 @@ final class SmartScanModel: ObservableObject {
     @Published private(set) var isRestoring = false
     @Published private(set) var hashesExhaustive = false
     @Published private(set) var potential: Int64 = 0
+    @Published private(set) var opportunities = CleanupOpportunitySummary()
     @Published private(set) var snapshots: [String] = []
     @Published private(set) var snapshotStatus = "Sin analizar"
     @Published private(set) var systemTotals: [SystemDataKind: AnalysisBytes] = [:]
@@ -49,7 +50,10 @@ final class SmartScanModel: ObservableObject {
         self.journal = journal ?? OperationJournal(home: home)
         catalog = resources.flatMap { try? RuleCatalog(directory: $0.appendingPathComponent("Rules")) }
         if let initialIndex { apply(initialIndex) }
-        if let initialDuplicates { duplicates = initialDuplicates; potential = Self.estimate(index: index, findings: findings, duplicates: initialDuplicates) }
+        if let initialDuplicates {
+            duplicates = initialDuplicates; potential = Self.estimate(index: index, findings: findings, duplicates: initialDuplicates)
+            opportunities = .make(index: index, findings: findings, duplicates: initialDuplicates)
+        }
         if persists { restore() }
     }
 
@@ -61,11 +65,12 @@ final class SmartScanModel: ObservableObject {
             let findings = saved.flatMap { catalog?.findings(index: $0.index, home: home) } ?? []
             let totals = saved.map { Self.systemTotals($0.index, home: home) } ?? [:]
             let potential = saved.map { Self.estimate(index: $0.index, findings: findings, duplicates: $0.duplicates) } ?? 0
+            let summary = saved.map { CleanupOpportunitySummary.make(index: $0.index, findings: findings, duplicates: $0.duplicates) } ?? .init()
             DispatchQueue.main.async {
                 guard let self, self.restoreAllowed else { return }
                 self.isRestoring = false
                 guard let saved else { return }
-                self.apply(saved.index, prepared: findings, totals: totals)
+                self.apply(saved.index, prepared: findings, totals: totals, summary: summary)
                 self.duplicates = saved.duplicates; self.potential = potential
                 self.snapshots = saved.snapshots; self.snapshotStatus = saved.snapshotStatus
                 self.isStale = true; self.showingCached = true
@@ -90,7 +95,8 @@ final class SmartScanModel: ObservableObject {
     }
     var busy: Bool { isScanning || isComparing || isRemoving }
 
-    private func apply(_ result: StorageIndex, prepared: [StorageFinding]? = nil, totals: [SystemDataKind: AnalysisBytes]? = nil) {
+    private func apply(_ result: StorageIndex, prepared: [StorageFinding]? = nil, totals: [SystemDataKind: AnalysisBytes]? = nil,
+                       summary: CleanupOpportunitySummary? = nil) {
         isStale = false; showingCached = false; hashesExhaustive = false; lastUsed = [:]; usageQueried = []; index = result; findings = prepared ?? catalog?.findings(index: result, home: home) ?? []
         systemTotals = totals ?? Self.systemTotals(result, home: home)
         systemPotential = [:]
@@ -100,6 +106,7 @@ final class SmartScanModel: ObservableObject {
             }
         }
         potential = Self.estimate(index: result, findings: findings, duplicates: DuplicateReport())
+        opportunities = summary ?? .make(index: result, findings: findings, duplicates: DuplicateReport())
         selected = []; duplicateSelection = []; duplicates = DuplicateReport()
         onIndex?(result)
     }
@@ -124,7 +131,6 @@ final class SmartScanModel: ObservableObject {
     func markChanged() {
         restoreAllowed = false; isRestoring = false
         if isScanning || isComparing { token.cancel(); request = UUID(); isScanning = false; isComparing = false }
-        if persists { let cache = cache; queue.async { cache.invalidateAnalysis() } }
         guard !index.files.isEmpty else { return }
         isStale = true; selected = []; duplicateSelection = []
     }
@@ -143,11 +149,12 @@ final class SmartScanModel: ObservableObject {
         let roots = roots ?? [home, URL(fileURLWithPath: "/Applications"), URL(fileURLWithPath: "/Library"), URL(fileURLWithPath: "/private/var")]
         let home = home
         let catalog = catalog
+        let cache = cache, persistResults = persists
         let includeSnapshots = roots.contains { $0.path == "/private/var" } && home == FileManager.default.homeDirectoryForCurrentUser
         isScanning = true; visited = 0; error = nil
         queue.async { [weak self] in
             let checkpoint = FolderChangeMonitor.eventID()
-            var result = StorageIndexer.scan(roots: roots, home: home, cancellation: token) { count in
+            var result = StorageIndexer.scan(roots: roots, home: home, cancellation: token, priorityPaths: catalog?.priorityPaths(home: home) ?? []) { count in
                 DispatchQueue.main.async { guard let self, self.request == request else { return }; self.visited = count }
             }
             result.eventID = checkpoint
@@ -156,19 +163,24 @@ final class SmartScanModel: ObservableObject {
             let totals = Self.systemTotals(result, home: home)
             let duplicateResult = includeDuplicates ? DuplicateDetector.exact(index: result, cancellation: token) : DuplicateReport()
             let potential = Self.estimate(index: result, findings: findings, duplicates: duplicateResult)
+            let summary = CleanupOpportunitySummary.make(index: result, findings: findings, duplicates: duplicateResult)
             guard !token.isCancelled else { return }
             #if KAZE_PREVIEW
             let snapshots = (output: "", status: Int32(1))
             #else
             let snapshots = includeSnapshots ? CleanerOperations.runCommand("/usr/bin/tmutil", arguments: ["listlocalsnapshots", "/"], timeout: 5) : (output: "", status: Int32(1))
             #endif
+            let snapshotNames = snapshots.status == 0 ? snapshots.output.split(separator: "\n").map(String.init).filter { $0.hasPrefix("com.apple.TimeMachine.") } : []
+            let snapshotStatus = !includeSnapshots ? "Snapshots no consultados en el análisis de una carpeta" : snapshots.status == 0 ? "Inventario de snapshots; tamaño exclusivo no disponible" : "No se pudo consultar Time Machine"
+            guard !token.isCancelled else { return }
+            let saved = !persistResults || cache.saveAnalysis(CachedStorageAnalysis(schema: 1, index: result,
+                duplicates: duplicateResult, snapshots: snapshotNames, snapshotStatus: snapshotStatus))
             DispatchQueue.main.async {
                 guard let self, self.request == request else { return }
-                self.apply(result, prepared: findings, totals: totals); self.duplicates = duplicateResult; self.visited = result.scannedCount; self.isScanning = false
+                self.apply(result, prepared: findings, totals: totals, summary: summary); self.duplicates = duplicateResult; self.visited = result.scannedCount; self.isScanning = false
                 self.potential = potential
-                self.snapshots = snapshots.status == 0 ? snapshots.output.split(separator: "\n").map(String.init).filter { $0.hasPrefix("com.apple.TimeMachine.") } : []
-                self.snapshotStatus = !includeSnapshots ? "Snapshots no consultados en el análisis de una carpeta" : snapshots.status == 0 ? "Inventario de snapshots; tamaño exclusivo no disponible" : "No se pudo consultar Time Machine"
-                self.persist()
+                self.snapshots = snapshotNames; self.snapshotStatus = snapshotStatus
+                if !saved { self.error = L10n.text("No se pudo guardar el análisis. Los resultados siguen disponibles en esta sesión.") }
             }
         }
     }
@@ -225,11 +237,13 @@ final class SmartScanModel: ObservableObject {
                 DispatchQueue.main.async { guard let self, self.request == request else { return }; self.visited = count }
             }
             let estimate = Self.estimate(index: index, findings: findings, duplicates: result)
+            let summary = CleanupOpportunitySummary.make(index: index, findings: findings, duplicates: result)
             DispatchQueue.main.async {
                 guard let self, self.request == request else { return }
                 self.hashesExhaustive = true; self.duplicates.exact = result.exact; self.duplicates.partial = result.partial
                 self.duplicates.examined = result.examined; self.duplicates.skipped = result.skipped
                 self.potential = estimate; self.isComparing = false
+                self.opportunities = summary
                 self.persist()
             }
         }
@@ -255,8 +269,7 @@ final class SmartScanModel: ObservableObject {
             DispatchQueue.main.async {
                 guard let self else { return }; self.isRemoving = false; self.selected = []; self.duplicateSelection = []
                 self.error = failures.isEmpty ? L10n.text("Elementos movidos a la Papelera. Actualiza el análisis.") : failures.joined(separator: "\n")
-                // Invalidated sizes are never presented as fresh analysis after a mutation.
-                self.findings = []; self.duplicates = DuplicateReport(); self.index = .empty; self.potential = 0; self.systemTotals = [:]; self.systemPotential = [:]; self.onIndex?(.empty)
+                self.onIndex?(.empty)
                 self.markChanged()
             }
         }

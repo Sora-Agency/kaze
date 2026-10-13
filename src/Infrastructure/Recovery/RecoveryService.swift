@@ -10,7 +10,6 @@ protocol RecoveryFileReading: AnyObject {
 }
 extension APFSReader: RecoveryFileReading {}
 
-// Confined to RecoveryModel's serial utility queue; descriptors never leave it.
 final class RecoveryService: @unchecked Sendable {
     private var reader: RecoveryFileReading?
     private var descriptor: Int32 = -1

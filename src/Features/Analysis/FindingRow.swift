@@ -18,6 +18,9 @@ struct FindingRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(finding.rule.map { L10n.string($0.title) } ?? file.url.lastPathComponent).font(SoraTypography.body(14, weight: .semibold))
                 Text(file.url.path).font(SoraTypography.body(12)).foregroundStyle(SoraPalette.secondary).lineLimit(1).truncationMode(.middle)
+                Text(finding.potential > 0 ? L10n.text("Recuperación estimada: 0 – \(formatDiskBytes(finding.potential))")
+                     : file.partial || file.containsProtected ? L10n.text("Sin estimación segura; revisa los detalles") : L10n.text("Revisión manual; no incluido en recuperación potencial"))
+                    .font(SoraTypography.body(10)).foregroundStyle(finding.potential > 0 ? SoraPalette.success : SoraPalette.secondary)
                 if let rule = finding.rule {
                     Text(L10n.string(rule.recovery)).font(SoraTypography.body(10)).foregroundStyle(SoraPalette.muted)
                     Text(L10n.text("Cerrar: \(rule.closedProcesses.map { L10n.string($0) }.joined(separator: ", "))"))

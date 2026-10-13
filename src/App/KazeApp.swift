@@ -46,8 +46,6 @@ struct KazeApp: App {
                 }
             }
         }
-        // AppKit can echo the current insertion state during scene updates.
-        // Writing it back to AppStorage would invalidate both scenes again.
         MenuBarExtra(isInserted: Binding(
             get: { monitorEnabled },
             set: { if monitorEnabled != $0 { monitorEnabled = $0 } }

@@ -122,7 +122,6 @@ struct LocalAITests {
             check(!answer.isEmpty && !answer.contains("<think>"), "Pinned Qwen model answers with the native engine")
             print("Real inference: \(String(format: "%.2f", Date().timeIntervalSince(clock))) seconds\n\(answer)")
         }
-        // Exercise native observable phases without touching the real home directory.
         let ui = LocalAssistantModel(service: failed)
         ui.checkAvailability()
         func wait(_ predicate: () -> Bool) {
@@ -145,5 +144,53 @@ struct LocalAITests {
         ready.ask("System Data", analysis: analysis)
         check(ready.submittedQuestion == "System Data", "Assistant keeps the submitted question with its response")
         check(!ready.isGenerating && ready.response.contains("Smart Scan"), "Without a measured scan, the assistant requests one without starting inference")
+        let history = root.appendingPathComponent("Library/Application Support/Kaze/Operations/keep.json")
+        try fm.createDirectory(at: history.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try Data("history fixture".utf8).write(to: history)
+        let settings = root.appendingPathComponent("Library/Application Support/Kaze/schedule.json")
+        try Data("settings fixture".utf8).write(to: settings)
+        let externalModel = root.appendingPathComponent("external-model.gguf")
+        try model.write(to: externalModel)
+        try fm.createSymbolicLink(at: readyService.directory.appendingPathComponent("external-link"), withDestinationURL: externalModel)
+        ready.uninstall()
+        check(ready.phase == .removing, "Uninstall disables inference and download immediately")
+        wait { ready.phase == .missing && !ready.hasInstallation }
+        check(!fm.fileExists(atPath: readyService.directory.deletingLastPathComponent().path),
+              "Uninstall removes all Kaze AI versions and resets the installation state")
+        check(fm.fileExists(atPath: history.path) && fm.fileExists(atPath: settings.path) && fm.fileExists(atPath: externalModel.path),
+              "Uninstall preserves history, settings and nested symlink targets")
+        ready.install(); wait { ready.phase == .ready }
+        check(ready.hasInstallation && ready.submittedQuestion.isEmpty && ready.response.isEmpty,
+              "AI can be explicitly reinstalled after uninstall without retaining its conversation")
+        var changedModel = model; changedModel[0] ^= 1
+        try changedModel.write(to: readyService.directory.appendingPathComponent("model.gguf"))
+        do { _ = try readyService.validate(cancellation: ScanCancellation()); fatalError("Reinstalled model bypassed verification") }
+        catch LocalAIError.integrity { print("PASS: Reinstallation does not reuse pre-uninstall hash validation") }
+        let damaged = LocalAssistantModel(service: readyService)
+        damaged.checkAvailability(); wait { damaged.phase == .missing && damaged.hasInstallation }
+        damaged.uninstall(); wait { damaged.phase == .missing && !damaged.hasInstallation }
+        check(!fm.fileExists(atPath: readyService.directory.path), "A damaged model can still be uninstalled without downloading or hashing it")
+        try slow.install(cancellation: ScanCancellation(), progress: { _ in })
+        let generating = LocalAssistantModel(service: slow)
+        generating.checkAvailability(); wait { generating.phase == .ready }
+        let s = DiskScanner.metadata(root)!
+        let node = IndexedFile(url: root, parent: nil, directory: true, symbolicLink: false, protected: false,
+                               fingerprint: StorageIndexer.fingerprint(s), links: 1, ownAllocated: 0,
+                               logical: 0, allocated: 0, modified: Date())
+        let measured = SmartScanModel(home: root, resources: nil,
+            initialIndex: StorageIndex(date: Date(), roots: [root], home: root, files: [node], children: [-1: [0]], byPath: [root.path: 0]))
+        generating.ask("What occupies disk space?", analysis: measured)
+        check(generating.isGenerating, "Fixture starts inference before uninstall")
+        generating.uninstall(); wait { generating.phase == .missing }
+        check(!generating.isGenerating && generating.response.isEmpty && !slow.hasInstallation,
+              "Uninstall cancels queued or running inference and discards its late response")
+        let linkedHome = root.appendingPathComponent("LinkedHome")
+        let storage = LocalAIStorage(home: linkedHome)
+        try fm.createDirectory(at: storage.root.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try fm.createSymbolicLink(at: storage.root, withDestinationURL: history.deletingLastPathComponent())
+        do { try storage.uninstall(); fatalError("Redirected AI directory removed") }
+        catch LocalAIError.integrity {
+            check(fm.fileExists(atPath: history.path), "Uninstall refuses a redirected AI root and preserves its target")
+        }
     }
 }

@@ -76,8 +76,8 @@ struct ScheduleTaskEditor: View {
                     SoraDivider()
                     VStack(alignment: .leading, spacing: 12) {
                         fieldLabel(L10n.text("QUÉ LIMPIAR"))
-                        category(L10n.text("Cachés generales"), detail: L10n.text("Cachés del usuario, Discord y Homebrew."), selection: $task.configuration.generalCaches)
-                        category(L10n.text("Cachés de desarrollo"), detail: L10n.text("Xcode, simuladores no disponibles, npm, Gradle, Nx y pnpm."), selection: $task.configuration.developmentCaches)
+                        category(L10n.text("Cachés generales"), detail: L10n.text("Navegadores, Discord, Slack y Homebrew"), selection: $task.configuration.generalCaches)
+                        category(L10n.text("Cachés de desarrollo"), detail: L10n.text("VS Code, Yarn, pip, CocoaPods, Gradle, npm, pnpm y Xcode"), selection: $task.configuration.developmentCaches)
                         category(L10n.text("Cachés de Docker"), detail: L10n.text("Builds antiguos e imágenes sin referencias; conserva contenedores y volúmenes."), selection: $task.configuration.dockerCaches)
                     }
                     SoraDivider()

@@ -51,7 +51,6 @@ struct StorageIndex: Codable {
     var systemTotals: [SystemDataKind: AnalysisBytes] = [:]
     var systemLocations: [SystemDataKind: [Int]] = [:]
     var eventID: UInt64 = 0
-    // Avoid duplicating the large derived dictionaries in the on-disk cache.
     private enum CodingKeys: String, CodingKey {
         case date, roots, home, files, unreadable, omitted, candidateOmitted, cancelled, scannedCount
         case systemTotals, systemLocations, eventID

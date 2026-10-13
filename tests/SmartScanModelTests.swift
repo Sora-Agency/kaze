@@ -55,12 +55,14 @@ struct SmartScanModelTests {
         explorer.sharedIndex = model.index; explorer.open(docs)
         check(!explorer.isScanning && explorer.entries.count == 2 && explorer.status.contains("Smart Scan"), "Explorer reuses complete recent folder measurements without rescanning")
         let copy = model.duplicates.exact[0].nodes[1]
+        let latestSavedDate = cache.loadAnalysis(home: root)!.index.date
         model.duplicateSelection = [copy]; model.markChanged()
         check(model.isStale && !model.canSelectDuplicate(copy) && model.duplicateSelection.isEmpty, "A mutation invalidates selection until a fresh analysis")
-        wait { cache.loadAnalysis(home: root) == nil }
+        check(cache.loadAnalysis(home: root)?.index.date == latestSavedDate, "Invalidation preserves the most recently saved baseline on disk")
         let invalidated = SmartScanModel(home: root, resources: resources, cache: cache)
         wait { !invalidated.isRestoring }
-        check(invalidated.index.files.isEmpty, "Invalidation prevents deleted analysis data from returning on restart")
+        check(invalidated.index.date == latestSavedDate && invalidated.isStale && invalidated.showingCached && !invalidated.canSelectDuplicate(copy),
+              "Restart keeps the dated baseline visible without authorizing stale deletion")
         model.scan(roots: [root], includeDuplicates: false); finish()
         check(!model.isStale && model.duplicates.exact.isEmpty, "Fresh analysis resets stale results and duplicate selections")
         print("Smart Scan model integration tests passed using temporary data only.")

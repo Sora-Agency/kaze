@@ -29,12 +29,21 @@ ellas. La IA no tiene herramientas ni permisos para limpiar. Se conservan las
 confirmaciones y verificaciones existentes para borrado.
 
 Instalación: `~/Library/Application Support/Kaze/AI/<versión-fijada>/`.
-Cierra Kaze y elimina manualmente la carpeta AI para recuperar su espacio; al
-abrir el asistente se ofrecerá descargar nuevamente. Los archivos temporales de
+Usa **Desinstalar IA** para recuperar su espacio; al abrir el asistente se
+ofrecerá descargar nuevamente. Los archivos temporales de
 consulta se eliminan al terminar y no se guarda historial de chat. Los archivos
-AI persisten tras desinstalar Kaze hasta que los eliminas manualmente.
+AI persisten tras desinstalar Kaze hasta que los eliminas explícitamente.
 
 Las pruebas usan instalaciones temporales, nunca la carpeta de IA del usuario.
 Los archivos del modelo utilizados para QA quedan en build y no se incluyen en
 Git ni en los instaladores. DistributionTests verifica que solo se empaquetan las
 licencias, sin modelo GGUF, archivo del motor ni ejecutable llama.
+
+## Desinstalar la IA
+
+El botón **Desinstalar IA** en el asistente elimina solo el motor, los modelos y
+versiones anteriores dentro de `~/Library/Application Support/Kaze/AI`. Pide
+confirmación, detiene las consultas pendientes y ejecuta el borrado en segundo
+plano. Conserva análisis, historial, ajustes y modelos de otras herramientas.
+También permite retirar una instalación dañada y descargarla nuevamente.
+No sigue enlaces simbólicos a directorios externos.

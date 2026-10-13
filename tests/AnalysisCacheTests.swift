@@ -63,7 +63,6 @@ struct AnalysisCacheTests {
         try fm.removeItem(at: linked)
         let baseline = try refresh(nil)
         cache.saveFolder(baseline)
-        // Simulate changes while the application is closed, then replay macOS history.
         try Data(repeating: 4, count: 524_288).write(to: leaf)
         let explorer = FileExplorerModel(folder: data, home: home, cache: cache)
         var displayedPrevious = false
@@ -90,6 +89,18 @@ struct AnalysisCacheTests {
         RunLoop.main.run(until: Date().addingTimeInterval(1.5))
         check(!explorer.isScanning && explorer.measuredAt == settledDate, "Saving the cache does not create a scan feedback loop")
         explorer.suspendMonitoring(); observer.cancel()
+        var large = baseline
+        let entry = large.entries[0]
+        large.entries[0] = CachedExplorerEntry(url: entry.url, directory: entry.directory, symbolicLink: entry.symbolicLink,
+            modified: entry.modified, fingerprint: entry.fingerprint, measurement: DiskMeasurement(bytes: entry.measurement?.bytes ?? 0, fileCount: 50_000))
+        large.eventID = FolderChangeMonitor.eventID(); cache.saveFolder(large)
+        let largeExplorer = FileExplorerModel(folder: data, home: home, cache: cache)
+        largeExplorer.loadIfNeeded(); wait { !largeExplorer.isScanning && !largeExplorer.isCheckingChanges }
+        let largeDate = largeExplorer.measuredAt
+        largeExplorer.invalidate()
+        check(!largeExplorer.isScanning && largeExplorer.needsRefresh && largeExplorer.measuredAt == largeDate,
+              "A mutation preserves a large folder baseline and requests refresh without another full walk")
+        largeExplorer.suspendMonitoring()
         var corrupt = baseline
         corrupt.entries.append(baseline.entries[0]); cache.saveFolder(corrupt)
         check(cache.loadFolder(data) == nil, "Malformed duplicate cached rows are discarded")
@@ -104,7 +115,7 @@ struct AnalysisCacheTests {
         check(restored?.index.allocated == scan.allocated && restored?.index.byPath == scan.byPath,
               "Smart Scan restores aggregates and rebuilds derived lookups for bounded detail")
         cache.invalidateAnalysis()
-        check(cache.loadAnalysis(home: home) == nil, "Mutations invalidate the saved Smart Scan")
+        check(cache.loadAnalysis(home: home) == nil, "Explicit cache reset removes a saved baseline")
         let token = ScanCancellation(); token.cancel()
         do {
             _ = try ExplorerSnapshotBuilder.refresh(folder: data, previous: nil, changes: FolderChanges(full: true), force: true,
