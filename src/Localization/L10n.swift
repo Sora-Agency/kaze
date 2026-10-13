@@ -1,7 +1,7 @@
 import Foundation
 
 enum L10n {
-    struct Message: ExpressibleByStringLiteral, ExpressibleByStringInterpolation, Hashable {
+    struct Message: ExpressibleByStringLiteral, ExpressibleByStringInterpolation, Hashable, Codable {
         let key: String
         let arguments: [String]
 
@@ -118,7 +118,7 @@ enum AppLanguage: String, CaseIterable, Identifiable {
     var name: String { self == .spanish ? "Español" : "English" }
 }
 
-enum LocalizedText: Hashable {
+enum LocalizedText: Hashable, Codable {
     case message(L10n.Message)
     case count(String, Int)
     case verbatim(String)

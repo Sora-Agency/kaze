@@ -4,18 +4,26 @@ import AppKit
 struct LocalAssistantView: View {
     @ObservedObject var model: SmartScanModel
     @ObservedObject var assistant: LocalAssistantModel
+    @ObservedObject private var chats: AssistantChatModel
     @ObservedObject private var language = AppLanguageStore.shared
     @ViewState private var question = ""
     @ViewState private var confirmUninstall = false
+    @ViewState private var showingChats = false
     @FocusState private var inputFocused: Bool
     var navigate: (AppSection) -> Void
-    private var canAsk: Bool { assistant.phase == .ready && !assistant.isGenerating && !model.busy }
+    private var canAsk: Bool { assistant.phase == .ready && !assistant.isGenerating && !model.busy && !chats.isLoading }
+
+    init(model: SmartScanModel, assistant: LocalAssistantModel, navigate: @escaping (AppSection) -> Void) {
+        self.model = model; self.assistant = assistant; chats = assistant.chats; self.navigate = navigate
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             header
             SoraDivider()
-            if assistant.phase == .ready {
+            chatNavigation
+            SoraDivider()
+            if assistant.phase == .ready || !chats.turns.isEmpty {
                 HStack(alignment: .top, spacing: 0) {
                     VStack(spacing: 0) {
                         conversation
@@ -28,6 +36,9 @@ struct LocalAssistantView: View {
                 AssistantDownloadView(assistant: assistant, navigate: navigate)
             }
         }.onAppear { assistant.checkAvailability() }
+            .reviewedTrashActions(home: model.home, journal: model.journal, authorization: { assistant.canReview($0, analysis: model) }) { url in
+                assistant.recordMove(url); model.markChanged()
+            }
             .alert(L10n.text("¿Desinstalar la IA local?"), isPresented: $confirmUninstall) {
                 Button(L10n.text("Cancelar"), role: .cancel) {}
                 Button(L10n.text("Desinstalar IA"), role: .destructive) { assistant.uninstall() }
@@ -37,8 +48,6 @@ struct LocalAssistantView: View {
     }
     private var header: some View {
         HStack(spacing: 12) {
-            LucideIcon("brain-circuit", size: 23).foregroundStyle(SoraPalette.accent)
-                .frame(width: 44, height: 44).background(SoraPalette.accent.opacity(0.1), in: RoundedRectangle(cornerRadius: 14))
             VStack(alignment: .leading, spacing: 4) {
                 Text(L10n.text("Asistente local")).font(SoraTypography.body(21, weight: .semibold))
                 Text(L10n.text("Menos dudas. Más espacio.")).font(SoraTypography.body(12)).foregroundStyle(SoraPalette.secondary)
@@ -55,47 +64,49 @@ struct LocalAssistantView: View {
             Button { navigate(.smart) } label: { SoraLabel("Smart Scan", icon: "arrow-up-right") }
         }.padding(.horizontal, 24).padding(.vertical, 18)
     }
+    private var chatNavigation: some View {
+        HStack(spacing: 12) {
+            Text(chats.isLoading ? L10n.text("Cargando chats…") : chats.selected?.title ?? L10n.text("Nuevo chat"))
+                .font(SoraTypography.body(11, weight: .medium)).lineLimit(1)
+            Spacer(minLength: 8)
+            if assistant.phase == .downloading {
+                SoraSpinner(size: 13)
+                Text(assistant.progress.formatted(.percent.precision(.fractionLength(0))))
+                    .font(SoraTypography.body(11)).monospacedDigit()
+                Button(L10n.text("Detener")) { assistant.cancel() }
+            }
+            if assistant.phase == .missing {
+                Button(L10n.text("Descargar IA")) { assistant.install() }.disabled(!LocalAIPackage.supported)
+            }
+            Button { assistant.newChat(); question = "" } label: { SoraLabel(L10n.text("Nuevo chat"), icon: "plus") }
+                .disabled(chats.isLoading || assistant.phase == .removing || assistant.phase == .downloading)
+            Button { showingChats = true } label: { SoraLabel(L10n.text("Chats"), icon: "message-square") }
+                .disabled(chats.isLoading || assistant.phase == .removing || assistant.phase == .downloading)
+                .popover(isPresented: $showingChats) {
+                    AssistantChatHistoryView(chats: chats, assistant: assistant) { showingChats = false; question = "" }
+                }
+        }.padding(.horizontal, 24).padding(.vertical, 10)
+    }
     private var conversation: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    if assistant.response.isEmpty && !assistant.isGenerating && assistant.submittedQuestion.isEmpty {
-                        welcome
-                    } else {
-                        if !assistant.submittedQuestion.isEmpty {
-                            HStack {
-                                Spacer(minLength: 48)
-                                VStack(alignment: .trailing, spacing: 7) {
-                                    Text(L10n.text("Tu consulta")).font(SoraTypography.body(10)).foregroundStyle(SoraPalette.muted)
-                                    Text(assistant.submittedQuestion).font(SoraTypography.body(14)).textSelection(.enabled)
-                                        .padding(16).background(SoraPalette.elevated, in: RoundedRectangle(cornerRadius: 16))
-                                }
-                            }
-                        }
-                        if assistant.isGenerating || !assistant.response.isEmpty {
-                            VStack(alignment: .leading, spacing: 14) {
-                                HStack(spacing: 9) {
-                                    LucideIcon("brain-circuit", size: 18).foregroundStyle(SoraPalette.accent)
-                                    Text("Kaze").font(SoraTypography.body(13, weight: .semibold))
-                                    Text(L10n.text("Solo en tu Mac")).font(SoraTypography.body(10)).foregroundStyle(SoraPalette.muted)
-                                }
-                                if assistant.isGenerating {
-                                    HStack(spacing: 10) { SoraSpinner(size: 16); Text(L10n.text("Preparando una respuesta en tu Mac…")) }
-                                        .font(SoraTypography.body(12)).foregroundStyle(SoraPalette.secondary).padding(.vertical, 12)
-                                } else {
-                                    Text(assistant.response).font(SoraTypography.body(14)).lineSpacing(5).textSelection(.enabled)
-                                }
-                            }.padding(20).frame(maxWidth: .infinity, alignment: .leading)
-                                .background(SoraPalette.surface, in: RoundedRectangle(cornerRadius: 16))
-                                .overlay(RoundedRectangle(cornerRadius: 16).stroke(SoraPalette.accent.opacity(0.16)))
+                VStack(alignment: .leading, spacing: 32) {
+                    if chats.turns.isEmpty { welcome }
+                    else {
+                        ForEach(chats.turns) { turn in
+                            AssistantTurnView(turn: turn, current: turn.id == assistant.currentTurnID,
+                                              assistant: assistant, analysis: model)
                         }
                     }
-                    if let error = assistant.error {
-                        SoraLabel(error, icon: "circle-alert").font(SoraTypography.body(12)).foregroundStyle(Color.orange)
+                    if let error = chats.error {
+                        Text(error).font(SoraTypography.body(11)).foregroundStyle(Color.orange)
                     }
                     Color.clear.frame(height: 1).id("assistant-end")
                 }.frame(maxWidth: 720).padding(24).frame(maxWidth: .infinity)
+                    .fixedSize(horizontal: false, vertical: true)
             }.onChange(of: assistant.isGenerating) { _ in proxy.scrollTo("assistant-end", anchor: .bottom) }
+                .onChange(of: chats.turns.count) { _ in proxy.scrollTo("assistant-end", anchor: .bottom) }
+                .onChange(of: chats.archive.selectedID) { _ in proxy.scrollTo("assistant-end", anchor: .bottom) }
         }
     }
     private var welcome: some View {
@@ -145,7 +156,7 @@ struct LocalAssistantView: View {
                 HStack(spacing: 10) {
                     TextField(L10n.text("Pregunta sobre tu disco…"), text: $question)
                         .textFieldStyle(.plain).font(SoraTypography.body(13)).focused($inputFocused)
-                        .onSubmit { send(question) }.disabled(assistant.isGenerating)
+                        .onSubmit { send(question) }.disabled(!canAsk)
                         .frame(minHeight: 32)
                     if assistant.isGenerating {
                         Button { assistant.cancel() } label: { LucideIcon("x", size: 17) }
@@ -159,7 +170,7 @@ struct LocalAssistantView: View {
                 }
             }.padding(14).background(SoraPalette.surface, in: RoundedRectangle(cornerRadius: 16))
                 .overlay(RoundedRectangle(cornerRadius: 16).stroke(inputFocused ? SoraPalette.accent.opacity(0.7) : SoraPalette.border))
-            Text(L10n.text("La IA puede equivocarse. Tú revisas y decides; Kaze no limpia desde el chat."))
+            Text(L10n.text("La IA puede equivocarse. Cada acción requiere tu revisión y confirmación; nunca se elimina sin preguntar."))
                 .font(SoraTypography.body(10)).foregroundStyle(SoraPalette.muted)
         }.padding(.horizontal, 24).padding(.top, 12).padding(.bottom, 18)
     }

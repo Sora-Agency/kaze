@@ -50,8 +50,15 @@ run_swift_test AnalysisRemovalTests "${analysis_sources[@]}"
 run_swift_test ReviewedTrashTests "${analysis_sources[@]}" src/Infrastructure/ReviewedTrashService.swift src/Features/Files/ReviewedTrashModel.swift
 run_swift_test AnalysisCacheTests "${analysis_sources[@]}" src/Infrastructure/ExplorerSnapshotBuilder.swift src/Features/Explorer/FileExplorerModel.swift
 run_swift_test AnalysisPersistenceTests "${analysis_sources[@]}" src/Infrastructure/ExplorerSnapshotBuilder.swift
+run_swift_test AssistantChatTests "${analysis_sources[@]}" src/Infrastructure/AssistantChatStore.swift src/Features/Assistant/AssistantChatModel.swift
 run_swift_test LocalAITests "${analysis_sources[@]}" src/Infrastructure/LocalAIService.swift src/Infrastructure/LocalAIStorage.swift \
-  src/Infrastructure/SpotlightUsage.swift src/Features/SmartScan/SmartScanModel.swift src/Features/Assistant/LocalAssistantModel.swift
+  src/Infrastructure/SpotlightUsage.swift src/Features/SmartScan/SmartScanModel.swift src/Features/Assistant/LocalAssistantModel.swift src/Features/Assistant/AssistantActivityModel.swift src/Features/Assistant/AssistantChatModel.swift \
+  src/Features/Assistant/LocalAssistantQuery.swift src/Features/Assistant/LocalAssistantChats.swift src/Infrastructure/AssistantChatStore.swift \
+  src/Infrastructure/ReviewedTrashService.swift src/Infrastructure/AssistantFilePlanner.swift
+run_swift_test AssistantFileActionsTests "${analysis_sources[@]}" src/Infrastructure/LocalAIService.swift src/Infrastructure/LocalAIStorage.swift \
+  src/Infrastructure/SpotlightUsage.swift src/Features/SmartScan/SmartScanModel.swift src/Features/Assistant/LocalAssistantModel.swift src/Features/Assistant/AssistantActivityModel.swift src/Features/Assistant/AssistantChatModel.swift \
+  src/Features/Assistant/LocalAssistantQuery.swift src/Features/Assistant/LocalAssistantChats.swift src/Infrastructure/AssistantChatStore.swift \
+  src/Infrastructure/ReviewedTrashService.swift src/Features/Files/ReviewedTrashModel.swift src/Infrastructure/AssistantFilePlanner.swift
 run_swift_test ScheduleTests "${schedule_sources[@]}"
 run_swift_test IdentityTests src/App/AppIdentity.swift
 run_swift_test DiskAccessTests src/Infrastructure/DiskAccessStore.swift

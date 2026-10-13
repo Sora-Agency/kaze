@@ -5,26 +5,37 @@ import AppKit
 @MainActor
 final class LocalAssistantModel: ObservableObject {
     enum Phase { case checking, missing, downloading, ready, removing }
-    @Published private(set) var phase: Phase = .checking
+    @Published var phase: Phase = .checking
     @Published private(set) var progress = 0.0
-    @Published private(set) var response = ""
-    @Published private(set) var submittedQuestion = ""
-    @Published private(set) var isGenerating = false
-    @Published private(set) var error: String?
+    @Published var response = ""
+    @Published var submittedQuestion = ""
+    @Published var isGenerating = false
+    @Published var error: String?
+    @Published var contextNotice: String?
     @Published private(set) var hasInstallation = false
+    @Published var proposals: [AssistantFileProposal] = []
+    let activity = AssistantActivityModel()
+    let chats: AssistantChatModel
+    var currentTurnID: UUID?
+    var reviewContext: (chatID: UUID, turnID: UUID, url: URL)?
+    var proposalScanDate: Date?
+    var proposalRevision: UUID?
     let downloadBytes: Int64
-    private let service: LocalAIService
-    private let queue = DispatchQueue(label: "kaze.assistant", qos: .utility)
-    private var token = ScanCancellation()
-    private var request = UUID()
+    let service: LocalAIService
+    let queue = DispatchQueue(label: "kaze.assistant", qos: .utility)
+    var token = ScanCancellation()
+    var request = UUID()
     private var checked = false
     private var termination: AnyCancellable?
 
-    init(service: LocalAIService = LocalAIService(), initialReady: Bool = false, initialResponse: String = "", initialQuestion: String = "") {
+    init(service: LocalAIService = LocalAIService(), chatStore: AssistantChatStore? = nil, initialReady: Bool = false, initialResponse: String = "", initialQuestion: String = "") {
         self.service = service; downloadBytes = service.package.downloadBytes
+        chats = AssistantChatModel(store: chatStore ?? AssistantChatStore(home: service.home))
+        chats.onSelect = { [weak self] turn in self?.restoreConversation(turn) }
+        chats.load()
         if initialReady { phase = .ready; checked = true; hasInstallation = true; response = initialResponse; submittedQuestion = initialQuestion }
         termination = NotificationCenter.default.publisher(for: NSApplication.willTerminateNotification)
-            .sink { [weak self] _ in self?.cancel() }
+            .sink { [weak self] _ in self?.cancel(); self?.chats.flush() }
     }
     deinit { token.cancel(); service.stopExecution() }
 
@@ -84,7 +95,8 @@ final class LocalAssistantModel: ObservableObject {
         #else
         token.cancel(); service.stopExecution(); request = UUID()
         let service = service, request = request, previous = phase
-        isGenerating = false; phase = .removing; error = nil
+        let wasGenerating = isGenerating
+        activity.stop(); isGenerating = false; persistConversation(status: wasGenerating ? .cancelled : nil); phase = .removing; error = nil; discardProposals()
         queue.async { [weak self] in
             let result = Result { try service.uninstall() }
             DispatchQueue.main.async {
@@ -92,7 +104,7 @@ final class LocalAssistantModel: ObservableObject {
                 switch result {
                 case .success:
                     self.phase = .missing; self.hasInstallation = false; self.progress = 0
-                    self.response = ""; self.submittedQuestion = ""
+                    self.response = ""; self.submittedQuestion = ""; self.activity.reset(); self.currentTurnID = nil
                 case .failure(let error): self.phase = previous; self.error = error.localizedDescription
                 }
             }
@@ -100,49 +112,73 @@ final class LocalAssistantModel: ObservableObject {
         #endif
     }
 
-    func ask(_ question: String, analysis: SmartScanModel) {
-        guard phase == .ready, !isGenerating, !analysis.busy,
-              !question.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-        submittedQuestion = String(question.trimmingCharacters(in: .whitespacesAndNewlines).prefix(1000))
-        response = ""; error = nil
-        if analysis.index.files.isEmpty {
-            error = nil
-            response = L10n.text("Primero ejecuta Smart Scan para obtener recomendaciones sobre tu disco."); return
-        }
-        if analysis.isStale {
-            error = L10n.text("El disco cambió desde este análisis. Vuelve a analizar antes de limpiar."); return
-        }
-        #if KAZE_PREVIEW
-        return
-        #else
-        let scanDate = analysis.index.date
-        let prompt = LocalAssistantPrompt.make(question: submittedQuestion, index: analysis.index, findings: analysis.findings,
-            totals: analysis.systemTotals, systemPotential: analysis.systemPotential, potential: analysis.potential,
-            stale: analysis.isStale, english: L10n.language == "en")
-        token.cancel(); token = ScanCancellation(); request = UUID()
-        let service = service, token = token, request = request
-        isGenerating = true; error = nil; response = ""
-        queue.async { [weak self] in
-            let result = Result { try service.answer(prompt: prompt, cancellation: token) }
-            DispatchQueue.main.async {
-                guard let self, self.request == request else { return }; self.isGenerating = false
-                switch result {
-                case .success(let response):
-                    if analysis.index.date == scanDate && !analysis.isStale { self.response = response }
-                    else { self.error = L10n.text("El disco cambió desde este análisis. Vuelve a analizar antes de limpiar.") }
-                case .failure(let error):
-                    self.error = error.localizedDescription
-                    if let error = error as? LocalAIError, error == .integrity || error == .notInstalled { self.phase = .missing }
-                }
-            }
-        }
-        #endif
+    func cancel() {
+        guard phase != .removing, isGenerating || phase == .downloading else { return }
+        token.cancel(); service.stopExecution(); request = UUID()
+        activity.stop()
+        if phase == .downloading { phase = .missing; progress = 0 }
+        isGenerating = false; error = LocalAIError.cancelled.localizedDescription; discardProposals()
+        persistConversation(status: .cancelled)
     }
 
-    func cancel() {
-        guard phase != .removing else { return }
-        token.cancel(); service.stopExecution(); request = UUID()
-        if phase == .downloading { phase = .missing; progress = 0 }
-        isGenerating = false; error = LocalAIError.cancelled.localizedDescription
+    func canReview(_ target: TrashTarget, analysis: SmartScanModel) -> Bool {
+        phase == .ready && !isGenerating && !analysis.busy && analysis.catalog != nil
+            && analysis.index.date == proposalScanDate && analysis.revision == proposalRevision
+            && proposals.contains { $0.file.url == target.url && $0.file.directory == target.directory
+                && $0.file.fingerprint == target.fingerprint && $0.authorizationID == target.authorizationID }
     }
+
+    func discardProposals() { proposals = []; proposalScanDate = nil; proposalRevision = nil }
+
+    func recordReview(_ target: TrashTarget) {
+        guard !isGenerating, proposals.contains(where: {
+            $0.file.url == target.url && $0.file.fingerprint == target.fingerprint && $0.authorizationID == target.authorizationID
+        }) else { return }
+        if let chatID = chats.archive.selectedID, let turnID = currentTurnID { reviewContext = (chatID, turnID, target.url) }
+        activity.complete(.review, detail: .message("Mostró la ruta y solicitó revisar el elemento antes de autorizar la operación."), paths: [target.url]); persistConversation()
+    }
+
+    func recordMove(_ url: URL) {
+        let context = reviewContext; reviewContext = nil
+        if let context, context.url == url, context.turnID != currentTurnID {
+            guard let chat = chats.archive.chats.first(where: { $0.id == context.chatID }),
+                  let turn = chat.turns.first(where: { $0.id == context.turnID }) else { return }
+            let log = AssistantActivityModel(); log.restore(turn.activity)
+            log.complete(.trash, detail: .message("Operación confirmada y registrada en Historial. Puedes restaurar el elemento."), paths: [url])
+            chats.capture(turn.id, chatID: chat.id, answer: turn.answer, status: turn.status, steps: log.steps, notice: turn.notice, error: turn.error)
+        } else {
+            activity.complete(.trash, detail: .message("Operación confirmada y registrada en Historial. Puedes restaurar el elemento."), paths: [url])
+            discardProposals(); persistConversation()
+        }
+    }
+
+    func showContextNotice(_ date: Date) {
+        contextNotice = L10n.text("Uso el análisis del \(L10n.date(date, includeTime: true)). Los tamaños pueden haber cambiado; comprobaré cada elemento antes de preparar una acción.")
+    }
+
+    #if KAZE_PREVIEW
+    func previewFileActions(analysis: SmartScanModel) {
+        proposals = Array(AssistantFileProposal.candidates(index: analysis.index, findings: analysis.findings, question: submittedQuestion).prefix(1))
+        proposalScanDate = analysis.index.date
+        proposalRevision = analysis.revision
+    }
+    func previewActivity(analysis: SmartScanModel, running: Bool) {
+        let question = submittedQuestion, answer = response, proposed = proposals, scanDate = proposalScanDate, revision = proposalRevision
+        currentTurnID = chats.begin(question)
+        submittedQuestion = question; response = answer
+        proposals = proposed; proposalScanDate = scanDate; proposalRevision = revision
+        activity.reset()
+        activity.complete(.context, detail: .message("Tamaños y categorías medidos por Smart Scan."), snapshotDate: analysis.index.date)
+        activity.complete(.files, detail: .message("\(6) ubicaciones comprobadas: \(1) disponibles y \(5) omitidas. Se verificaron ubicación e identidad mediante metadatos."), paths: proposals.map { $0.file.url }, checked: 6)
+        activity.start(.response)
+        if running { response = ""; isGenerating = true }
+        else {
+            activity.complete(.response, detail: .message("Preparó la explicación en tu Mac usando el resumen del análisis, sin enviar datos."))
+            if !proposals.isEmpty {
+                activity.complete(.proposals, detail: .message("Acciones para revisar: \(proposals.count). Ningún archivo se mueve sin tu confirmación."), paths: proposals.map { $0.file.url }, criteria: proposals.compactMap { $0.rule.map { .message(L10n.Message(stringLiteral: $0.reason)) } })
+            }
+        }
+        persistConversation(status: running ? .pending : .completed)
+    }
+    #endif
 }
